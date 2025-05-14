@@ -1,10 +1,1 @@
 /* css styles */
-/* Justify text globally */
-body {
-  text-align: justify;
-}
-
-/* Optional: Justify text for specific elements or classes (e.g., paragraphs) */
-p {
-  text-align: justify;
-}
