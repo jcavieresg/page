@@ -1,0 +1,1332 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.56">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Joaquin Cavieres">
+<meta name="dcterms.date" content="2025-04-29">
+
+<title>Understanding Kriging (Part 1) – jcavieresg_blog</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">jcavieresg_blog</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Understanding Kriging (Part 1)</h1>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Joaquin Cavieres </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">April 29, 2025</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<p>In this first blog post, I would like to share my thoughts on how the Kriging method can often lead to confusion due to its different interpretations. My goal is to help readers distinguish between Kriging as a “<strong>best linear unbiased predictor (BLUP)</strong>” for point-referenced spatial data, and its probabilistic interpretation as a <strong>Gaussian random field</strong> (the term “Gaussian process” I prefer using it for data without a spatial reference (I mean probabilistic because the following results are not based in the likelihood method, for now).</p>
+<p>In Part 1, I will present the equations used to calculate the Kriging weights and demonstrate how to predict values at specific spatial locations. Using these weights, we will then perform interpolation over a regular square grid covering the entire spatial domain of interest. Finally, the results from our manual calculations will be compared with those obtained using the “<em><code>gstat</code></em>” package to assess their consistency and accuracy.</p>
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
+<p>We will denote the spatial locations as <span class="math inline">\(\{\mathbf{s}_1, \ldots, \mathbf{s}_n\}\)</span>, and the spatial data collected at these locations (the observed or measurement variable) will be denoted as <span class="math inline">\(Z(\mathbf{s}_1), \ldots, Z(\mathbf{s}_n)\)</span>. The spatial locations are determined by their coordinates in the space, for example, <em>latitude-longitude</em> and we will be mainly focused in the two-dimensional space. To denote the vector of all the observations we will use <span class="math inline">\(\mathbf{Z} = (Z(\mathbf{s}_1), \ldots, Z(\mathbf{s}_n))^{\top}\)</span>.</p>
+</section>
+<section id="computing-the-distance" class="level1">
+<h1>Computing the distance</h1>
+<p>Distance is a numerical description of how far apart things are. It is the most fundamental concept in geography. Considering the Waldo Tobler’s first law of the geography which says , we need to quantify this relationship in some way and it is not always as easy a question as it seems.</p>
+<p>Computing the distance between a set of spatial data points is very important for spatial data analysis. If we have <span class="math inline">\(\mathbf{s}_i\)</span> spatial locations, for <span class="math inline">\(i = 1, \ldots, n\)</span>, with <span class="math inline">\(n\)</span> equal to the total number of spatial locations. The coordinates of <span class="math inline">\(\mathbf{s}_i\)</span> are in <em>latitude-longitude</em> but for simplicity, we will denote them as <span class="math inline">\((x_i,y_i)\)</span>. Now, another set of spatial locations <span class="math inline">\(\mathbf{s}_j\)</span> has coordinates <span class="math inline">\((x_i, y_j)\)</span>, hence the Euclidean distance between spatial points <span class="math inline">\(\mathbf{s}_i\)</span> and <span class="math inline">\(\mathbf{s}_j\)</span> is given by</p>
+<p><span id="eq-1"><span class="math display">\[
+\begin{equation}\text{dist\_matrix}_{ij} = \sqrt{(x_i - x_j)^2 + (y_i - y_j)^2}.\end{equation}
+\tag{1}\]</span></span></p>
+<p>There are other forms to calculate the distance, for example; great-circle distance, azimuth distance, travel distance from point to point, time needed to get from point to point, etc.).</p>
+<p>The computation of “distances” are commonly represented by the distance matrix. In this object (the distance matrix) we have all the values calculated for the distances between the objects of interest. For example,</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>site1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">30</span>, <span class="dv">45</span>) </span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>site2 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">95</span>, <span class="dv">5</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>site3 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">80</span>, <span class="dv">45</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>site4 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">90</span>, <span class="dv">55</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>site5 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">70</span>, <span class="dv">30</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>site6 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">30</span>, <span class="dv">8</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>sites <span class="ot">&lt;-</span> <span class="fu">rbind</span>(site1, site2, site3, site4, site5, site6)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>sites</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      [,1] [,2]
+site1   30   45
+site2   95    5
+site3   80   45
+site4   90   55
+site5   70   30
+site6   30    8</code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sites, <span class="at">xlim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">100</span>), <span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">100</span>), <span class="at">pch=</span><span class="dv">20</span>, <span class="at">cex=</span><span class="dv">2</span>, <span class="at">col=</span><span class="st">'red'</span>, <span class="at">xlab=</span><span class="st">'X'</span>, <span class="at">ylab=</span><span class="st">'Y'</span>, <span class="at">las=</span><span class="dv">1</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(sites<span class="sc">+</span><span class="dv">3</span>, <span class="fu">c</span>(<span class="st">"site1"</span>, <span class="st">"site2"</span>, <span class="st">"site3"</span>, <span class="st">"site4"</span>, <span class="st">"site5"</span>, <span class="st">"site6"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" data-fig-pos="H" width="624"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Using these data, we can compute the distance between spatial points (distance matrix) as:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute Euclidean distances</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>dist_matrix <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(<span class="fu">dist</span>(sites))</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>dist_matrix</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         site1    site2    site3    site4    site5    site6
+site1  0.00000 76.32169 50.00000 60.82763 42.72002 37.00000
+site2 76.32169  0.00000 42.72002 50.24938 35.35534 65.06919
+site3 50.00000 42.72002  0.00000 14.14214 18.02776 62.20129
+site4 60.82763 50.24938 14.14214  0.00000 32.01562 76.21680
+site5 42.72002 35.35534 18.02776 32.01562  0.00000 45.65085
+site6 37.00000 65.06919 62.20129 76.21680 45.65085  0.00000</code></pre>
+</div>
+</div>
+</section>
+<section id="semivariogram" class="level1">
+<h1>(Semi)Variogram</h1>
+<p>In simple terms, it is a function of difference over distance. In mathematical terms, we could define it as the expected squared difference between values separated by a distance vector, generally denoted as <span class="math inline">\(h\)</span>. The equation of the Variogram is the following</p>
+<p><span id="eq-2"><span class="math display">\[
+\begin{equation}
+\gamma(\mathbf{h}) = \frac{1}{2}\text{Var}[Z(\mathbf{s}) - Z(\mathbf{s} + \mathbf{h})],
+\end{equation}
+\tag{2}\]</span></span></p>
+<p>where <span class="math inline">\(\mathbf{s}\)</span> is the spatial location, <span class="math inline">\(\mathbf{h}\)</span> is the vector of distance between two spatial points, and <span class="math inline">\(\gamma(\mathbf{h})\)</span> measured how dissimilar the field values become as <span class="math inline">\(\mathbf{h}\)</span> increases (this is for a third type of stationarity (<strong>intrinsic stationarity</strong>) and assuming that <span class="math inline">\(\mathbb{E}[Z(\mathbf{s} + \mathbf{h}) - Z(\mathbf{s})] = 0\)</span>). The relationship of the variogram and the covariance function is given by:</p>
+<span class="math display">\[\begin{align*}
+2\gamma(\mathbf{h}) \hspace{2mm} = &amp; \text{Var}[Z(\mathbf{s}) - Z(\mathbf{s} + \mathbf{h})] \\
+= &amp; \text{Var}(Z(\mathbf{s} + \mathbf{h}) + \text{Var}(Z(\mathbf{s}) - 2Cov(Z(\mathbf{s} + \mathbf{h}, Z(\mathbf{s})\\
+= &amp; C(0) + C(0) - 2C(\mathbf{h})
+\end{align*}\]</span>
+<p>Thus,</p>
+<p><span id="eq-3"><span class="math display">\[
+\gamma(\mathbf{h}) = C(0) - C(\mathbf{h}).
+\tag{3}\]</span></span></p>
+<section id="empirical-variogram" class="level2">
+<h2 class="anchored" data-anchor-id="empirical-variogram">Empirical Variogram</h2>
+<p>Traditionally, the selection of a variogram model begins with plotting the <strong>empirical semivariogram</strong> (Matheron (1963)). This empirical plot is then visually compared against various theoretical models to identify the most appropriate fit. The standard form of the empirical semivariogram is given by</p>
+<p><span id="eq-4"><span class="math display">\[
+\hat{\gamma}(\mathbf{h}) = \frac{1}{2n(\mathbf{h})} \sum^{n(\mathbf{h})}_{i,j}(Z(\mathbf{s}_i) - Z(\mathbf{s}_j))^{2}
+\tag{4}\]</span></span></p>
+<p>where <span class="math inline">\(Z(\mathbf{s}_i)\)</span> and <span class="math inline">\(Z(\mathbf{s}_j)\)</span> are the values (in the space) at the spatial locations <span class="math inline">\(\mathbf{s}\)</span>. Finally, we will denote the <strong>variogram</strong> as <span class="math inline">\(2 \gamma(\mathbf{h})\)</span>.</p>
+<!-- We can write the variance (stationary) of $Z(\mathbf{s})$ and $Z(\mathbf{s} + \mathbf{h})$ as $\sigma^{2}_{\mathbf{s}} = \mathbb{E}[Z^2] - \mu^2$ (for some mean $\mu$). Thus, the spatial covariance between $Z(\mathbf{s})$ and $Z(\mathbf{s} + \mathbf{h})$ can be written as -->
+<!-- $$ -->
+<!-- \begin{equation}C(\mathbf{h}) = \mathbb{E}[Z(\mathbf{s}) - \mu] [Z(\mathbf{s} + \mathbf{h}) - \mu] = \mathbb{E}[Z(\mathbf{s}) Z(\mathbf{s} + \mathbf{h})] - \mu^2\end{equation} -->
+<!-- $$ -->
+<!-- If we assume that the $\mu$ is stationary, then -->
+<!-- $$ -->
+<!-- \begin{align*}2\gamma(\mathbf{h}) = & \mathbb{E}[Z(\mathbf{s})^2] - \mu^2 - 2\mathbb{E}[Z(\mathbf{s}) Z(\mathbf{s} + \mathbf{h})] + 2\mu^2 + \mathbb{E}[Z(\mathbf{s} + \mathbf{h})] - \mu^2 \\\gamma(\mathbf{h}) = & \sigma^{2}_{\mathbf{s}} - C(\mathbf{h}) \hspace{4mm} \text{or} \rightarrow  C(\mathbf{h}) = \sigma^{2}_{\mathbf{s}} - \gamma(\mathbf{h})\end{align*} -->
+<!-- $$ -->
+<!-- [These relations are valid for a spatial variables with a stationary mean and variance.]{style="color:blue;"} <!--#  -->
+<p>The typical variogram models are:</p>
+<ul>
+<li><p><u>Exponential</u>:</p>
+<p><span class="math inline">\(\gamma(\mathbf{h}) = \sigma^2 \left(1 - \exp\left(-\frac{\mathbf{h}}{\rho}\right)\right)\)</span></p></li>
+<li><p><u>Spherical:</u></p>
+<span class="math display">\[\begin{equation*}
+\gamma(\mathbf{h}) =
+\begin{cases}
+\sigma^2 \left[\frac{3\mathbf{h}}{2\rho} - \frac{\mathbf{h}^3}{2\rho^3}\right], &amp; \text{if } 0 \le \mathbf{h} \le \rho \\\sigma^2, &amp; \text{if } \mathbf{h} &gt; \rho
+\end{cases}
+\end{equation*}\]</span></li>
+<li><p><u>Gaussian:</u></p>
+<p><span class="math inline">\(\gamma(\mathbf{h}) = \sigma^2 \left(1 - \exp\left(-\left(\frac{\mathbf{h}}{\rho}\right)^2\right)\right)\)</span></p></li>
+</ul>
+<p>For all the variograms presented, <span class="math inline">\(\rho\)</span> is the range parameter.</p>
+</section>
+</section>
+<section id="variogram-computation" class="level1">
+<h1>Variogram computation</h1>
+<p>From the <a href="#eq-4" class="quarto-xref">Equation&nbsp;4</a>, we know that; <span class="math inline">\(n(\mathbf{h})\)</span> is the number of spatial points for a specific distance vector <span class="math inline">\(\mathbf{h}\)</span>, with <span class="math inline">\(Z(\mathbf{s})\)</span> and <span class="math inline">\(Z(\mathbf{s} + \mathbf{h})\)</span> and <span class="math inline">\(2 \gamma(\mathbf{h})\)</span> is the variogram.</p>
+<p>First, we will consider the following important observations before of the computation:</p>
+<ol type="1">
+<li><u>As the distance increase, then the variability also increase</u>: this is typical, as larger distance offsets generally lead to greater differences between the head and tail samples.</li>
+<li><u>It is calculated over all possible pairs separated by the distance vector <span class="math inline">\(\mathbf{h}\)</span></u>: we evaluate all data, identifying all possible pair combinations with every other spatial point. The variogram is then calculated as half the expected squared difference between these pairs. A larger number of pairs provides a more reliable estimate</li>
+<li><u>It is necessary plot the <strong>sill</strong> to know the correlation between the spatial points:</u> here, sill is the spatial variance <span class="math inline">\(\sigma^2_{\mathbf{s}}\)</span>. As we are assuming stationarity, the covariance is:</li>
+</ol>
+<span class="math display">\[\begin{equation*}
+C(\mathbf{h}) = \sigma^2_\mathbf{s} - \gamma(\mathbf{h})
+\end{equation*}\]</span>
+<p>The covariance measure the similarity over distance, and if <span class="math inline">\(\sigma^2_{\mathbf{s}} = 1.0\)</span>, <span class="math inline">\(C(\mathbf{h})\)</span> is equal to the correlogram <span class="math inline">\(\rho(\mathbf{h})\)</span> such that</p>
+<span class="math display">\[\begin{equation}
+\rho(\mathbf{h}) = \sigma^2_\mathbf{s} - \gamma(\mathbf{h})
+\end{equation}\]</span>
+<ol start="4" type="1">
+<li><p><u>The distance at which the variogram reaches <span class="math inline">\(\sigma^2_{\mathbf{s}}\)</span> is known as the <strong>range</strong></u>: the distance in which the difference of the variogram from <span class="math inline">\(\sigma^2_{\mathbf{s}}\)</span> becomes negligible.</p></li>
+<li><p><u>Evaluate the discontinuity at the origin, the <strong>nugget effec</strong>t</u>: It represents variability in the data that occurs at scales smaller than the sampling distance, or it may be caused by measurement errors or random noise.</p></li>
+</ol>
+<section id="practical-example" class="level2">
+<h2 class="anchored" data-anchor-id="practical-example">Practical example</h2>
+<!-- Let consider a set of spatial data points (location) with known coordinates $\mathbf{s}_1, \mathbf{s}_2, \dots, \mathbf{s}_n$ and observed values $Z(\mathbf{s}_1), Z(\mathbf{s}_2), \dots, Z(\mathbf{s}_n)$. -->
+<!-- 1.  Define the empirical variogram estimator $\hat{\gamma}(\mathbf{h})$. -->
+<p>Given the following observations:</p>
+<span class="math display">\[\begin{equation*}
+Z(\mathbf{s}_1) = 10, \hspace{2mm} Z(\mathbf{s}_2) = 12, \hspace{2mm} Z(\mathbf{s}_3) = 14, \hspace{2mm} Z(\mathbf{s}_4) = 13, \hspace{2mm} Z(\mathbf{s}_5) = 15
+\end{equation*}\]</span>
+<p>and the corresponding distances between the points (the distance matrix)</p>
+<span class="math display">\[\begin{bmatrix}
+0 &amp; 2 &amp; 4 &amp; 6 &amp; 8 \\
+2 &amp; 0 &amp; 2 &amp; 4 &amp; 6 \\
+4 &amp; 2 &amp; 0 &amp; 2 &amp; 4 \\
+6 &amp; 4 &amp; 2 &amp; 0 &amp; 2 \\
+8 &amp; 6 &amp; 4 &amp; 2 &amp; 0
+\end{bmatrix}\]</span>
+<p>Calculate the experimental variogram for the distance <span class="math inline">\(\mathbf{h} = 2\)</span>.</p>
+<p><strong>Solution</strong>: The empirical variogram estimator <span class="math inline">\(\hat{\gamma}(\mathbf{h})\)</span> for <span class="math inline">\(\mathbf{h}\)</span> is defined as:</p>
+<span class="math display">\[\begin{equation*}
+\hat{\gamma}(\mathbf{h}) = \frac{1}{2 n(\mathbf{h})} \sum^{n(\mathbf{h})}_{i,j} \left( Z(\mathbf{s}_i) - Z(\mathbf{s}_j) \right)^2,
+\end{equation*}\]</span>
+<p>where <span class="math inline">\(n(\mathbf{h})\)</span> is the number of pairs <span class="math inline">\((i, j)\)</span> such that the distance between <span class="math inline">\(\mathbf{s}_i\)</span> and <span class="math inline">\(\mathbf{s}_j\)</span> is approximately <span class="math inline">\(\mathbf{h}\)</span>.</p>
+<ol type="1">
+<li><p>For <span class="math inline">\(\mathbf{h} = 2\)</span>, the pairs of points whose distance is 2 are:</p>
+<ul>
+<li><span class="math inline">\((\mathbf{s}_1, \mathbf{s}_2)\)</span></li>
+<li><span class="math inline">\((\mathbf{s}_2, \mathbf{s}_3)\)</span></li>
+<li><span class="math inline">\((\mathbf{s}_3, \mathbf{s}_4)\)</span></li>
+<li><span class="math inline">\((\mathbf{s}_4, \mathbf{s}_5)\)</span></li>
+</ul>
+<p>We now calculate the squared differences for each pair of spatial points:</p>
+<span class="math display">\[\begin{aligned}
+\left( Z(\mathbf{s}_1) - Z(\mathbf{s}_2) \right)^2 &amp;= (10 - 12)^2 = 4, \\
+\left( Z(\mathbf{s}_2) - Z(\mathbf{s}_3) \right)^2 &amp;= (12 - 14)^2 = 4, \\
+\left( Z(\mathbf{s}_3) - Z(\mathbf{s}_4) \right)^2 &amp;= (14 - 13)^2 = 1, \\
+\left( Z(\mathbf{s}_4) - Z(\mathbf{s}_5) \right)^2 &amp;= (13 - 15)^2 = 4.
+\end{aligned}\]</span>
+<p>Now, compute the empirical variogram:</p>
+<span class="math display">\[\begin{equation*}
+\hat{\gamma}(2) = \frac{1}{2 \times 4} \left( 4 + 4 + 1 + 4 \right) = \frac{1}{8} \times 13 = 1.625.
+\end{equation*}\]</span>
+<p>Thus, for <span class="math inline">\(\mathbf{h} = 2\)</span> is <span class="math inline">\(\hat{\gamma}(2) = 1.625\)</span>.</p></li>
+</ol>
+</section>
+<section id="using-the-gstat-package-of-r" class="level2">
+<h2 class="anchored" data-anchor-id="using-the-gstat-package-of-r">Using the “<em><code>gstat</code></em>” package of R</h2>
+<p>The “<em><code>gstat</code></em>” package in R is a versatile tool used for geostatistical modelling, spatial prediction, and multivariable geostatistics <span class="citation" data-cites="pebesma2004multivariable">[@pebesma2004multivariable]</span>. It provides functionality for variogram modeling, Kriging, and conditional simulation, supporting univariate and multivariate spatial data. Some of the main features of this library are the following:</p>
+<ul>
+<li><p><strong>Computing the variogram</strong> <span class="math inline">\(\rightarrow\)</span> empirical variogram (also called experimental) and variogram fitting (variogram modeling).</p></li>
+<li><p><strong>Kriging</strong> <span class="math inline">\(\rightarrow\)</span> ordinary, simple, and universal kriging.</p></li>
+<li><p><strong>Multivariable geostatistics</strong> <span class="math inline">\(\rightarrow\)</span> co-kriging and other methods for spatial modelling.</p></li>
+<li><p><strong>Simulation</strong> <span class="math inline">\(\rightarrow\)</span> conditional and unconditional GRF for spatial predictions.</p></li>
+</ul>
+<p>The “<em><code>gstat</code></em>” package is simple to use and here are the basics steps for spatial data analysis</p>
+<ol type="1">
+<li>Define spatial data ( a <span class="math inline">\(\texttt{SpatialPointsDataFrame})\)</span> from the “<em><code>sp</code></em>” package.</li>
+<li>Compute the empirical variogram using the function <span class="math inline">\(\texttt{variogram()}\)</span></li>
+<li>Fit a variogram model using the function <span class="math inline">\(\texttt{fit.variogram()}\)</span></li>
+<li>Perform kriging prediction with the <span class="math inline">\(\texttt{krige()}\)</span> function.</li>
+</ol>
+<p>For the California air pollution data (from the “<em><code>rspatial</code></em>” package), select the “airqual” data and interpolate the levels of ozone (averages for 1980-2009). Here, you must consider “OZDLYAV” (unit is parts per billion) for interpolation purposes.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Installing the rspat package</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="st">"rspatial"</span>)) remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">'rspatial/rspatial'</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Read the data</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rspatial)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">sp_data</span>(<span class="st">"airqual"</span>)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>x<span class="sc">$</span>res <span class="ot">&lt;-</span> x<span class="sc">$</span>OZDLYAV <span class="sc">*</span> <span class="dv">1000</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now, we create a <span class="math inline">\(\texttt{SpatialPointsDataFrame}\)</span> and transform to Teale Albers. Note the units=km, which was needed to fit the variogram.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#===================================</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">#         Installing rgdal</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">#===================================</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># url &lt;- "https://download.r-forge.r-project.org/bin/windows/contrib/4.4/rgdal_1.6-7.zip"</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(url, type="source", repos=NULL)</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rgdal)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="fu">coordinates</span>(x) <span class="ot">&lt;-</span> <span class="er">~</span>LONGITUDE <span class="sc">+</span> LATITUDE</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="fu">proj4string</span>(x) <span class="ot">&lt;-</span> <span class="fu">CRS</span>(<span class="st">'+proj=longlat +datum=NAD83'</span>)</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>TA <span class="ot">&lt;-</span> <span class="fu">CRS</span>(<span class="st">"+proj=aea +lat_1=34 +lat_2=40.5 +lat_0=0 +lon_0=-120 +</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="st">          x_0=0 +y_0=-4000000 +datum=WGS84 +units=km"</span>)</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>coords <span class="ot">&lt;-</span> <span class="fu">spTransform</span>(x, TA)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now we will create an empirical variogram using the package “<em><code>gstat</code></em>” as follow</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gstat)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>gs <span class="ot">&lt;-</span> <span class="fu">gstat</span>(<span class="at">formula =</span> res<span class="sc">~</span><span class="dv">1</span>, <span class="at">locations =</span> coords)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>v <span class="ot">&lt;-</span> <span class="fu">variogram</span>(gs, <span class="at">width=</span><span class="dv">20</span>)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(v)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    np      dist    gamma dir.hor dir.ver   id
+1 1010  11.35040 34.80579       0       0 var1
+2 1806  30.63737 47.52591       0       0 var1
+3 2355  50.58656 67.26548       0       0 var1
+4 2619  70.10411 80.92707       0       0 var1
+5 2967  90.13917 88.93653       0       0 var1
+6 3437 110.42302 84.13589       0       0 var1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(v)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" data-fig-pos="H" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>and then fit a model variogram</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>fve <span class="ot">&lt;-</span> <span class="fu">fit.variogram</span>(v, <span class="fu">vgm</span>(<span class="dv">85</span>, <span class="st">"Exp"</span>, <span class="dv">75</span>, <span class="dv">20</span>))</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>fve</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  model    psill    range
+1   Nug 21.96600  0.00000
+2   Exp 85.52957 72.31404</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">variogramLine</span>(fve, <span class="dv">400</span>), <span class="at">type=</span><span class="st">'l'</span>, <span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">120</span>))</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(v[,<span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>], <span class="at">pch=</span><span class="dv">20</span>, <span class="at">col=</span><span class="st">'red'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" data-fig-pos="H" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>You can change the type of variograms (spherical in stead of exponential) and compare them</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>fvs <span class="ot">&lt;-</span> <span class="fu">fit.variogram</span>(v, <span class="fu">vgm</span>(<span class="dv">85</span>, <span class="st">"Sph"</span>, <span class="dv">75</span>, <span class="dv">20</span>))</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>fvs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  model    psill    range
+1   Nug 25.57019   0.0000
+2   Sph 72.65881 135.7744</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">variogramLine</span>(fvs, <span class="dv">400</span>), <span class="at">type=</span><span class="st">'l'</span>, <span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">120</span>) ,<span class="at">col=</span><span class="st">'blue'</span>, <span class="at">lwd=</span><span class="dv">2</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(v[,<span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>], <span class="at">pch=</span><span class="dv">20</span>, <span class="at">col=</span><span class="st">'red'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" data-fig-pos="H" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="kriging" class="level1">
+<h1>Kriging</h1>
+<p>This section introduces the traditional method for spatial prediction in point-referenced data, which aims to minimize the mean squared prediction error. Known as <strong>Kriging</strong>, this technique was formalized by <span class="citation" data-cites="matheron1963">[@matheron1963]</span>, who named it in tribute to Danie G. Krige <span class="citation" data-cites="krige1951">[@krige1951]</span>. Here, the main task is finding an optimal spatial prediction, that is; giving a vector of observations <span class="math inline">\(\mathbf{Z} = (Z(\mathbf{s}_1), \ldots, Z(\mathbf{s}_n))^{\top}\)</span> the goal is accurately estimate values at an unsampled location <span class="math inline">\(Z(\mathbf{s}_0)\)</span>. So, basically the question is; what is the best predictor of the value of <span class="math inline">\(Z(\mathbf{s}_0)\)</span> based upon the data <span class="math inline">\(\mathbf{Z}\)</span>?</p>
+<section id="ordinary-kriging" class="level2">
+<h2 class="anchored" data-anchor-id="ordinary-kriging">Ordinary Kriging</h2>
+<p>Let consider the observed values <span class="math inline">\(\mathbf{Z} = (Z(\mathbf{s}_1), Z(\mathbf{s}_2), \dots, Z(\mathbf{s}_n))^{\top}\)</span> at known locations <span class="math inline">\(\{\mathbf{s}_1, \mathbf{s}_2, \dots, \mathbf{s}_n\}\)</span>. The goal is to predict the value of a random field <span class="math inline">\(Z(\mathbf{s}_0)\)</span> at an unobserved location <span class="math inline">\(\mathbf{s}_0\)</span>. The model assumption for this case is the following:</p>
+<p><span class="math display">\[
+\mathbf{Z} = \mu  + \delta(\mathbf{s}), \hspace{6mm} \mathbf{s} \in S, \hspace{2mm} \mu \in \mathbb{R} (\text{unknown})
+\]</span></p>
+<p>where <span class="math inline">\(\delta(\mathbf{s})\)</span> is a zero-mean spatial stochastic process with variogram or with some covariance function and <span class="math inline">\(S \subset \mathbb{R}^{d}\)</span>, with <span class="math inline">\(d\)</span> being a dimensional Euclidean space. For this case, Kriging assumes a spatial random field expressed through a variogram or covariance function, and allows to face this spatial rediction problem. In this case, the Ordinary Kriging predictor for <span class="math inline">\(Z(\mathbf{s}_0)\)</span> is a <strong>linear combination of the observed values</strong> such that:</p>
+<span class="math display">\[\begin{equation*}
+\hat{Z}(\mathbf{s}_0) = \sum_{i=1}^n w_i Z(\mathbf{s}_i),
+\end{equation*},\]</span>
+<p>where <span class="math inline">\(w_i\)</span>, for <span class="math inline">\(i = 1, \ldots, n\)</span> are the Kriging weights that need to be calculated. In this way, Kriging minimizes the mean squared error of the prediction such that:</p>
+<span class="math display">\[\begin{equation*}
+\text{min} \hspace{2mm}\sigma^{2}_{\text{error}} = \mathbb{E}[Z(\mathbf{s}_0) - \hat{Z}(\mathbf{s}_0)]^{2}
+\end{equation*},\]</span>
+<p>or</p>
+<p><span id="eq-5"><span class="math display">\[
+\text{min}\hspace{2mm} \sigma^{2}_{\text{error}} = \mathbb{E}[Z(\mathbf{s}_0) - \sum_{i=1}^n w_i Z(\mathbf{s}_i)]^{2}
+\tag{5}\]</span></span></p>
+<p>In terms of a <strong>covariance function</strong>, for a zero-mean and second order stationary spatial process, and also considering to <span class="math inline">\(C(\mathbf{h}), \mathbf{h} \in \mathbb{R}^{d}\)</span>, then <a href="#eq-5" class="quarto-xref">Equation&nbsp;5</a> can be written as:</p>
+<span class="math display">\[\begin{equation}
+\sigma^{2}_{\text{error}} = C(0) - 2 \sum^{n}_{i=1}w_iC(\mathbf{s}_0, \mathbf{s}_i) + \sum^{n}_{i=1}\sum^{n}_{j=1} w_{i}w_{j}C(\mathbf{s}_i, \mathbf{s}_j).
+\end{equation}\]</span>
+<p>The ordinary Kriging weights <span class="math inline">\(w_i\)</span> must satisfy two requirements:</p>
+<ul>
+<li><p><strong>Unbiasedness</strong>: The predictor should be unbiased, which requires that <span class="math inline">\(\sum_{i=1}^n w_i = 1\)</span>.</p></li>
+<li><p><strong>Optimality</strong>: The weights should minimize the variance of the prediction error (the Kriging variance), leading to the solution of a system of equations.</p></li>
+</ul>
+<p>The unbiasedness requirement ensures that the expected value of the Kriging predictor matches the expected value of the random field, preventing systematic over- or under-prediction (interpolation).</p>
+</section>
+<section id="finding-the-kriging-weights" class="level2">
+<h2 class="anchored" data-anchor-id="finding-the-kriging-weights">Finding the Kriging weights</h2>
+<p>Based on the data <span class="math inline">\(\mathbf{Z}\)</span> and <span class="math inline">\(\{\mathbf{s}_1, \ldots, \mathbf{s}_n\}\)</span>, with <span class="math inline">\(C(\mathbf{h})\)</span> being a covariance function of the spatial random field, and <span class="math inline">\(\mathbf{h} = \mathbf{s}_i - \mathbf{s}_j\)</span>, for <strong>Ordinary Kriging</strong> we can write a <strong>linear system of equations</strong> fo find the Kriging weights <span class="math inline">\(w_1, \ldots, w_n\)</span>. But, how can we propose this system of equations? Well, we already know that the ordinary Kriging estimator is a linear combination of the observed values,</p>
+<span class="math display">\[\begin{equation*}
+\hat{Z}(\mathbf{s}_0) = \sum^{n}_{i=1} w_i Z(\mathbf{s}_i),
+\end{equation*}\]</span>
+<p>and since that here we are considering the covariance then the minimization problem can be written as:</p>
+<p><span id="eq-6"><span class="math display">\[
+\text{min} \hspace{2mm} C(0) - 2\sum^{n}_{i=1}w_{i}C(\mathbf{s}_0, \mathbf{s}_i) + \sum^{n}_{i=1}\sum^{n}_{j=1}w_{i}w_{j}C(\mathbf{s}_i, \mathbf{s}_j) + 2\mathcal{M}(\sum^{n}_{i=1} w_i - 1)
+\tag{6}\]</span></span></p>
+<p>where <span class="math inline">\(\mathcal{M}\)</span> is the Lagrange multiplier. Thus, after differentiating <a href="#eq-6" class="quarto-xref">Equation&nbsp;6</a> with respect <span class="math inline">\(w_{1}, \ldots, w_{n}\)</span> and <span class="math inline">\(\mathcal{M}\)</span>, and set the derivatives equal to zero we have:</p>
+<span class="math display">\[\begin{align*}
+2\sum^{n}_{j=1}w_{j}C(\mathbf{s}_i, \mathbf{s}_j) - 2C(\mathbf{s}_0, \mathbf{s}_i) - 2\mathcal{M} \hspace{2mm} = &amp; 0 \\
+\sum^{n}_{j=1}w_{j} C(\mathbf{s}_i - \mathbf{s}_j) + C(\mathbf{s}_0 - \mathbf{s}_i) - \mathcal{M} \hspace{2mm} = &amp; \hspace{2mm} 0 \\
+\sum^{n}_{i=1}w_{i} \hspace{2mm} = &amp; \hspace{2mm} 1
+\end{align*}\]</span>
+<p>Therefore, using a matrix notation to find <span class="math inline">\(w_{1}, \ldots, w_{n}\)</span> we propose the following linear system of equations:</p>
+<p><span class="math display">\[
+\boldsymbol{\Gamma}\mathbf{w} = \mathbf{c},
+\]</span></p>
+<p>where:</p>
+<ul>
+<li><p><span class="math inline">\(\mathbf{w} = (w_{1}, \ldots, w_{n}, -\mathcal{M})^{\top}\)</span>.</p></li>
+<li><p><span class="math inline">\(\mathbf{c} = (C(\mathbf{s}_0, \mathbf{s}_1), \ldots, C(\mathbf{s}_0, \mathbf{s}_n), 1)^{\top}\)</span>.</p></li>
+<li><p><span class="math inline">\(\boldsymbol{\Gamma} = C(\mathbf{s}_i, \mathbf{s}_j), \hspace{2mm} i = 1, \ldots, n, \hspace{2mm} j = 1, \ldots, n\)</span>.</p></li>
+</ul>
+<p>Thus, expressed in a linear system of equations (the <strong>Kriging system):</strong></p>
+<span class="math display">\[\begin{equation*}
+\begin{pmatrix}
+C(\mathbf{s}_1, \mathbf{s}_1) &amp; C(\mathbf{s}_1, \mathbf{s}_2) &amp; \dots &amp; C(\mathbf{s}_1, \mathbf{s}_n) &amp; 1 \\
+C(\mathbf{s}_2, \mathbf{s}_1) &amp; C(\mathbf{s}_2, \mathbf{s}_2) &amp; \dots &amp; C(\mathbf{s}_2, \mathbf{s}_n) &amp; 1 \\
+\vdots &amp; \vdots &amp; \ddots &amp; \vdots &amp; \vdots \\
+C(\mathbf{s}_n, \mathbf{s}_1) &amp; C(\mathbf{s}_n, \mathbf{s}_2) &amp; \dots &amp; C(\mathbf{s}_n, \mathbf{s}_n) &amp; 1 \\
+1 &amp; 1 &amp; \dots &amp; 1 &amp; 0 \\
+\end{pmatrix}
+\begin{pmatrix}
+w_1 \\
+w_2 \\
+\vdots \\
+w_n \\
+-\mathcal{M} \\
+\end{pmatrix}
+=
+\begin{pmatrix}
+C(\mathbf{s}_1, \mathbf{s}_0) \\
+C(\mathbf{s}_2, \mathbf{s}_0) \\
+\vdots \\
+C(\mathbf{s}_n, \mathbf{s}_0) \\
+1 \\
+\end{pmatrix}
+\end{equation*}\]</span>
+<p>We can find <span class="math inline">\(\hat{\mathbf{w}}\)</span> as</p>
+<p><span class="math display">\[
+\hat{\mathbf{w}} = \boldsymbol{\Gamma}^{-1}\mathbf{c}.
+\]</span></p>
+<p>Finally, the Kriging variance, which quantifies the uncertainty of the prediction at <span class="math inline">\(\mathbf{s}_0\)</span>, is given by:</p>
+<span class="math display">\[\begin{equation*}
+\sigma_\text{OK}^2(\mathbf{s}_0) = C(\mathbf{0}) - \sum_{i=1}^n w_i C(\mathbf{s}_i - \mathbf{s}_0) - \mathcal{M}
+\end{equation*},\]</span>
+<p>where lower Kriging variance indicates a reliable prediction (interpolation) values.</p>
+</section>
+</section>
+<section id="example-using-r" class="level1">
+<h1>Example using R</h1>
+<p>We will simulate some spatial data (point referenced or geostatistical data) to compute manually the Ordinary Kriging predictor using the Kriging system.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load neccesary libraries</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gridExtra)</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(magrittr)</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulating the spatial locations</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>locations <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">runif</span>(<span class="dv">2</span> <span class="sc">*</span> n, <span class="dv">1</span>, <span class="dv">10</span>), <span class="at">ncol =</span> <span class="dv">2</span>)</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulating the observed values at these locations</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>z_values <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">10</span>, <span class="at">sd =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The next step is to choose an appropriate covariance function for modeling spatial dependence. While several types of covariance (or correlation) functions are available for spatial data, we will use the <strong>Exponential covariance function</strong> for its simplicity and effectiveness. It is defined as:</p>
+<span class="math display">\[\begin{equation*}
+C(\mathbf{h}) = \sigma^{2}\exp\bigg (\frac{\mathbf{h}}{\rho} \bigg ),
+\end{equation*}\]</span>
+<p>where <span class="math inline">\(\sigma^{2}\)</span> is the sill (representing the <strong>variance of the spatial process at zero distance</strong>), <span class="math inline">\(\rho\)</span> is the range (controls how <strong>quickly the correlation decays</strong> with distance) and <span class="math inline">\(\mathbf{h}\)</span> is the distance between two locations. We will create this function in R:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Exponential covariance function</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>exp_cov <span class="ot">&lt;-</span> <span class="cf">function</span>(h, <span class="at">sill =</span> <span class="dv">1</span>, <span class="at">range =</span> <span class="dv">3</span>) {</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  sill <span class="sc">*</span> <span class="fu">exp</span>(<span class="sc">-</span>h <span class="sc">/</span> range)}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now we will build the covariance matrix</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Build the covariance matrix</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>cov_mat <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">0</span>, <span class="at">nrow =</span> n <span class="sc">+</span> <span class="dv">1</span>, <span class="at">ncol =</span> n <span class="sc">+</span> <span class="dv">1</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>nugget <span class="ot">&lt;-</span> <span class="fl">1e-10</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n) {</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n) {</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    h <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">sum</span>((locations[i, ] <span class="sc">-</span> locations[j, ])<span class="sc">^</span><span class="dv">2</span>))</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>    cov_mat[i, j] <span class="ot">&lt;-</span> <span class="fu">exp_cov</span>(h)</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>  cov_mat[i, n <span class="sc">+</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="dv">1</span>  <span class="co"># Add 1s for constraint</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>  cov_mat[n <span class="sc">+</span> <span class="dv">1</span>, i] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>cov_mat[n <span class="sc">+</span> <span class="dv">1</span>, n <span class="sc">+</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="dv">0</span>  <span class="co"># Lagrange multiplier part</span></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a><span class="fu">diag</span>(cov_mat)[<span class="dv">1</span><span class="sc">:</span>n] <span class="ot">&lt;-</span> <span class="fu">diag</span>(cov_mat)[<span class="dv">1</span><span class="sc">:</span>n] <span class="sc">+</span> nugget</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>At this point, we have all the elements to predict manually a specific value in a spatial coordinate <span class="math inline">\(\mathbf{s_0} = (s_1, s_2)^{T}\)</span>. For example, if we are interested in the prediction in the spatial coordinates <em>longitude</em> = 5, and <em>latitude</em> = 5. This means, <span class="math inline">\(\mathbf{s_0} = (latitude, longitude) = (5, 5)\)</span>, hence we want to predict <span class="math inline">\(\hat{Z}(\mathbf{s}_0)\)</span>. Now, applying the exponential covariance function to the right side of the linear system:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Cov between new coordinates and known points</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Location for prediction</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>s0 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">5</span>)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Initializing the cov in the right hand side</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>c_rhs <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n <span class="sc">+</span> <span class="dv">1</span>)</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n) {</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>  h <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">sum</span>((locations[i, ] <span class="sc">-</span> s0)<span class="sc">^</span><span class="dv">2</span>))</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>  c_rhs[i] <span class="ot">&lt;-</span> <span class="fu">exp_cov</span>(h)</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>c_rhs[n <span class="sc">+</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="dv">1</span>  <span class="co"># constraint</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Finally, we will solve the Kriging system</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fiding w and Lagrange multiplier (M)</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>sol <span class="ot">&lt;-</span> <span class="fu">solve</span>(cov_mat, c_rhs)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>w <span class="ot">&lt;-</span> sol[<span class="dv">1</span><span class="sc">:</span>n]; w</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  [1]  5.276449e-04 -1.803309e-04  1.808293e-02  3.633872e-05  3.512794e-07
+  [6]  4.037552e-06 -1.075393e-04 -4.808129e-05  1.185162e-01 -2.727913e-04
+ [11]  7.221219e-05  2.943618e-02 -8.813330e-05 -1.101876e-05 -2.536848e-05
+ [16] -5.618937e-06 -2.864650e-03  7.090709e-05 -1.194771e-02  3.334460e-05
+ [21] -1.292535e-05 -4.060164e-04 -4.474131e-04  3.765660e-05 -6.044917e-03
+ [26]  4.564017e-05 -4.555052e-04 -8.970886e-05 -6.535305e-05  7.507714e-05
+ [31]  6.314879e-05  9.338884e-07 -4.830208e-04 -1.474871e-05  3.282166e-05
+ [36] -5.492154e-03 -4.961159e-05  1.600371e-04  1.783362e-05 -2.947635e-03
+ [41] -5.033814e-05  4.059160e-01 -3.603510e-05 -2.640918e-04 -3.769253e-05
+ [46]  2.305515e-05 -1.535201e-05 -6.635154e-05 -1.800664e-03  1.070637e-05
+ [51] -1.374114e-06  4.253124e-02  5.859619e-05  1.412490e-05 -8.819846e-05
+ [56]  2.088056e-04  8.108485e-05 -2.172081e-04 -1.140082e-04 -2.971160e-03
+ [61] -3.386579e-03  6.540672e-05 -5.333364e-03 -6.878677e-03  3.795126e-05
+ [66] -1.479047e-02  6.800025e-06 -2.405783e-05 -2.911957e-04 -6.566962e-03
+ [71] -5.174284e-04 -4.830647e-04 -1.256172e-04  2.572667e-05 -5.796527e-04
+ [76]  5.918588e-04 -2.105901e-02  1.104930e-02  7.288147e-05  4.985706e-07
+ [81]  4.945123e-05 -7.647327e-05  2.493547e-04 -6.589906e-05 -5.331597e-06
+ [86]  4.589720e-01  5.533826e-06 -1.741735e-04 -8.916278e-06 -1.164895e-05
+ [91] -2.342534e-05 -8.579970e-04  2.773732e-05 -2.368735e-03 -2.154586e-05
+ [96] -1.211798e-04 -8.375836e-04 -1.596751e-05 -5.827816e-04  1.571912e-02</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>M <span class="ot">&lt;-</span> sol[n <span class="sc">+</span> <span class="dv">1</span>]; M</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -0.0002080739</code></pre>
+</div>
+</div>
+<p>With these values, we will compute <span class="math inline">\(\hat{Z}(\mathbf{s}_0)\)</span> and the Kriging variance <span class="math inline">\(\sigma^{2}_{\text{OK}}(\mathbf{s}_0)\)</span> as follows:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Kriging estimate</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>z_hat <span class="ot">&lt;-</span> <span class="fu">sum</span>(w <span class="sc">*</span> z_values); z_hat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 9.516983</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Kriging variance</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>c0 <span class="ot">&lt;-</span> <span class="fu">exp_cov</span>(<span class="dv">0</span>)  <span class="co"># C(0)</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>sigma_OK2 <span class="ot">&lt;-</span> c0 <span class="sc">-</span> <span class="fu">sum</span>(w <span class="sc">*</span> c_rhs[<span class="dv">1</span><span class="sc">:</span>n]) <span class="sc">-</span> M; sigma_OK2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.1262456</code></pre>
+</div>
+</div>
+<p>As we see, <span class="math inline">\(\hat{Z}(\mathbf{s}_0) = 9.516983\)</span> and <span class="math inline">\(\sigma^{2}_{\text{OK}}(\mathbf{s}_0) = 0.1262456\)</span>. This mean that the value in the location <em>longitude</em> = 5 and <em>latitude</em> = 5 is <strong>9.516983</strong> and the variance associated with this prediction is <strong>0.1262456</strong>. We will compare this result with the package “<em><code>gstat</code></em>”:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Using gstat</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>spat_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(z_values, locations)</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(spat_data) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"z_values"</span>, <span class="st">"s1"</span>, <span class="st">"s2"</span>)</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert to spatial object</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a><span class="fu">coordinates</span>(spat_data) <span class="ot">&lt;-</span> <span class="er">~</span>s1 <span class="sc">+</span> s2</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Empirical variogram</span></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>emp_vario <span class="ot">&lt;-</span> <span class="fu">variogram</span>(z_values <span class="sc">~</span> <span class="dv">1</span>, spat_data)</span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit a model variogram</span></span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>fit_vario <span class="ot">&lt;-</span> <span class="fu">fit.variogram</span>(emp_vario, <span class="at">model =</span> <span class="fu">vgm</span>(<span class="at">psill =</span> <span class="dv">1</span>, <span class="at">model =</span> <span class="st">"Exp"</span>, <span class="at">range =</span> <span class="dv">1</span>, <span class="at">nugget =</span> <span class="fl">0.1</span>))</span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a data frame with the prediction location</span></span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a>s0 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">s1 =</span> <span class="dv">5</span>, <span class="at">s2 =</span> <span class="dv">5</span>)</span>
+<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert to spatial object</span></span>
+<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a><span class="fu">coordinates</span>(s0) <span class="ot">&lt;-</span> <span class="er">~</span>s1 <span class="sc">+</span> s2</span>
+<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Kriging</span></span>
+<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a>s0_pred <span class="ot">&lt;-</span> <span class="fu">krige</span>(z_values <span class="sc">~</span> <span class="dv">1</span>, spat_data, s0, <span class="at">model =</span> fit_vario)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[using ordinary kriging]</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>z_hat_gstat <span class="ot">&lt;-</span> s0_pred<span class="sc">$</span>var1.pred; z_hat_gstat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 9.715304</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>z_var_gstat <span class="ot">&lt;-</span> s0_pred<span class="sc">$</span>var1.var; z_var_gstat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3.880513</code></pre>
+</div>
+</div>
+<p>Comparing the prediction in location <span class="math inline">\(\mathbf{s}_0\)</span>, for Kriging computed manually and using “<em><code>gstat</code></em>” package, the values are very close (9.516983 and 9.715304, respectively). The variance for the prediction using “<em><code>gstat</code></em>” is 3.880513.</p>
+<p>Finally, we can compare the interpolation in a grid for both methods.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co">#============================================</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="co">#              Interpolation</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="co">#============================================</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Set up prediction grid</span></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>bbox_vals <span class="ot">&lt;-</span> <span class="fu">bbox</span>(spat_data)</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract ranges</span></span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>grid_size <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>s1_seq <span class="ot">&lt;-</span> <span class="fu">seq</span>(bbox_vals[<span class="dv">1</span>, <span class="dv">1</span>] <span class="sc">-</span> <span class="fl">0.5</span>, bbox_vals[<span class="dv">1</span>, <span class="dv">2</span>] <span class="sc">+</span> <span class="fl">0.5</span>, <span class="at">length.out =</span> grid_size)</span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>s2_seq <span class="ot">&lt;-</span> <span class="fu">seq</span>(bbox_vals[<span class="dv">2</span>, <span class="dv">1</span>] <span class="sc">-</span> <span class="fl">0.5</span>, bbox_vals[<span class="dv">2</span>, <span class="dv">2</span>] <span class="sc">+</span> <span class="fl">0.5</span>, <span class="at">length.out =</span> grid_size)</span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Create prediction grid</span></span>
+<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a>grid_points <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">x =</span> s1_seq, <span class="at">y =</span> s2_seq)</span>
+<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Initialize vector for predictions (interpolation)</span></span>
+<span id="cb35-17"><a href="#cb35-17" aria-hidden="true" tabindex="-1"></a>z_inter <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="fu">nrow</span>(grid_points))</span>
+<span id="cb35-18"><a href="#cb35-18" aria-hidden="true" tabindex="-1"></a>var_inter <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="fu">nrow</span>(grid_points))</span>
+<span id="cb35-19"><a href="#cb35-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-20"><a href="#cb35-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Loop over grid points</span></span>
+<span id="cb35-21"><a href="#cb35-21" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(grid_points)) {</span>
+<span id="cb35-22"><a href="#cb35-22" aria-hidden="true" tabindex="-1"></a>  s0 <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(grid_points[k, ])</span>
+<span id="cb35-23"><a href="#cb35-23" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb35-24"><a href="#cb35-24" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Build RHS covariance vector</span></span>
+<span id="cb35-25"><a href="#cb35-25" aria-hidden="true" tabindex="-1"></a>  c_rhs <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n <span class="sc">+</span> <span class="dv">1</span>)</span>
+<span id="cb35-26"><a href="#cb35-26" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n) {</span>
+<span id="cb35-27"><a href="#cb35-27" aria-hidden="true" tabindex="-1"></a>    h <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">sum</span>((locations[i, ] <span class="sc">-</span> s0)<span class="sc">^</span><span class="dv">2</span>))</span>
+<span id="cb35-28"><a href="#cb35-28" aria-hidden="true" tabindex="-1"></a>    c_rhs[i] <span class="ot">&lt;-</span> <span class="fu">exp_cov</span>(h)</span>
+<span id="cb35-29"><a href="#cb35-29" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb35-30"><a href="#cb35-30" aria-hidden="true" tabindex="-1"></a>  c_rhs[n <span class="sc">+</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb35-31"><a href="#cb35-31" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb35-32"><a href="#cb35-32" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Solve for weights</span></span>
+<span id="cb35-33"><a href="#cb35-33" aria-hidden="true" tabindex="-1"></a>  sol <span class="ot">&lt;-</span> <span class="fu">solve</span>(cov_mat, c_rhs)</span>
+<span id="cb35-34"><a href="#cb35-34" aria-hidden="true" tabindex="-1"></a>  w <span class="ot">&lt;-</span> sol[<span class="dv">1</span><span class="sc">:</span>n]</span>
+<span id="cb35-35"><a href="#cb35-35" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb35-36"><a href="#cb35-36" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Kriging estimate</span></span>
+<span id="cb35-37"><a href="#cb35-37" aria-hidden="true" tabindex="-1"></a>  z_inter[k] <span class="ot">&lt;-</span> <span class="fu">sum</span>(w <span class="sc">*</span> z_values)</span>
+<span id="cb35-38"><a href="#cb35-38" aria-hidden="true" tabindex="-1"></a>  var_inter[k] <span class="ot">&lt;-</span> <span class="fu">exp_cov</span>(<span class="dv">0</span>) <span class="sc">-</span> <span class="fu">sum</span>(w <span class="sc">*</span> c_rhs[<span class="dv">1</span><span class="sc">:</span>n]) <span class="sc">+</span> M</span>
+<span id="cb35-39"><a href="#cb35-39" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb35-40"><a href="#cb35-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-41"><a href="#cb35-41" aria-hidden="true" tabindex="-1"></a><span class="co"># Reshape result into matrix for plotting</span></span>
+<span id="cb35-42"><a href="#cb35-42" aria-hidden="true" tabindex="-1"></a>z_pred <span class="ot">&lt;-</span> <span class="fu">matrix</span>(z_inter, <span class="at">nrow =</span> grid_size, <span class="at">ncol =</span> grid_size, <span class="at">byrow =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb35-43"><a href="#cb35-43" aria-hidden="true" tabindex="-1"></a>z_var  <span class="ot">&lt;-</span> <span class="fu">matrix</span>(var_inter, <span class="at">nrow =</span> grid_size, <span class="at">ncol =</span> grid_size, <span class="at">byrow =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb35-44"><a href="#cb35-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-45"><a href="#cb35-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-46"><a href="#cb35-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-47"><a href="#cb35-47" aria-hidden="true" tabindex="-1"></a><span class="co">#====================================</span></span>
+<span id="cb35-48"><a href="#cb35-48" aria-hidden="true" tabindex="-1"></a><span class="co">#     Using the "gstat" package</span></span>
+<span id="cb35-49"><a href="#cb35-49" aria-hidden="true" tabindex="-1"></a><span class="co">#====================================</span></span>
+<span id="cb35-50"><a href="#cb35-50" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert grid to SpatialPoints</span></span>
+<span id="cb35-51"><a href="#cb35-51" aria-hidden="true" tabindex="-1"></a><span class="fu">coordinates</span>(grid_points) <span class="ot">&lt;-</span> <span class="er">~</span>x <span class="sc">+</span> y</span>
+<span id="cb35-52"><a href="#cb35-52" aria-hidden="true" tabindex="-1"></a><span class="fu">gridded</span>(grid_points) <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
+<span id="cb35-53"><a href="#cb35-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-54"><a href="#cb35-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-55"><a href="#cb35-55" aria-hidden="true" tabindex="-1"></a><span class="co"># Create gstat object for Kriging</span></span>
+<span id="cb35-56"><a href="#cb35-56" aria-hidden="true" tabindex="-1"></a>krige_gstat <span class="ot">&lt;-</span> <span class="fu">krige</span>(z_values <span class="sc">~</span> <span class="dv">1</span>, spat_data, grid_points, <span class="at">model =</span> fit_vario)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[using ordinary kriging]</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>z_pred_df <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">x =</span> s1_seq, <span class="at">y =</span> s2_seq)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Adding a column of z values</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>z_pred_df<span class="sc">$</span>z_values <span class="ot">&lt;-</span> z_values</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Predictions</span></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>z_pred_df<span class="sc">$</span>z_pred <span class="ot">&lt;-</span> <span class="fu">as.vector</span>(z_pred) </span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>z_pred_df<span class="sc">$</span>z_pred_gstat <span class="ot">&lt;-</span> <span class="fu">as.vector</span>(krige_gstat<span class="sc">$</span>var1.pred)</span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Variances</span></span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>z_pred_df<span class="sc">$</span>z_var <span class="ot">&lt;-</span> <span class="fu">as.vector</span>(z_var)</span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>z_pred_df<span class="sc">$</span>z_var_gstat <span class="ot">&lt;-</span> <span class="fu">as.vector</span>(krige_gstat<span class="sc">$</span>var1.var)</span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot prediction + observed points</span></span>
+<span id="cb37-17"><a href="#cb37-17" aria-hidden="true" tabindex="-1"></a>spat_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(spat_data)</span>
+<span id="cb37-18"><a href="#cb37-18" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(spat_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   z_values       s1       s2 optional
+1  8.579187 3.588198 6.399901     TRUE
+2 10.513767 8.094746 3.995412     TRUE
+3  9.506616 4.680792 5.397517     TRUE
+4  9.304915 8.947157 9.590264     TRUE
+5  8.096763 9.464206 5.346122     TRUE
+6  9.909945 1.410008 9.013152     TRUE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(z_pred_df, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)) <span class="sc">+</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>(<span class="fu">aes</span>(<span class="at">fill =</span> z_pred)) <span class="sc">+</span>  <span class="co"># prediction surface</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> spat_data, <span class="fu">aes</span>(<span class="at">x =</span> s1, <span class="at">y =</span> s2, <span class="at">size =</span> z_values), <span class="at">color =</span> <span class="st">"blue"</span>, <span class="at">alpha =</span> <span class="fl">0.75</span>) <span class="sc">+</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_equal</span>() <span class="sc">+</span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"s1"</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"s2"</span>) <span class="sc">+</span> </span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradient</span>(<span class="at">low =</span> <span class="st">"yellow"</span>, <span class="at">high =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> comma) <span class="sc">+</span></span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> comma) <span class="sc">+</span></span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">fill =</span> <span class="st">"Predicted z values (manually)"</span>, <span class="at">size =</span> <span class="st">"Observed z values"</span>) <span class="sc">+</span> </span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text=</span><span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">12</span>),</span>
+<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title=</span><span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">14</span>,<span class="at">face=</span><span class="st">"bold"</span>))</span>
+<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-15"><a href="#cb39-15" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(z_pred_df, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)) <span class="sc">+</span></span>
+<span id="cb39-16"><a href="#cb39-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>(<span class="fu">aes</span>(<span class="at">fill =</span> z_pred_gstat)) <span class="sc">+</span>  <span class="co"># prediction surface</span></span>
+<span id="cb39-17"><a href="#cb39-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> spat_data, <span class="fu">aes</span>(<span class="at">x =</span> s1, <span class="at">y =</span> s2, <span class="at">size =</span> z_values), <span class="at">color =</span> <span class="st">"blue"</span>, <span class="at">alpha =</span> <span class="fl">0.75</span>) <span class="sc">+</span></span>
+<span id="cb39-18"><a href="#cb39-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_equal</span>() <span class="sc">+</span></span>
+<span id="cb39-19"><a href="#cb39-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"s1"</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"s2"</span>) <span class="sc">+</span> </span>
+<span id="cb39-20"><a href="#cb39-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradient</span>(<span class="at">low =</span> <span class="st">"yellow"</span>, <span class="at">high =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb39-21"><a href="#cb39-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> comma) <span class="sc">+</span></span>
+<span id="cb39-22"><a href="#cb39-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> comma) <span class="sc">+</span></span>
+<span id="cb39-23"><a href="#cb39-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb39-24"><a href="#cb39-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">fill =</span> <span class="st">"Predicted z values (gstat)"</span>, <span class="at">size =</span> <span class="st">"Observed z values"</span>) <span class="sc">+</span></span>
+<span id="cb39-25"><a href="#cb39-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text=</span><span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">12</span>),</span>
+<span id="cb39-26"><a href="#cb39-26" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title=</span><span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">14</span>,<span class="at">face=</span><span class="st">"bold"</span>))</span>
+<span id="cb39-27"><a href="#cb39-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-28"><a href="#cb39-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-29"><a href="#cb39-29" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(p1, p2, <span class="at">ncol =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Variances</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(z_pred_df, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)) <span class="sc">+</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>(<span class="fu">aes</span>(<span class="at">fill =</span> z_var)) <span class="sc">+</span>  </span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> spat_data, <span class="fu">aes</span>(<span class="at">x =</span> s1, <span class="at">y =</span> s2, <span class="at">size =</span> z_values), <span class="at">color =</span> <span class="st">"blue"</span>, <span class="at">alpha =</span> <span class="fl">0.75</span>) <span class="sc">+</span></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_equal</span>() <span class="sc">+</span></span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"s1"</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"s2"</span>) <span class="sc">+</span> </span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradient</span>(<span class="at">low =</span> <span class="st">"yellow"</span>, <span class="at">high =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> comma) <span class="sc">+</span></span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> comma) <span class="sc">+</span></span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">fill =</span> <span class="st">"Variance of predictions (manually)"</span>, <span class="at">size =</span> <span class="st">"Observed z"</span>) <span class="sc">+</span></span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text=</span><span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">12</span>),</span>
+<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title=</span><span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">14</span>,<span class="at">face=</span><span class="st">"bold"</span>))</span>
+<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-16"><a href="#cb40-16" aria-hidden="true" tabindex="-1"></a>p4 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(z_pred_df, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)) <span class="sc">+</span></span>
+<span id="cb40-17"><a href="#cb40-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>(<span class="fu">aes</span>(<span class="at">fill =</span> z_var_gstat)) <span class="sc">+</span>  </span>
+<span id="cb40-18"><a href="#cb40-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> spat_data, <span class="fu">aes</span>(<span class="at">x =</span> s1, <span class="at">y =</span> s2, <span class="at">size =</span> z_values), <span class="at">color =</span> <span class="st">"blue"</span>, <span class="at">alpha =</span> <span class="fl">0.75</span>) <span class="sc">+</span></span>
+<span id="cb40-19"><a href="#cb40-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_equal</span>() <span class="sc">+</span></span>
+<span id="cb40-20"><a href="#cb40-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"s1"</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"s2"</span>) <span class="sc">+</span> </span>
+<span id="cb40-21"><a href="#cb40-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradient</span>(<span class="at">low =</span> <span class="st">"yellow"</span>, <span class="at">high =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb40-22"><a href="#cb40-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> comma) <span class="sc">+</span></span>
+<span id="cb40-23"><a href="#cb40-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> comma) <span class="sc">+</span></span>
+<span id="cb40-24"><a href="#cb40-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb40-25"><a href="#cb40-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">fill =</span> <span class="st">"Variance of predictions (gstat)"</span>, <span class="at">size =</span> <span class="st">"Observed z"</span>) <span class="sc">+</span></span>
+<span id="cb40-26"><a href="#cb40-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text=</span><span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">12</span>),</span>
+<span id="cb40-27"><a href="#cb40-27" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title=</span><span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">14</span>,<span class="at">face=</span><span class="st">"bold"</span>))</span>
+<span id="cb40-28"><a href="#cb40-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-29"><a href="#cb40-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-30"><a href="#cb40-30" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(p3, p4, <span class="at">ncol =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-16-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="conclusion" class="level1">
+<h1>Conclusion</h1>
+<p>In this first entry, I explore the foundational idea of Kriging interpolation, initially proposed by Danie G. Krige and later formalized mathematically by Georges Matheron <span class="citation" data-cites="matheron1963">[@matheron1963]</span>. The prediction at a specific location, or interpolation over a spatial domain, can be done by solving a system of linear equations. The goal here is to demonstrate that Kriging can be applied both through its classical formulation and also by a “Gaussian Process Regression” (to be discussed in Part 2, coming sooon…).</p>
+<p><em>Note: I am not an expert in using the <code>gstat</code> package, so the comparisons presented may not be optimal or the most efficient. The package was used solely for illustrative purposes.</em></p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
