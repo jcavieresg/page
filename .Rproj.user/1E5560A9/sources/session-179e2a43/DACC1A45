@@ -3,7 +3,7 @@
     "path": "C:/Users/Usuario/Desktop/jcavieresg_blog/posts/welcome/index.qmd",
     "project_path": "posts/welcome/index.qmd",
     "type": "quarto_markdown",
-    "hash": "4166861875",
+    "hash": "0",
     "contents": "",
     "dirty": false,
     "created": 1747214797716.0,
@@ -16,16 +16,16 @@
         "Source": "Source",
         "docOutlineVisible": "1",
         "rmdVisualCollapsedChunks": "",
-        "rmdVisualModeLocation": "32:0",
+        "rmdVisualModeLocation": "100:0",
         "cursorPosition": "0,0",
         "scrollLine": "0"
     },
     "folds": "",
-    "lastKnownWriteTime": 1747217852,
+    "lastKnownWriteTime": 1747218773,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1747217852938,
+    "last_content_update": 1747218773613,
     "read_only": false,
     "read_only_alternatives": []
 }
