@@ -3,6 +3,7 @@ title: "Understanding Kriging (Part 1)"
 author: "Joaquin Cavieres"
 date: "2025-05-14"
 categories: [code, analysis]
+image: "images/plot1.jpg"
 ---
 
 ![](images/plot1.jpg){width="569"}
