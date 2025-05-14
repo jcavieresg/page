@@ -1,5 +1,5 @@
 ---
-title: "Welcome To My Blog"
+title: "Welcome...!"
 author: "Joaquin Cavieres"
 date: "2025-05-11"
 categories: [news]

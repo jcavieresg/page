@@ -3,10 +3,9 @@ title: "Understanding Kriging (Part 1)"
 author: "Joaquin Cavieres"
 date: "2025-05-14"
 categories: [code, analysis]
-image: "image.jpg"
 ---
 
-![](images/plot1.jpg)
+![](images/plot1.jpg){width="569"}
 
 In this first blog post, I would like to share my thoughts on how the Kriging method can often lead to confusion due to its different interpretations. My goal is to help readers distinguish between Kriging as a "**best linear unbiased predictor (BLUP)**" for point-referenced spatial data, and its probabilistic interpretation as a **Gaussian random field** (the term "Gaussian process" I prefer using it for data without a spatial reference (I mean probabilistic because the following results are not based in the likelihood method, for now).
 
