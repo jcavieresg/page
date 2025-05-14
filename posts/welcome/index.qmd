@@ -5,7 +5,7 @@ date: "2025-05-11"
 categories: [news]
 ---
 
-​This is my first post, a space that I wanted to create quite a long time ago... My main idea is to share with people interested in Spatial Statistics, Bayesian modeling and Computational methods. I will be posting different topics but in an ordered way, then it can be understood from the beginning the topics covered and also we can share thoughts about them. I'm open to hear any type of comment/observation or help to improve the content of the blog so, please, let's share ideas!
+This is my first post, a space that I wanted to create quite a long time ago... My main idea is to share with people interested in Spatial Statistics, Bayesian modeling and Computational methods. I will be posting different topics but in an ordered way, then it can be understood from the beginning the topics covered and also we can share thoughts about them. I'm open to hear any type of comment/observation or help to improve the content of the blog so, please, let's share ideas!
 
 ![](/images/plot2.jpg){width="569"}
 
