@@ -218,8 +218,9 @@ window.Quarto = {
 
 
 
+<p><img src="images/plot1.jpg" class="img-fluid" width="569"></p>
 <p>In this first blog post, I would like to share my thoughts on how the Kriging method can often lead to confusion due to its different interpretations. My goal is to help readers distinguish between Kriging as a “<strong>best linear unbiased predictor (BLUP)</strong>” for point-referenced spatial data, and its probabilistic interpretation as a <strong>Gaussian random field</strong> (the term “Gaussian process” I prefer using it for data without a spatial reference (I mean probabilistic because the following results are not based in the likelihood method, for now).</p>
-<p>In Part 1, I will present the equations used to calculate the Kriging weights and demonstrate how to predict values at specific spatial locations. Using these weights, we will then perform interpolation over a regular square grid covering the entire spatial domain of interest. Finally, the results from our manual calculations will be compared with those obtained using the “<em><code>gstat</code></em>” package to assess their consistency and accuracy.</p>
+<p>In Part 1, I will present the equations used to calculate the Kriging weights and demonstrate how to predict values at specific spatial locations. Using these weights, we will then perform interpolation over a regular square grid covering the entire spatial domain of interest. Finally, the results from our manual calculations will be compared with those obtained using the “<code>gstat</code>” package to assess their consistency and accuracy.</p>
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
 <p>We will denote the spatial locations as <span class="math inline">\(\{\mathbf{s}_1, \ldots, \mathbf{s}_n\}\)</span>, and the spatial data collected at these locations (the observed or measurement variable) will be denoted as <span class="math inline">\(Z(\mathbf{s}_1), \ldots, Z(\mathbf{s}_n)\)</span>. The spatial locations are determined by their coordinates in the space, for example, <em>latitude-longitude</em> and we will be mainly focused in the two-dimensional space. To denote the vector of all the observations we will use <span class="math inline">\(\mathbf{Z} = (Z(\mathbf{s}_1), \ldots, Z(\mathbf{s}_n))^{\top}\)</span>.</p>
@@ -395,22 +396,22 @@ Z(\mathbf{s}_1) = 10, \hspace{2mm} Z(\mathbf{s}_2) = 12, \hspace{2mm} Z(\mathbf{
 </ol>
 </section>
 <section id="using-the-gstat-package-of-r" class="level2">
-<h2 class="anchored" data-anchor-id="using-the-gstat-package-of-r">Using the “<em><code>gstat</code></em>” package of R</h2>
-<p>The “<em><code>gstat</code></em>” package in R is a versatile tool used for geostatistical modelling, spatial prediction, and multivariable geostatistics <span class="citation" data-cites="pebesma2004multivariable">[@pebesma2004multivariable]</span>. It provides functionality for variogram modeling, Kriging, and conditional simulation, supporting univariate and multivariate spatial data. Some of the main features of this library are the following:</p>
+<h2 class="anchored" data-anchor-id="using-the-gstat-package-of-r">Using the “<code>gstat</code>” package of R</h2>
+<p>The “<code>gstat</code>” package in R is a versatile tool used for geostatistical modelling, spatial prediction, and multivariable geostatistics <span class="citation" data-cites="pebesma2004multivariable">[@pebesma2004multivariable]</span>. It provides functionality for variogram modeling, Kriging, and conditional simulation, supporting univariate and multivariate spatial data. Some of the main features of this library are the following:</p>
 <ul>
 <li><p><strong>Computing the variogram</strong> <span class="math inline">\(\rightarrow\)</span> empirical variogram (also called experimental) and variogram fitting (variogram modeling).</p></li>
 <li><p><strong>Kriging</strong> <span class="math inline">\(\rightarrow\)</span> ordinary, simple, and universal kriging.</p></li>
 <li><p><strong>Multivariable geostatistics</strong> <span class="math inline">\(\rightarrow\)</span> co-kriging and other methods for spatial modelling.</p></li>
 <li><p><strong>Simulation</strong> <span class="math inline">\(\rightarrow\)</span> conditional and unconditional GRF for spatial predictions.</p></li>
 </ul>
-<p>The “<em><code>gstat</code></em>” package is simple to use and here are the basics steps for spatial data analysis</p>
+<p>The “<code>gstat</code>” package is simple to use and here are the basics steps for spatial data analysis</p>
 <ol type="1">
-<li>Define spatial data ( a <span class="math inline">\(\texttt{SpatialPointsDataFrame})\)</span> from the “<em><code>sp</code></em>” package.</li>
+<li>Define spatial data ( a <span class="math inline">\(\texttt{SpatialPointsDataFrame})\)</span> from the “<code>sp</code>” package.</li>
 <li>Compute the empirical variogram using the function <span class="math inline">\(\texttt{variogram()}\)</span></li>
 <li>Fit a variogram model using the function <span class="math inline">\(\texttt{fit.variogram()}\)</span></li>
 <li>Perform kriging prediction with the <span class="math inline">\(\texttt{krige()}\)</span> function.</li>
 </ol>
-<p>For the California air pollution data (from the “<em><code>rspatial</code></em>” package), select the “airqual” data and interpolate the levels of ozone (averages for 1980-2009). Here, you must consider “OZDLYAV” (unit is parts per billion) for interpolation purposes.</p>
+<p>For the California air pollution data (from the “<code>rspatial</code>” package), select the “airqual” data and interpolate the levels of ozone (averages for 1980-2009). Here, you must consider “OZDLYAV” (unit is parts per billion) for interpolation purposes.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Installing the rspat package</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="st">"rspatial"</span>)) remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">'rspatial/rspatial'</span>)</span>
@@ -435,7 +436,7 @@ Z(\mathbf{s}_1) = 10, \hspace{2mm} Z(\mathbf{s}_2) = 12, \hspace{2mm} Z(\mathbf{
 <span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="st">          x_0=0 +y_0=-4000000 +datum=WGS84 +units=km"</span>)</span>
 <span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>coords <span class="ot">&lt;-</span> <span class="fu">spTransform</span>(x, TA)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Now we will create an empirical variogram using the package “<em><code>gstat</code></em>” as follow</p>
+<p>Now we will create an empirical variogram using the package “<code>gstat</code>” as follow</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gstat)</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>gs <span class="ot">&lt;-</span> <span class="fu">gstat</span>(<span class="at">formula =</span> res<span class="sc">~</span><span class="dv">1</span>, <span class="at">locations =</span> coords)</span>
@@ -699,7 +700,7 @@ C(\mathbf{h}) = \sigma^{2}\exp\bigg (\frac{\mathbf{h}}{\rho} \bigg ),
 <pre><code>[1] 0.1262456</code></pre>
 </div>
 </div>
-<p>As we see, <span class="math inline">\(\hat{Z}(\mathbf{s}_0) = 9.516983\)</span> and <span class="math inline">\(\sigma^{2}_{\text{OK}}(\mathbf{s}_0) = 0.1262456\)</span>. This mean that the value in the location <em>longitude</em> = 5 and <em>latitude</em> = 5 is <strong>9.516983</strong> and the variance associated with this prediction is <strong>0.1262456</strong>. We will compare this result with the package “<em><code>gstat</code></em>”:</p>
+<p>As we see, <span class="math inline">\(\hat{Z}(\mathbf{s}_0) = 9.516983\)</span> and <span class="math inline">\(\sigma^{2}_{\text{OK}}(\mathbf{s}_0) = 0.1262456\)</span>. This mean that the value in the location <em>longitude</em> = 5 and <em>latitude</em> = 5 is <strong>9.516983</strong> and the variance associated with this prediction is <strong>0.1262456</strong>. We will compare this result with the package “<code>gstat</code>”:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Using gstat</span></span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>spat_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(z_values, locations)</span>
@@ -735,7 +736,7 @@ C(\mathbf{h}) = \sigma^{2}\exp\bigg (\frac{\mathbf{h}}{\rho} \bigg ),
 <pre><code>[1] 3.880513</code></pre>
 </div>
 </div>
-<p>Comparing the prediction in location <span class="math inline">\(\mathbf{s}_0\)</span>, for Kriging computed manually and using “<em><code>gstat</code></em>” package, the values are very close (9.516983 and 9.715304, respectively). The variance for the prediction using “<em><code>gstat</code></em>” is 3.880513.</p>
+<p>Comparing the prediction in location <span class="math inline">\(\mathbf{s}_0\)</span>, for Kriging computed manually and using “<code>gstat</code>” package, the values are very close (9.516983 and 9.715304, respectively). The variance for the prediction using “<code>gstat</code>” is 3.880513.</p>
 <p>Finally, we can compare the interpolation in a grid for both methods.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co">#============================================</span></span>
@@ -902,7 +903,7 @@ C(\mathbf{h}) = \sigma^{2}\exp\bigg (\frac{\mathbf{h}}{\rho} \bigg ),
 <section id="conclusion" class="level1">
 <h1>Conclusion</h1>
 <p>In this first entry, I explore the foundational idea of Kriging interpolation, initially proposed by Danie G. Krige and later formalized mathematically by Georges Matheron <span class="citation" data-cites="matheron1963">[@matheron1963]</span>. The prediction at a specific location, or interpolation over a spatial domain, can be done by solving a system of linear equations. The goal here is to demonstrate that Kriging can be applied both through its classical formulation and also by a “Gaussian Process Regression” (to be discussed in Part 2, coming sooon…).</p>
-<p><em>Note: I am not an expert in using the <code>gstat</code> package, so the comparisons presented may not be optimal or the most efficient. The package was used solely for illustrative purposes.</em></p>
+<p><em>Note: I am not an expert in using the</em> <code>gstat</code> <em>package, so the comparisons presented may not be optimal or the most efficient. The package was used solely for illustrative purposes.</em></p>
 
 
 </section>
