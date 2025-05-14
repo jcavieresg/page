@@ -1,8 +1,8 @@
 {
-  "hash": "7111696974220385744500d9295f5d65",
+  "hash": "0b0b74d51b15a7da85cd4d7f7413c6b6",
   "result": {
     "engine": "knitr",
-    "markdown": "---\ntitle: \"Welcome To My Blog\"\nauthor: \"Joaquin Cavieres\"\ndate: \"2025-05-11\"\ncategories: [news]\n---\n\n\n\n\nThis is the first post in a Quarto blog. Welcome!\n\n![](/images/plot2.jpg){width=\"569\"}\n\nresults from our manual calculations will be compared with those obtained using the \"*`gstat`*\" package to assess their consistency and accuracy.\n\n\n\n\n::: {.cell}\n\n:::\n\n\n\n\n# I\n",
+    "markdown": "---\ntitle: \".. from Germany (for now..) \"\nauthor: \"Joaquin Cavieres\"\ndate: \"2025-05-11\"\ncategories: [news]\n---\n\n\n\n![](/images/plot2.jpg){width=\"569\"}\n\n\n\n::: {.cell}\n\n:::\n\n\n\nThis is my first post, a space that I wanted to create quite a long time ago... My main idea is to share with people interested in Spatial Statistics, Bayesian modeling and Computational methods. I will be posting different topics but in an ordered way, then it can be understood from the beginning the topics covered and also we can share thoughts about them. I'm open to hear any type of comment/observation or help to improve the content of the blog so, please, let's share ideas!\n",
     "supporting": [],
     "filters": [
       "rmarkdown/pagebreak.lua"
