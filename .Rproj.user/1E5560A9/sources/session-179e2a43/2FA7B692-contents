@@ -10,6 +10,10 @@ In this first blog post, I would like to share my thoughts on how the Kriging me
 
 In Part 1, I will present the equations used to calculate the Kriging weights and demonstrate how to predict values at specific spatial locations. Using these weights, we will then perform interpolation over a regular square grid covering the entire spatial domain of interest. Finally, the results from our manual calculations will be compared with those obtained using the "*`gstat`*" package to assess their consistency and accuracy.
 
+```{r, echo=FALSE, message=FALSE, warning=FALSE, results='hide'}
+source("C:/Users/Usuario/Desktop/jcavieresg_blog/update_dates.R")
+```
+
 # Introduction
 
 We will denote the spatial locations as $\{\mathbf{s}_1, \ldots, \mathbf{s}_n\}$, and the spatial data collected at these locations (the observed or measurement variable) will be denoted as $Z(\mathbf{s}_1), \ldots, Z(\mathbf{s}_n)$. The spatial locations are determined by their coordinates in the space, for example, *latitude-longitude* and we will be mainly focused in the two-dimensional space. To denote the vector of all the observations we will use $\mathbf{Z} = (Z(\mathbf{s}_1), \ldots, Z(\mathbf{s}_n))^{\top}$.
