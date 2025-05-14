@@ -19,5 +19,5 @@ format:
 editor: visual
 
 exclude:
-- posts/post-with-code
+- docs/post-with-code
 
