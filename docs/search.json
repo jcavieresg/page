@@ -7,6 +7,20 @@
     "text": "This is the first post in a Quarto blog. Welcome!\n\nSince this post doesn’t specify an explicit image, the first image in the post will be used in the listing page of posts."
   },
   {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "jcavieresg_blog",
+    "section": "",
+    "text": "Understanding Kriging (Part 1)\n\n\n\n\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\nMay 14, 2025\n\n\nJoaquin Cavieres\n\n\n\n\n\n\n\n\n\n\n\n\nWelcome To My Blog\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\nMay 11, 2025\n\n\nJoaquin Cavieres\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "About this blog"
+  },
+  {
     "objectID": "posts/kriging_part1/index.html",
     "href": "posts/kriging_part1/index.html",
     "title": "Understanding Kriging (Part 1)",
@@ -47,26 +61,5 @@
     "title": "Understanding Kriging (Part 1)",
     "section": "Finding the Kriging weights",
     "text": "Finding the Kriging weights\nBased on the data \\(\\mathbf{Z}\\) and \\(\\{\\mathbf{s}_1, \\ldots, \\mathbf{s}_n\\}\\), with \\(C(\\mathbf{h})\\) being a covariance function of the spatial random field, and \\(\\mathbf{h} = \\mathbf{s}_i - \\mathbf{s}_j\\), for Ordinary Kriging we can write a linear system of equations fo find the Kriging weights \\(w_1, \\ldots, w_n\\). But, how can we propose this system of equations? Well, we already know that the ordinary Kriging estimator is a linear combination of the observed values,\n\\[\\begin{equation*}\n\\hat{Z}(\\mathbf{s}_0) = \\sum^{n}_{i=1} w_i Z(\\mathbf{s}_i),\n\\end{equation*}\\]\nand since that here we are considering the covariance then the minimization problem can be written as:\n\\[\n\\text{min} \\hspace{2mm} C(0) - 2\\sum^{n}_{i=1}w_{i}C(\\mathbf{s}_0, \\mathbf{s}_i) + \\sum^{n}_{i=1}\\sum^{n}_{j=1}w_{i}w_{j}C(\\mathbf{s}_i, \\mathbf{s}_j) + 2\\mathcal{M}(\\sum^{n}_{i=1} w_i - 1)\n\\tag{6}\\]\nwhere \\(\\mathcal{M}\\) is the Lagrange multiplier. Thus, after differentiating Equation 6 with respect \\(w_{1}, \\ldots, w_{n}\\) and \\(\\mathcal{M}\\), and set the derivatives equal to zero we have:\n\\[\\begin{align*}\n2\\sum^{n}_{j=1}w_{j}C(\\mathbf{s}_i, \\mathbf{s}_j) - 2C(\\mathbf{s}_0, \\mathbf{s}_i) - 2\\mathcal{M} \\hspace{2mm} = & 0 \\\\\n\\sum^{n}_{j=1}w_{j} C(\\mathbf{s}_i - \\mathbf{s}_j) + C(\\mathbf{s}_0 - \\mathbf{s}_i) - \\mathcal{M} \\hspace{2mm} = & \\hspace{2mm} 0 \\\\\n\\sum^{n}_{i=1}w_{i} \\hspace{2mm} = & \\hspace{2mm} 1\n\\end{align*}\\]\nTherefore, using a matrix notation to find \\(w_{1}, \\ldots, w_{n}\\) we propose the following linear system of equations:\n\\[\n\\boldsymbol{\\Gamma}\\mathbf{w} = \\mathbf{c},\n\\]\nwhere:\n\n\\(\\mathbf{w} = (w_{1}, \\ldots, w_{n}, -\\mathcal{M})^{\\top}\\).\n\\(\\mathbf{c} = (C(\\mathbf{s}_0, \\mathbf{s}_1), \\ldots, C(\\mathbf{s}_0, \\mathbf{s}_n), 1)^{\\top}\\).\n\\(\\boldsymbol{\\Gamma} = C(\\mathbf{s}_i, \\mathbf{s}_j), \\hspace{2mm} i = 1, \\ldots, n, \\hspace{2mm} j = 1, \\ldots, n\\).\n\nThus, expressed in a linear system of equations (the Kriging system):\n\\[\\begin{equation*}\n\\begin{pmatrix}\nC(\\mathbf{s}_1, \\mathbf{s}_1) & C(\\mathbf{s}_1, \\mathbf{s}_2) & \\dots & C(\\mathbf{s}_1, \\mathbf{s}_n) & 1 \\\\\nC(\\mathbf{s}_2, \\mathbf{s}_1) & C(\\mathbf{s}_2, \\mathbf{s}_2) & \\dots & C(\\mathbf{s}_2, \\mathbf{s}_n) & 1 \\\\\n\\vdots & \\vdots & \\ddots & \\vdots & \\vdots \\\\\nC(\\mathbf{s}_n, \\mathbf{s}_1) & C(\\mathbf{s}_n, \\mathbf{s}_2) & \\dots & C(\\mathbf{s}_n, \\mathbf{s}_n) & 1 \\\\\n1 & 1 & \\dots & 1 & 0 \\\\\n\\end{pmatrix}\n\\begin{pmatrix}\nw_1 \\\\\nw_2 \\\\\n\\vdots \\\\\nw_n \\\\\n-\\mathcal{M} \\\\\n\\end{pmatrix}\n=\n\\begin{pmatrix}\nC(\\mathbf{s}_1, \\mathbf{s}_0) \\\\\nC(\\mathbf{s}_2, \\mathbf{s}_0) \\\\\n\\vdots \\\\\nC(\\mathbf{s}_n, \\mathbf{s}_0) \\\\\n1 \\\\\n\\end{pmatrix}\n\\end{equation*}\\]\nWe can find \\(\\hat{\\mathbf{w}}\\) as\n\\[\n\\hat{\\mathbf{w}} = \\boldsymbol{\\Gamma}^{-1}\\mathbf{c}.\n\\]\nFinally, the Kriging variance, which quantifies the uncertainty of the prediction at \\(\\mathbf{s}_0\\), is given by:\n\\[\\begin{equation*}\n\\sigma_\\text{OK}^2(\\mathbf{s}_0) = C(\\mathbf{0}) - \\sum_{i=1}^n w_i C(\\mathbf{s}_i - \\mathbf{s}_0) - \\mathcal{M}\n\\end{equation*},\\]\nwhere lower Kriging variance indicates a reliable prediction (interpolation) values."
-  },
-  {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "About",
-    "section": "",
-    "text": "About this blog"
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "jcavieresg_blog",
-    "section": "",
-    "text": "Post With Code\n\n\n\n\n\n\nnews\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\nMay 14, 2025\n\n\nHarlow Malloc\n\n\n\n\n\n\n\n\n\n\n\n\nWelcome To My Blog\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\nMay 11, 2025\n\n\nJoaquin Cavieres\n\n\n\n\n\n\n\n\n\n\n\n\nUnderstanding Kriging (Part 1)\n\n\n\n\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\nApr 25, 2025\n\n\nJoaquin Cavieres\n\n\n\n\n\n\nNo matching items"
-  },
-  {
-    "objectID": "posts/post-with-code/index.html",
-    "href": "posts/post-with-code/index.html",
-    "title": "Post With Code",
-    "section": "",
-    "text": "This is a post with executable code."
   }
 ]
