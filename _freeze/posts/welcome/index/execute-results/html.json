@@ -1,0 +1,15 @@
+{
+  "hash": "7111696974220385744500d9295f5d65",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Welcome To My Blog\"\nauthor: \"Joaquin Cavieres\"\ndate: \"2025-05-11\"\ncategories: [news]\n---\n\n\n\n\nThis is the first post in a Quarto blog. Welcome!\n\n![](/images/plot2.jpg){width=\"569\"}\n\nresults from our manual calculations will be compared with those obtained using the \"*`gstat`*\" package to assess their consistency and accuracy.\n\n\n\n\n::: {.cell}\n\n:::\n\n\n\n\n# I\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

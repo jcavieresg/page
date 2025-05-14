@@ -8,3 +8,7 @@ categories: [news]
 This is the first post in a Quarto blog. Welcome!
 
 ![](/images/plot2.jpg){width="569"}
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, results='hide'}
+source("C:/Users/Usuario/Desktop/jcavieresg_blog/update_dates.R")
+```

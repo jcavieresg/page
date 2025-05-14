@@ -4,7 +4,7 @@
     "href": "posts/welcome/index.html",
     "title": "Welcome To My Blog",
     "section": "",
-    "text": "This is the first post in a Quarto blog. Welcome!"
+    "text": "This is the first post in a Quarto blog. Welcome!\n\nresults from our manual calculations will be compared with those obtained using the “gstat” package to assess their consistency and accuracy.\n\nI"
   },
   {
     "objectID": "index.html",
