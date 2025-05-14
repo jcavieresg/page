@@ -1,19 +1,23 @@
 project:
   type: website
+  output-dir: docs
 
 website:
-  title: "jcavieresg_blog"
+  title: "Joaquin Cavieres"
   navbar:
     right:
       - about.qmd
       - icon: github
-        href: https://github.com/
+        href: https://github.com/jcavieresg
       - icon: twitter
-        href: https://twitter.com
+        href: https://x.com/jcavieresg
 format:
   html:
     theme: cosmo
     css: styles.css
 
 editor: visual
+
+exclude:
+- posts/post-with-code
 

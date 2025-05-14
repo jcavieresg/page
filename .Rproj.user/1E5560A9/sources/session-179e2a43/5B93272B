@@ -3,7 +3,7 @@
     "path": "C:/Users/Usuario/Desktop/jcavieresg_blog/_quarto.yml",
     "project_path": "_quarto.yml",
     "type": "yaml",
-    "hash": "0",
+    "hash": "3689617175",
     "contents": "",
     "dirty": false,
     "created": 1747207999138.0,
@@ -12,15 +12,15 @@
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "19,0",
+        "cursorPosition": "12,38",
         "scrollLine": "0"
     },
     "folds": "",
-    "lastKnownWriteTime": 1747207988,
+    "lastKnownWriteTime": 1747211463,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1747207988,
+    "last_content_update": 1747211463469,
     "read_only": false,
     "read_only_alternatives": []
 }
