@@ -13,6 +13,7 @@ about:
     - icon: github
       text: Github
       href: https://github.com/jcavieresg
+# image: images/image_losvilos
 ---
 
 I am a postdoctoral researcher in the "Chair of Spatial Data Science and Statistical Learning" at **Georg-August-Universität Göttingen**. Previously, I was a postdoctoral researcher in the "Chair of Geoinformatics-Big Spatial Data" at **Bayreuth University**. I earned a doctoral degree in Statistics from **Universidad de Valparaíso** in 2022 and a Master in Statistics in the same University

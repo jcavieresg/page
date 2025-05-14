@@ -3,7 +3,7 @@
     "path": "C:/Users/Usuario/Desktop/jcavieresg_blog/posts/kriging_part1/index.qmd",
     "project_path": "posts/kriging_part1/index.qmd",
     "type": "quarto_markdown",
-    "hash": "1027510095",
+    "hash": "71809409",
     "contents": "",
     "dirty": false,
     "created": 1747214089545.0,
@@ -16,16 +16,16 @@
         "Source": "Source",
         "docOutlineVisible": "1",
         "rmdVisualCollapsedChunks": "",
-        "rmdVisualModeLocation": "91:1.3333333730697632",
+        "rmdVisualModeLocation": "145:0",
         "cursorPosition": "0,0",
         "scrollLine": "0"
     },
     "folds": "",
-    "lastKnownWriteTime": 1747217740,
+    "lastKnownWriteTime": 1747218019,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1747217740112,
+    "last_content_update": 1747218019294,
     "read_only": false,
     "read_only_alternatives": []
 }
