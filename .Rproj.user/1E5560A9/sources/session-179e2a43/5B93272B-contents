@@ -5,8 +5,6 @@ project:
 website:
   title: "Joaquin Cavieres"
   navbar:
-    left: 
-      - index.qmd
     right:
       - about.qmd
       - icon: github
