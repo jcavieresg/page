@@ -16,7 +16,7 @@
   {
     "objectID": "about.html",
     "href": "about.html",
-    "title": "About me",
+    "title": "About",
     "section": "",
     "text": "I am a postdoctoral researcher in the “Chair of Spatial Data Science and Statistical Learning” at Georg-August-Universität Göttingen. Previously, I was a postdoctoral researcher in the “Chair of Geoinformatics-Big Spatial Data” at Bayreuth University. I earned a doctoral degree in Statistics from Universidad de Valparaíso in 2022 and a Master in Statistics (2016) in the same University.\nOriginally I am from Puente Alto, Santiago of Chile, but most of my life was in the beautiful Valparaíso. ​However (sorry to the former two), my favorite place in the world is Los Vilos!"
   },
@@ -25,7 +25,7 @@
     "href": "posts/kriging_part1/index.html",
     "title": "Understanding Kriging (Part 1)",
     "section": "",
-    "text": "In this first blog post, I would like to share my thoughts on how the Kriging method can often lead to confusion due to its different interpretations. My goal is to help readers distinguish between Kriging as a “best linear unbiased predictor (BLUP)” for point-referenced spatial data, and its probabilistic interpretation as a Gaussian random field (the term “Gaussian process” I prefer using it for data without a spatial reference (I mean probabilistic because the following results are not based in the likelihood method, for now).\nIn Part 1, I will present the equations used to calculate the Kriging weights and demonstrate how to predict values at specific spatial locations. Using these weights, we will then perform interpolation over a regular square grid covering the entire spatial domain of interest. Finally, the results from our manual calculations will be compared with those obtained using the “gstat” package to assess their consistency and accuracy."
+    "text": "In this first blog post, I would like to share my thoughts on how the Kriging method can often lead to confusion due to its different interpretations. My goal is to help readers distinguish between Kriging (the “Best Linear Unbiased Predictor (BLUP)”) viewed from the linear algebra perspective (as a solution of a linear system of equations) and its probabilistic interpretation as a Gaussian random field (the term “Gaussian process” I prefer using it for data without a spatial reference).\nIn Part 1, I will present the equations used to calculate the Kriging weights and demonstrate how to predict values at specific spatial locations. Using these weights, we will then perform interpolation over a regular square grid covering the entire spatial domain of interest. Finally, the results from our manual calculations will be compared with those obtained using the “gstat” package to assess their consistency and accuracy."
   },
   {
     "objectID": "posts/kriging_part1/index.html#empirical-variogram",

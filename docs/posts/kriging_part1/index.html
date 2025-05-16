@@ -71,10 +71,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -155,7 +155,7 @@ window.Quarto = {
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
     <a class="nav-link" href="../../about.html"> 
-<span class="menu-text">About me</span></a>
+<span class="menu-text">About</span></a>
   </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/jcavieresg"> <i class="bi bi-github" role="img">
@@ -223,7 +223,7 @@ window.Quarto = {
 
 
 <p><img src="images/plot1.jpg" class="img-fluid" width="569"></p>
-<p>In this first blog post, I would like to share my thoughts on how the Kriging method can often lead to confusion due to its different interpretations. My goal is to help readers distinguish between Kriging as a “<strong>best linear unbiased predictor (BLUP)</strong>” for point-referenced spatial data, and its probabilistic interpretation as a <strong>Gaussian random field</strong> (the term “Gaussian process” I prefer using it for data without a spatial reference (I mean probabilistic because the following results are not based in the likelihood method, for now).</p>
+<p>In this first blog post, I would like to share my thoughts on how the Kriging method can often lead to confusion due to its different interpretations. My goal is to help readers distinguish between Kriging (the “<strong>Best Linear Unbiased Predictor (BLUP)</strong>”) viewed from the linear algebra perspective (as a solution of a linear system of equations) and its probabilistic interpretation as a <strong>Gaussian random field</strong> (the term “Gaussian process” I prefer using it for data without a spatial reference).</p>
 <p>In Part 1, I will present the equations used to calculate the Kriging weights and demonstrate how to predict values at specific spatial locations. Using these weights, we will then perform interpolation over a regular square grid covering the entire spatial domain of interest. Finally, the results from our manual calculations will be compared with those obtained using the “<code>gstat</code>” package to assess their consistency and accuracy.</p>
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
