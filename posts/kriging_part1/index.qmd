@@ -22,7 +22,7 @@ We will denote the spatial locations as $\{\mathbf{s}_1, \ldots, \mathbf{s}_n\}$
 
 # Computing the distance
 
-Distance is a numerical description of how far apart things are. It is the most fundamental concept in geography. Considering the Waldo Tobler's first law of the geography which says <span style="color:blue;">everything is related to everything else, but near things are more related than distant things'} [@tobler1970computer]</span> , we need to quantify this relationship in some way and it is not always as easy a question as it seems.
+Distance is a numerical description of how far apart things are. It is the most fundamental concept in geography. Considering the Waldo Tobler's first law of the geography which says <span style="color:blue;">everything is related to everything else, but near things are more related than distant things [@tobler1970computer]</span> , we need to quantify this relationship in some way and it is not always as easy a question as it seems.
 
 Computing the distance between a set of spatial data points is very important for spatial data analysis. If we have $\mathbf{s}_i$ spatial locations, for $i = 1, \ldots, n$, with $n$ equal to the total number of spatial locations. The coordinates of $\mathbf{s}_i$ are in *latitude-longitude* but for simplicity, we will denote them as $(x_i,y_i)$. Now, another set of spatial locations $\mathbf{s}_j$ has coordinates $(x_i, y_j)$, hence the Euclidean distance between spatial points $\mathbf{s}_i$ and $\mathbf{s}_j$ is given by
 
@@ -89,7 +89,7 @@ $$ {#eq-3}
 Traditionally, the selection of a variogram model begins with plotting the **empirical semivariogram**. This empirical plot is then visually compared against various theoretical models to identify the most appropriate fit. The standard form of the empirical semivariogram is given by
 
 $$
-\hat{\gamma}(\mathbf{h}) = \frac{1}{2n(\mathbf{h})} \sum^{n(\mathbf{h})}_{i,j}(Z(\mathbf{s}_i) - Z(\mathbf{s}_j))^{2}
+\hat{\gamma}(\mathbf{h}) = \frac{1}{2n(\mathbf{h})} \sum^{n(\mathbf{h})}_{i,j}(Z(\mathbf{s}_i) - Z(\mathbf{s}_j))^{2},
 $$ {#eq-4}
 
 where $Z(\mathbf{s}_i)$ and $Z(\mathbf{s}_j)$ are the values (in the space) at the spatial locations $\mathbf{s}$. Finally, we will denote the **variogram** as $2 \gamma(\mathbf{h})$.
@@ -142,7 +142,7 @@ From the @eq-4, we know that; $n(\mathbf{h})$ is the number of spatial points fo
 First, we will consider the following important observations before of the computation:
 
 1.  [As the distance increase, then the variability also increase]{.underline}: this is typical, as larger distance offsets generally lead to greater differences between the head and tail samples.
-2.  [It is calculated over all possible pairs separated by the distance vector $\mathbf{h}$]{.underline}: we evaluate all data, identifying all possible pair combinations with every other spatial point. The variogram is then calculated as half the expected squared difference between these pairs. A larger number of pairs provides a more reliable estimate
+2.  [It is calculated over all possible pairs separated by the distance vector $\mathbf{h}$]{.underline}: we evaluate all data, identifying all possible pair combinations with every other spatial point. The variogram is then calculated as half the expected squared difference between these pairs. A larger number of pairs provides a more reliable estimate.
 3.  [It is necessary plot the **sill** to know the correlation between the spatial points:]{.underline} here, sill is the spatial variance $\sigma^2_{\mathbf{s}}$. As we are assuming stationarity, the covariance is:
 
 ```{=tex}
@@ -150,11 +150,11 @@ First, we will consider the following important observations before of the compu
 C(\mathbf{h}) = \sigma^2_\mathbf{s} - \gamma(\mathbf{h})
 \end{equation*}
 ```
-The covariance measure the similarity over distance, and if $\sigma^2_{\mathbf{s}} = 1.0$, $C(\mathbf{h})$ is equal to the correlogram $\rho(\mathbf{h})$ such that
+The covariance measure the similarity over distance, and if $\sigma^2_{\mathbf{s}} = 1.0$, $C(\mathbf{h})$ is equal to the correlogram $\rho(\mathbf{h})$ such that:
 
 ```{=tex}
 \begin{equation}
-\rho(\mathbf{h}) = \sigma^2_\mathbf{s} - \gamma(\mathbf{h})
+\rho(\mathbf{h}) = \sigma^2_\mathbf{s} - \gamma(\mathbf{h}).
 \end{equation}
 ```
 4)  [The distance at which the variogram reaches $\sigma^2_{\mathbf{s}}$ is known as the **range**]{.underline}: the distance in which the difference of the variogram from $\sigma^2_{\mathbf{s}}$ becomes negligible.
@@ -167,14 +167,14 @@ The covariance measure the similarity over distance, and if $\sigma^2_{\mathbf{s
 
 <!-- 1.  Define the empirical variogram estimator $\hat{\gamma}(\mathbf{h})$. -->
 
-Given the following observations:
+Given the following observed values:
 
 ```{=tex}
 \begin{equation*}
 Z(\mathbf{s}_1) = 10, \hspace{2mm} Z(\mathbf{s}_2) = 12, \hspace{2mm} Z(\mathbf{s}_3) = 14, \hspace{2mm} Z(\mathbf{s}_4) = 13, \hspace{2mm} Z(\mathbf{s}_5) = 15 
 \end{equation*}
 ```
-and the corresponding distances between the points (the distance matrix)
+and the corresponding distances between the spatial points (the distance matrix)
 
 ```{=tex}
 \begin{bmatrix}
@@ -234,7 +234,7 @@ The "`gstat`" package in R is a versatile tool used for geostatistical modelling
 
 -   **Simulation** $\rightarrow$ conditional and unconditional GRF for spatial predictions.
 
-The "`gstat`" package is simple to use and here are the basics steps for spatial data analysis
+The "`gstat`" package is simple to use and here are the basics steps for spatial data analysis:
 
 1.  Define spatial data ( a $\texttt{SpatialPointsDataFrame})$ from the "`sp`" package.
 2.  Compute the empirical variogram using the function $\texttt{variogram()}$
@@ -270,7 +270,7 @@ TA <- CRS("+proj=aea +lat_1=34 +lat_2=40.5 +lat_0=0 +lon_0=-120 +
 coords <- spTransform(x, TA)
 ```
 
-Now we will create an empirical variogram using the package "`gstat`" as follow
+Now we will create an empirical variogram using the package "`gstat`" as follows:
 
 ```{r message=FALSE, warning=FALSE, fig.cap = "", fig.height = 5, fig.width = 6, fig.pos='H', fig.align = 'center'}
 library(gstat)
@@ -280,7 +280,7 @@ head(v)
 plot(v)
 ```
 
-and then fit a model variogram
+and then fit a model variogram (Exponential in this case):
 
 ```{r message=FALSE, warning=FALSE, fig.cap = "", fig.height = 5, fig.width = 6, fig.pos='H', fig.align = 'center'}
 fve <- fit.variogram(v, vgm(85, "Exp", 75, 20))
@@ -289,7 +289,7 @@ plot(variogramLine(fve, 400), type='l', ylim=c(0,120))
 points(v[,2:3], pch=20, col='red')
 ```
 
-You can change the type of variograms (spherical in stead of exponential) and compare them
+You can change the type of variograms (Spherical in stead of Exponential) and compare them, for example:
 
 ```{r message=FALSE, warning=FALSE, fig.cap = "", fig.height = 5, fig.width = 6, fig.pos='H', fig.align = 'center'}
 fvs <- fit.variogram(v, vgm(85, "Sph", 75, 20))
@@ -300,7 +300,7 @@ points(v[,2:3], pch=20, col='red')
 
 # Kriging
 
-This section introduces the traditional method for spatial prediction in point-referenced data, which aims to minimize the mean squared prediction error. Known as **Kriging**, this technique was formalized by [@matheron1963], who named it in tribute to Danie G. Krige [@krige1951]. Here, the main task is finding an optimal spatial prediction, that is; giving a vector of observations $\mathbf{Z} = (Z(\mathbf{s}_1), \ldots, Z(\mathbf{s}_n))^{\top}$ the goal is accurately estimate values at an unsampled location $Z(\mathbf{s}_0)$. So, basically the question is; what is the best predictor of the value of $Z(\mathbf{s}_0)$ based upon the data $\mathbf{Z}$?
+This section introduces the traditional method for spatial prediction in point-referenced data, which aims to minimize the mean squared prediction error. Known as **Kriging**, this technique was formalized by [@matheron1963], who named it in tribute to Danie G. Krige [@krige1951]. Here, the main task is finding an optimal spatial prediction, that is; giving a vector of observations $\mathbf{Z} = (Z(\mathbf{s}_1), \ldots, Z(\mathbf{s}_n))^{\top}$ with the purpose of accurately estimating a value at an unsampled location $Z(\mathbf{s}_0)$. So, basically the question is; what is the best predictor of the value of $Z(\mathbf{s}_0)$ based upon the data $\mathbf{Z}$?
 
 ## Ordinary Kriging
 
@@ -703,5 +703,7 @@ grid.arrange(p3, p4, ncol = 1)
 # Conclusion
 
 In this first entry, I explore the foundational idea of Kriging interpolation, initially proposed by Danie G. Krige and later formalized mathematically by Georges Matheron [@matheron1963]. The prediction at a specific location, or interpolation over a spatial domain, can be done by solving a system of linear equations. The goal here is to demonstrate that Kriging can be applied both through its classical formulation and also by a "Gaussian Process Regression" (to be discussed in Part 2, coming sooon...).
+
+In next post (Understanding Kriging Part 2), I will be presenting its full probabilistic interpretation. While in this post, Kriging predictions or interpolations are based on solving a linear system of equations, a solid understanding of stochastic (spatial) processes is still essential (I did not cover that part given the core of the post, but you can review it in @cressie1993spatial). However, the solution itself of the Kriging system of equations relies on linear algebra rather than likelihood-based methods.
 
 *Note: I am not an expert in using the* `gstat` *package, so the comparisons presented may not be optimal or the most efficient. The package was used solely for illustrative purposes.*

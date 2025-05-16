@@ -251,7 +251,7 @@ window.Quarto = {
 </section>
 <section id="computing-the-distance" class="level1" data-number="2">
 <h1 data-number="2"><span class="header-section-number">2</span> Computing the distance</h1>
-<p>Distance is a numerical description of how far apart things are. It is the most fundamental concept in geography. Considering the Waldo Tobler’s first law of the geography which says , we need to quantify this relationship in some way and it is not always as easy a question as it seems.</p>
+<p>Distance is a numerical description of how far apart things are. It is the most fundamental concept in geography. Considering the Waldo Tobler’s first law of the geography which says <span style="color:blue;">everything is related to everything else, but near things are more related than distant things <span class="citation" data-cites="tobler1970computer">(<a href="#ref-tobler1970computer" role="doc-biblioref">Tobler 1970</a>)</span></span> , we need to quantify this relationship in some way and it is not always as easy a question as it seems.</p>
 <p>Computing the distance between a set of spatial data points is very important for spatial data analysis. If we have <span class="math inline">\(\mathbf{s}_i\)</span> spatial locations, for <span class="math inline">\(i = 1, \ldots, n\)</span>, with <span class="math inline">\(n\)</span> equal to the total number of spatial locations. The coordinates of <span class="math inline">\(\mathbf{s}_i\)</span> are in <em>latitude-longitude</em> but for simplicity, we will denote them as <span class="math inline">\((x_i,y_i)\)</span>. Now, another set of spatial locations <span class="math inline">\(\mathbf{s}_j\)</span> has coordinates <span class="math inline">\((x_i, y_j)\)</span>, hence the Euclidean distance between spatial points <span class="math inline">\(\mathbf{s}_i\)</span> and <span class="math inline">\(\mathbf{s}_j\)</span> is given by</p>
 <p><span id="eq-1"><span class="math display">\[
 \begin{equation}\text{dist\_matrix}_{ij} = \sqrt{(x_i - x_j)^2 + (y_i - y_j)^2}.\end{equation}
@@ -324,7 +324,7 @@ site6 37.00000 65.06919 62.20129 76.21680 45.65085  0.00000</code></pre>
 \tag{3}\]</span></span></p>
 <section id="empirical-variogram" class="level2" data-number="3.1">
 <h2 data-number="3.1" class="anchored" data-anchor-id="empirical-variogram"><span class="header-section-number">3.1</span> Empirical Variogram</h2>
-<p>Traditionally, the selection of a variogram model begins with plotting the <strong>empirical semivariogram</strong> (Matheron (1963)). This empirical plot is then visually compared against various theoretical models to identify the most appropriate fit. The standard form of the empirical semivariogram is given by</p>
+<p>Traditionally, the selection of a variogram model begins with plotting the <strong>empirical semivariogram</strong>. This empirical plot is then visually compared against various theoretical models to identify the most appropriate fit. The standard form of the empirical semivariogram is given by</p>
 <p><span id="eq-4"><span class="math display">\[
 \hat{\gamma}(\mathbf{h}) = \frac{1}{2n(\mathbf{h})} \sum^{n(\mathbf{h})}_{i,j}(Z(\mathbf{s}_i) - Z(\mathbf{s}_j))^{2}
 \tag{4}\]</span></span></p>
@@ -942,6 +942,9 @@ Matheron, Georges. 1963. <span>“Principles of Geostatistics.”</span> <em>Eco
 </div>
 <div id="ref-pebesma2004multivariable" class="csl-entry" role="listitem">
 Pebesma, Edzer J. 2004. <span>“Multivariable Geostatistics in s: The Gstat Package.”</span> <em>Computers &amp; Geosciences</em> 30 (7): 683–91.
+</div>
+<div id="ref-tobler1970computer" class="csl-entry" role="listitem">
+Tobler, Waldo R. 1970. <span>“A Computer Movie Simulating Urban Growth in the Detroit Region.”</span> <em>Economic Geography</em> 46 (sup1): 234–40.
 </div>
 </div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
