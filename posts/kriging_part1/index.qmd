@@ -86,7 +86,7 @@ $$ {#eq-3}
 
 ## Empirical Variogram
 
-Traditionally, the selection of a variogram model begins with plotting the **empirical semivariogram** (Matheron (1963)). This empirical plot is then visually compared against various theoretical models to identify the most appropriate fit. The standard form of the empirical semivariogram is given by
+Traditionally, the selection of a variogram model begins with plotting the **empirical semivariogram**. This empirical plot is then visually compared against various theoretical models to identify the most appropriate fit. The standard form of the empirical semivariogram is given by
 
 $$
 \hat{\gamma}(\mathbf{h}) = \frac{1}{2n(\mathbf{h})} \sum^{n(\mathbf{h})}_{i,j}(Z(\mathbf{s}_i) - Z(\mathbf{s}_j))^{2}
