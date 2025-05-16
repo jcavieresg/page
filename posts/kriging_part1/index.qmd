@@ -1,7 +1,7 @@
 ---
 title: "Understanding Kriging (Part 1)"
 author: "Joaquin Cavieres"
-date: "2025-05-14"
+date: "2025-05-16"
 categories: [code, analysis]
 image: "images/plot1.jpg"
 ---
@@ -706,4 +706,6 @@ In this first entry, I explore the foundational idea of Kriging interpolation, i
 
 In next post (Understanding Kriging Part 2), I will be presenting its full probabilistic interpretation. While in this post, Kriging predictions or interpolations are based on solving a linear system of equations, a solid understanding of stochastic (spatial) processes is still essential (I did not cover that part given the core of the post, but you can review it in @cressie1993spatial). However, the solution itself of the Kriging system of equations relies on linear algebra rather than likelihood-based methods.
 
-*Note: I am not an expert in using the* `gstat` *package, so the comparisons presented may not be optimal or the most efficient. The package was used solely for illustrative purposes.*
+*Note 1: I am not an expert in using the* "`gstat"` *package, so the comparisons presented may not be optimal or the most efficient. The package was used solely for illustrative purposes.*
+
+*Note 2: It is interesting to see high values for the variance in the interpolation using the* "`gstat"` *package. Let's explore it in the next post..*
