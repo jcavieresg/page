@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Joaquin Cavieres">
-<meta name="dcterms.date" content="2025-05-14">
+<meta name="dcterms.date" content="2025-05-16">
 
 <title>Understanding Kriging (Part 1) – Joaquin Cavieres</title>
 <style>
@@ -223,7 +223,7 @@ window.Quarto = {
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">May 14, 2025</p>
+        <p class="date">May 16, 2025</p>
       </div>
     </div>
     
@@ -926,9 +926,10 @@ C(\mathbf{h}) = \sigma^{2}\exp\bigg (\frac{\mathbf{h}}{\rho} \bigg ),
 </section>
 <section id="conclusion" class="level1" data-number="7">
 <h1 data-number="7"><span class="header-section-number">7</span> Conclusion</h1>
-<p>In this first entry, I explore the foundational idea of Kriging interpolation, initially proposed by Danie G. Krige and later formalized mathematically by Georges Matheron <span class="citation" data-cites="matheron1963">(<a href="#ref-matheron1963" role="doc-biblioref">Matheron 1963</a>)</span>. The prediction at a specific location, or interpolation over a spatial domain, can be done by solving a system of linear equations. The goal here is to demonstrate that Kriging can be applied both through its classical formulation and also by a “Gaussian Process Regression”.</p>
-<p>In next post (Understanding Kriging Part 2), I will be presenting its full probabilistic interpretation. While in this post, Kriging predictions or interpolations are based on solving a linear system of equations, a solid understanding of stochastic (spatial) processes is still essential (I did not cover that part given the core of the post, but you can review it in <span class="citation" data-cites="cressie1993spatial">(<a href="#ref-cressie1993spatial" role="doc-biblioref">Cressie 1993</a>)</span>). However, the solution itself of the Kriging system of equations relies on linear algebra rather than likelihood-based methods.</p>
-<p><em>Note: I am not an expert in using the</em> <code>gstat</code> <em>package, so the comparisons presented may not be optimal or the most efficient. The package was used solely for illustrative purposes.</em></p>
+<p>In this first entry, I explored the foundational idea of Kriging interpolation, initially proposed by Danie G. Krige and later formalized mathematically by Georges Matheron. The prediction at a specific location, or interpolation over a spatial domain, can be done by solving a system of linear equations. The goal here is to demonstrate that Kriging can be applied both through its classical formulation.</p>
+<p>In next post (<strong>Understanding Kriging Part 2</strong>), I will be presenting its full probabilistic interpretation given by a “Gaussian Process Regression”. While in this post, Kriging predictions or interpolations are based on solving a linear system of equations, a hold understanding of stochastic (spatial) processes is still essential (I did not cover that part given the core of the post, but you can review it in <span class="citation" data-cites="cressie1993spatial">Cressie (<a href="#ref-cressie1993spatial" role="doc-biblioref">1993</a>)</span>). However, the solution itself of the Kriging system of equations relies on linear algebra rather than a likelihood-based method.</p>
+<p><em>Note 1: I am not an expert in using the</em> “<code>gstat"</code> <em>package, so the comparisons presented may not be optimal or the most efficient. The package was used solely for illustrative purposes.</em></p>
+<p><em>Note 2: It is interesting to see high values for the variance in the interpolation using the</em> “<code>gstat"</code> <em>package. Let’s explore it in the next post..</em></p>
 
 
 
