@@ -22,7 +22,7 @@ We will denote the spatial locations as $\{\mathbf{s}_1, \ldots, \mathbf{s}_n\}$
 
 # Computing the distance
 
-Distance is a numerical description of how far apart things are. It is the most fundamental concept in geography. Considering the Waldo Tobler's first law of the geography which says \textcolor{blue}{`everything is related to everything else, but near things are more related than distant things'} [@tobler1970computer], we need to quantify this relationship in some way and it is not always as easy a question as it seems.
+Distance is a numerical description of how far apart things are. It is the most fundamental concept in geography. Considering the Waldo Tobler's first law of the geography which says <span style="color:blue;">everything is related to everything else, but near things are more related than distant things'} [@tobler1970computer]</span> , we need to quantify this relationship in some way and it is not always as easy a question as it seems.
 
 Computing the distance between a set of spatial data points is very important for spatial data analysis. If we have $\mathbf{s}_i$ spatial locations, for $i = 1, \ldots, n$, with $n$ equal to the total number of spatial locations. The coordinates of $\mathbf{s}_i$ are in *latitude-longitude* but for simplicity, we will denote them as $(x_i,y_i)$. Now, another set of spatial locations $\mathbf{s}_j$ has coordinates $(x_i, y_j)$, hence the Euclidean distance between spatial points $\mathbf{s}_i$ and $\mathbf{s}_j$ is given by
 
