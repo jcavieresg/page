@@ -17,6 +17,9 @@ format:
   html:
     theme: flatly
     css: styles.css
+    number-sections: true
+    number-equations: true
+    bibliography: references.bib
 
 editor: visual
 
