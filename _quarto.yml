@@ -11,6 +11,8 @@ website:
         href: https://github.com/jcavieresg
       - icon: twitter
         href: https://x.com/jcavieresg
+      - text: "CV""
+        href: posts/CV_Joaquin_Cavieres.pdf
 format:
   html:
     theme: cyborg
