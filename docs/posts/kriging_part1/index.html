@@ -326,7 +326,7 @@ site6 37.00000 65.06919 62.20129 76.21680 45.65085  0.00000</code></pre>
 <h2 data-number="3.1" class="anchored" data-anchor-id="empirical-variogram"><span class="header-section-number">3.1</span> Empirical Variogram</h2>
 <p>Traditionally, the selection of a variogram model begins with plotting the <strong>empirical semivariogram</strong>. This empirical plot is then visually compared against various theoretical models to identify the most appropriate fit. The standard form of the empirical semivariogram is given by</p>
 <p><span id="eq-4"><span class="math display">\[
-\hat{\gamma}(\mathbf{h}) = \frac{1}{2n(\mathbf{h})} \sum^{n(\mathbf{h})}_{i,j}(Z(\mathbf{s}_i) - Z(\mathbf{s}_j))^{2}
+\hat{\gamma}(\mathbf{h}) = \frac{1}{2n(\mathbf{h})} \sum^{n(\mathbf{h})}_{i,j}(Z(\mathbf{s}_i) - Z(\mathbf{s}_j))^{2},
 \tag{4}\]</span></span></p>
 <p>where <span class="math inline">\(Z(\mathbf{s}_i)\)</span> and <span class="math inline">\(Z(\mathbf{s}_j)\)</span> are the values (in the space) at the spatial locations <span class="math inline">\(\mathbf{s}\)</span>. Finally, we will denote the <strong>variogram</strong> as <span class="math inline">\(2 \gamma(\mathbf{h})\)</span>.</p>
 <!-- We can write the variance (stationary) of $Z(\mathbf{s})$ and $Z(\mathbf{s} + \mathbf{h})$ as $\sigma^{2}_{\mathbf{s}} = \mathbb{E}[Z^2] - \mu^2$ (for some mean $\mu$). Thus, the spatial covariance between $Z(\mathbf{s})$ and $Z(\mathbf{s} + \mathbf{h})$ can be written as -->
@@ -361,15 +361,15 @@ site6 37.00000 65.06919 62.20129 76.21680 45.65085  0.00000</code></pre>
 <p>First, we will consider the following important observations before of the computation:</p>
 <ol type="1">
 <li><u>As the distance increase, then the variability also increase</u>: this is typical, as larger distance offsets generally lead to greater differences between the head and tail samples.</li>
-<li><u>It is calculated over all possible pairs separated by the distance vector <span class="math inline">\(\mathbf{h}\)</span></u>: we evaluate all data, identifying all possible pair combinations with every other spatial point. The variogram is then calculated as half the expected squared difference between these pairs. A larger number of pairs provides a more reliable estimate</li>
+<li><u>It is calculated over all possible pairs separated by the distance vector <span class="math inline">\(\mathbf{h}\)</span></u>: we evaluate all data, identifying all possible pair combinations with every other spatial point. The variogram is then calculated as half the expected squared difference between these pairs. A larger number of pairs provides a more reliable estimate.</li>
 <li><u>It is necessary plot the <strong>sill</strong> to know the correlation between the spatial points:</u> here, sill is the spatial variance <span class="math inline">\(\sigma^2_{\mathbf{s}}\)</span>. As we are assuming stationarity, the covariance is:</li>
 </ol>
 <span class="math display">\[\begin{equation*}
 C(\mathbf{h}) = \sigma^2_\mathbf{s} - \gamma(\mathbf{h})
 \end{equation*}\]</span>
-<p>The covariance measure the similarity over distance, and if <span class="math inline">\(\sigma^2_{\mathbf{s}} = 1.0\)</span>, <span class="math inline">\(C(\mathbf{h})\)</span> is equal to the correlogram <span class="math inline">\(\rho(\mathbf{h})\)</span> such that</p>
+<p>The covariance measure the similarity over distance, and if <span class="math inline">\(\sigma^2_{\mathbf{s}} = 1.0\)</span>, <span class="math inline">\(C(\mathbf{h})\)</span> is equal to the correlogram <span class="math inline">\(\rho(\mathbf{h})\)</span> such that:</p>
 <span class="math display">\[\begin{equation}
-\rho(\mathbf{h}) = \sigma^2_\mathbf{s} - \gamma(\mathbf{h})
+\rho(\mathbf{h}) = \sigma^2_\mathbf{s} - \gamma(\mathbf{h}).
 \end{equation}\]</span>
 <ol start="4" type="1">
 <li><p><u>The distance at which the variogram reaches <span class="math inline">\(\sigma^2_{\mathbf{s}}\)</span> is known as the <strong>range</strong></u>: the distance in which the difference of the variogram from <span class="math inline">\(\sigma^2_{\mathbf{s}}\)</span> becomes negligible.</p></li>
@@ -379,11 +379,11 @@ C(\mathbf{h}) = \sigma^2_\mathbf{s} - \gamma(\mathbf{h})
 <h2 data-number="4.1" class="anchored" data-anchor-id="practical-example"><span class="header-section-number">4.1</span> Practical example</h2>
 <!-- Let consider a set of spatial data points (location) with known coordinates $\mathbf{s}_1, \mathbf{s}_2, \dots, \mathbf{s}_n$ and observed values $Z(\mathbf{s}_1), Z(\mathbf{s}_2), \dots, Z(\mathbf{s}_n)$. -->
 <!-- 1.  Define the empirical variogram estimator $\hat{\gamma}(\mathbf{h})$. -->
-<p>Given the following observations:</p>
+<p>Given the following observed values:</p>
 <span class="math display">\[\begin{equation*}
 Z(\mathbf{s}_1) = 10, \hspace{2mm} Z(\mathbf{s}_2) = 12, \hspace{2mm} Z(\mathbf{s}_3) = 14, \hspace{2mm} Z(\mathbf{s}_4) = 13, \hspace{2mm} Z(\mathbf{s}_5) = 15
 \end{equation*}\]</span>
-<p>and the corresponding distances between the points (the distance matrix)</p>
+<p>and the corresponding distances between the spatial points (the distance matrix)</p>
 <span class="math display">\[\begin{bmatrix}
 0 &amp; 2 &amp; 4 &amp; 6 &amp; 8 \\
 2 &amp; 0 &amp; 2 &amp; 4 &amp; 6 \\
@@ -428,7 +428,7 @@ Z(\mathbf{s}_1) = 10, \hspace{2mm} Z(\mathbf{s}_2) = 12, \hspace{2mm} Z(\mathbf{
 <li><p><strong>Multivariable geostatistics</strong> <span class="math inline">\(\rightarrow\)</span> co-kriging and other methods for spatial modelling.</p></li>
 <li><p><strong>Simulation</strong> <span class="math inline">\(\rightarrow\)</span> conditional and unconditional GRF for spatial predictions.</p></li>
 </ul>
-<p>The “<code>gstat</code>” package is simple to use and here are the basics steps for spatial data analysis</p>
+<p>The “<code>gstat</code>” package is simple to use and here are the basics steps for spatial data analysis:</p>
 <ol type="1">
 <li>Define spatial data ( a <span class="math inline">\(\texttt{SpatialPointsDataFrame})\)</span> from the “<code>sp</code>” package.</li>
 <li>Compute the empirical variogram using the function <span class="math inline">\(\texttt{variogram()}\)</span></li>
@@ -460,7 +460,7 @@ Z(\mathbf{s}_1) = 10, \hspace{2mm} Z(\mathbf{s}_2) = 12, \hspace{2mm} Z(\mathbf{
 <span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="st">          x_0=0 +y_0=-4000000 +datum=WGS84 +units=km"</span>)</span>
 <span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>coords <span class="ot">&lt;-</span> <span class="fu">spTransform</span>(x, TA)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Now we will create an empirical variogram using the package “<code>gstat</code>” as follow</p>
+<p>Now we will create an empirical variogram using the package “<code>gstat</code>” as follows:</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gstat)</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>gs <span class="ot">&lt;-</span> <span class="fu">gstat</span>(<span class="at">formula =</span> res<span class="sc">~</span><span class="dv">1</span>, <span class="at">locations =</span> coords)</span>
@@ -484,7 +484,7 @@ Z(\mathbf{s}_1) = 10, \hspace{2mm} Z(\mathbf{s}_2) = 12, \hspace{2mm} Z(\mathbf{
 </div>
 </div>
 </div>
-<p>and then fit a model variogram</p>
+<p>and then fit a model variogram (Exponential in this case):</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>fve <span class="ot">&lt;-</span> <span class="fu">fit.variogram</span>(v, <span class="fu">vgm</span>(<span class="dv">85</span>, <span class="st">"Exp"</span>, <span class="dv">75</span>, <span class="dv">20</span>))</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>fve</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -503,7 +503,7 @@ Z(\mathbf{s}_1) = 10, \hspace{2mm} Z(\mathbf{s}_2) = 12, \hspace{2mm} Z(\mathbf{
 </div>
 </div>
 </div>
-<p>You can change the type of variograms (spherical in stead of exponential) and compare them</p>
+<p>You can change the type of variograms (Spherical in stead of Exponential) and compare them, for example:</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>fvs <span class="ot">&lt;-</span> <span class="fu">fit.variogram</span>(v, <span class="fu">vgm</span>(<span class="dv">85</span>, <span class="st">"Sph"</span>, <span class="dv">75</span>, <span class="dv">20</span>))</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>fvs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -526,7 +526,7 @@ Z(\mathbf{s}_1) = 10, \hspace{2mm} Z(\mathbf{s}_2) = 12, \hspace{2mm} Z(\mathbf{
 </section>
 <section id="kriging" class="level1" data-number="5">
 <h1 data-number="5"><span class="header-section-number">5</span> Kriging</h1>
-<p>This section introduces the traditional method for spatial prediction in point-referenced data, which aims to minimize the mean squared prediction error. Known as <strong>Kriging</strong>, this technique was formalized by <span class="citation" data-cites="matheron1963">(<a href="#ref-matheron1963" role="doc-biblioref">Matheron 1963</a>)</span>, who named it in tribute to Danie G. Krige <span class="citation" data-cites="krige1951">(<a href="#ref-krige1951" role="doc-biblioref">Krige 1951</a>)</span>. Here, the main task is finding an optimal spatial prediction, that is; giving a vector of observations <span class="math inline">\(\mathbf{Z} = (Z(\mathbf{s}_1), \ldots, Z(\mathbf{s}_n))^{\top}\)</span> the goal is accurately estimate values at an unsampled location <span class="math inline">\(Z(\mathbf{s}_0)\)</span>. So, basically the question is; what is the best predictor of the value of <span class="math inline">\(Z(\mathbf{s}_0)\)</span> based upon the data <span class="math inline">\(\mathbf{Z}\)</span>?</p>
+<p>This section introduces the traditional method for spatial prediction in point-referenced data, which aims to minimize the mean squared prediction error. Known as <strong>Kriging</strong>, this technique was formalized by <span class="citation" data-cites="matheron1963">(<a href="#ref-matheron1963" role="doc-biblioref">Matheron 1963</a>)</span>, who named it in tribute to Danie G. Krige <span class="citation" data-cites="krige1951">(<a href="#ref-krige1951" role="doc-biblioref">Krige 1951</a>)</span>. Here, the main task is finding an optimal spatial prediction, that is; giving a vector of observations <span class="math inline">\(\mathbf{Z} = (Z(\mathbf{s}_1), \ldots, Z(\mathbf{s}_n))^{\top}\)</span> with the purpose of accurately estimating a value at an unsampled location <span class="math inline">\(Z(\mathbf{s}_0)\)</span>. So, basically the question is; what is the best predictor of the value of <span class="math inline">\(Z(\mathbf{s}_0)\)</span> based upon the data <span class="math inline">\(\mathbf{Z}\)</span>?</p>
 <section id="ordinary-kriging" class="level2" data-number="5.1">
 <h2 data-number="5.1" class="anchored" data-anchor-id="ordinary-kriging"><span class="header-section-number">5.1</span> Ordinary Kriging</h2>
 <p>Let consider the observed values <span class="math inline">\(\mathbf{Z} = (Z(\mathbf{s}_1), Z(\mathbf{s}_2), \dots, Z(\mathbf{s}_n))^{\top}\)</span> at known locations <span class="math inline">\(\{\mathbf{s}_1, \mathbf{s}_2, \dots, \mathbf{s}_n\}\)</span>. The goal is to predict the value of a random field <span class="math inline">\(Z(\mathbf{s}_0)\)</span> at an unobserved location <span class="math inline">\(\mathbf{s}_0\)</span>. The model assumption for this case is the following:</p>
@@ -926,7 +926,8 @@ C(\mathbf{h}) = \sigma^{2}\exp\bigg (\frac{\mathbf{h}}{\rho} \bigg ),
 </section>
 <section id="conclusion" class="level1" data-number="7">
 <h1 data-number="7"><span class="header-section-number">7</span> Conclusion</h1>
-<p>In this first entry, I explore the foundational idea of Kriging interpolation, initially proposed by Danie G. Krige and later formalized mathematically by Georges Matheron <span class="citation" data-cites="matheron1963">(<a href="#ref-matheron1963" role="doc-biblioref">Matheron 1963</a>)</span>. The prediction at a specific location, or interpolation over a spatial domain, can be done by solving a system of linear equations. The goal here is to demonstrate that Kriging can be applied both through its classical formulation and also by a “Gaussian Process Regression” (to be discussed in Part 2, coming sooon…).</p>
+<p>In this first entry, I explore the foundational idea of Kriging interpolation, initially proposed by Danie G. Krige and later formalized mathematically by Georges Matheron <span class="citation" data-cites="matheron1963">(<a href="#ref-matheron1963" role="doc-biblioref">Matheron 1963</a>)</span>. The prediction at a specific location, or interpolation over a spatial domain, can be done by solving a system of linear equations. The goal here is to demonstrate that Kriging can be applied both through its classical formulation and also by a “Gaussian Process Regression”.</p>
+<p>In next post (Understanding Kriging Part 2), I will be presenting its full probabilistic interpretation. While in this post, Kriging predictions or interpolations are based on solving a linear system of equations, a solid understanding of stochastic (spatial) processes is still essential (I did not cover that part given the core of the post, but you can review it in <span class="citation" data-cites="cressie1993spatial">(<a href="#ref-cressie1993spatial" role="doc-biblioref">Cressie 1993</a>)</span>). However, the solution itself of the Kriging system of equations relies on linear algebra rather than likelihood-based methods.</p>
 <p><em>Note: I am not an expert in using the</em> <code>gstat</code> <em>package, so the comparisons presented may not be optimal or the most efficient. The package was used solely for illustrative purposes.</em></p>
 
 
@@ -934,6 +935,9 @@ C(\mathbf{h}) = \sigma^{2}\exp\bigg (\frac{\mathbf{h}}{\rho} \bigg ),
 </section>
 
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-cressie1993spatial" class="csl-entry" role="listitem">
+Cressie, Noel AC. 1993. <span>“Spatial Prediction and Kriging.”</span> <em>Statistics for Spatial Data (Cressie NAC, Ed). New York: John Wiley &amp; Sons</em>, 105–209.
+</div>
 <div id="ref-krige1951" class="csl-entry" role="listitem">
 Krige, D. G. 1951. <span>“A Statistical Approach to Some Basic Mine Valuation Problems on the Witwatersrand.”</span> <em>Journal of the Chemical, Metallurgical and Mining Society of South Africa</em> 52 (6): 119–39.
 </div>

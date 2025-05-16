@@ -702,7 +702,7 @@ grid.arrange(p3, p4, ncol = 1)
 
 # Conclusion
 
-In this first entry, I explore the foundational idea of Kriging interpolation, initially proposed by Danie G. Krige and later formalized mathematically by Georges Matheron [@matheron1963]. The prediction at a specific location, or interpolation over a spatial domain, can be done by solving a system of linear equations. The goal here is to demonstrate that Kriging can be applied both through its classical formulation and also by a "Gaussian Process Regression" (to be discussed in Part 2, coming sooon...).
+In this first entry, I explore the foundational idea of Kriging interpolation, initially proposed by Danie G. Krige and later formalized mathematically by Georges Matheron [@matheron1963]. The prediction at a specific location, or interpolation over a spatial domain, can be done by solving a system of linear equations. The goal here is to demonstrate that Kriging can be applied both through its classical formulation and also by a "Gaussian Process Regression".
 
 In next post (Understanding Kriging Part 2), I will be presenting its full probabilistic interpretation. While in this post, Kriging predictions or interpolations are based on solving a linear system of equations, a solid understanding of stochastic (spatial) processes is still essential (I did not cover that part given the core of the post, but you can review it in @cressie1993spatial). However, the solution itself of the Kriging system of equations relies on linear algebra rather than likelihood-based methods.
 
