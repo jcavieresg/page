@@ -1,8 +1,15 @@
 [
   {
-    "listing": "/index.html",
+    "listing": "/index2.html",
     "items": [
-      "/posts/kriging_part1/index.html",
+      "/posts/kriging_part1/kriging_part1.html",
+      "/posts/welcome/index.html"
+    ]
+  },
+  {
+    "listing": "/posts.html",
+    "items": [
+      "/posts/kriging_part1/kriging_part1.html",
       "/posts/welcome/index.html"
     ]
   }

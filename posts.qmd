@@ -1,0 +1,12 @@
+---
+title: "Blog Posts"
+listing:
+  contents: posts
+  type: default
+  sort: "date desc"
+  categories: true
+  fields: [title, date, description]
+---
+
+Here you will find a selection of my blog posts on spatial modeling and statistical analysis.
+
