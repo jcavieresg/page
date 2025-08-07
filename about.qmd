@@ -1,6 +1,6 @@
 ---
 title: "About"
-image: "images/profile2.jpeg"
+# image: "images/profile3.jpg"
 about:
   template: jolla
   links:
@@ -13,12 +13,13 @@ about:
     - icon: github
       text: Github
       href: https://github.com/jcavieresg
-# image: images/image_losvilos
 ---
 
-<!-- I am a postdoctoral researcher in the "[Chair of Spatial Data Science and Statistical Learning](https://uni-goettingen.de/en/629104.html)" at **Georg-August-Universität Göttingen**. Previously, I was a postdoctoral researcher in the "[Chair of Geoinformatics-Big Spatial Data](https://www.geoinformatics.uni-bayreuth.de/en/)" at **Bayreuth University**. I earned a doctoral degree in Statistics from **Universidad de Valparaíso** in 2022 and a Master in Statistics (2016) in the same University. -->
 
-<!-- Originally I am from **Puente Alto**, Santiago of Chile, but most of my life was in the beautiful **Valparaíso**. ​However (sorry to the former two), my favorite place in the world is **Los Vilos**! -->
+<p style="text-align: center;">
+  <img src="images/profile3.jpg" alt="Joaquin Cavieres" style="width: 180px; border-radius: 50%;">
+</p>
+
 
 I am a postdoctoral researcher in the "[Chair of Spatial Data Science and Statistical Learning](https://uni-goettingen.de/en/629104.html)" at **Georg-August-Universität Göttingen**. Previously, I was a postdoctoral researcher in the "[Chair of Geoinformatics-Big Spatial Data](https://www.geoinformatics.uni-bayreuth.de/en/)" at **Bayreuth University**. My doctoral thesis was supervised by [Javier Contreras Reyes](https://www.researchgate.net/profile/Javier-Contreras-Reyes)" and [Michael Karkulik](http://mkarkulik.mat.utfsm.cl/), proposing different computational methods to incorporate a smoothing thin plate spline in spatial models. During my doctoral studies I did two very interesting internships; the first one in the Probabilistic Machine Learning group at Aalto University, under the supervision of [Aki Vehtari](href="https://users.aalto.fi/~ave/). The second one was in the Computer, Electrical, and Mathematical Sciences and Engineering Division at KAUST, under the supervision of [Paula Moraga](https://www.paulamoraga.com/).
 I have also worked as Data Scientist in the retail (Cencosud-Scotiabank) and the forest industry (Arauco Celulosa).

@@ -8,3 +8,11 @@ body {
 p {
   text-align: justify;
 }
+
+
+.about-image img {
+  margin-bottom: 0.5em;
+  width: 2000px;     /* You can adjust this */
+  height: auto;
+  border-radius: 100%; /* optional: make it a circle */
+}
