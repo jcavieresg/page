@@ -5,7 +5,7 @@ project:
     - posts/CV_JoaquinCavieres.pdf
     - images/chart.jpg
     - images/hmat1.png
-
+    - images/main_plot.png
 website:
   title: "Joaquin Cavieres"
   navbar:
