@@ -4,7 +4,7 @@ project:
   resources:
     - posts/CV_JoaquinCavieres.pdf
     - images/chart.jpg
-    - images/hmat1.jpg
+    - images/hmat1.png
 
 website:
   title: "Joaquin Cavieres"
