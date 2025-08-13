@@ -1,6 +1,10 @@
 project:
   type: website
   output-dir: docs
+  resources:
+    - posts/CV_JoaquinCavieres.pdf
+    - images/chart.jpg
+    - images/hmat1.jpg
 
 website:
   title: "Joaquin Cavieres"
