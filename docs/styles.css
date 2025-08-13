@@ -12,7 +12,30 @@ p {
 
 .about-image img {
   margin-bottom: 0.5em;
-  width: 2000px;     /* You can adjust this */
+  width: 10000px;     /* You can adjust this */
   height: auto;
   border-radius: 100%; /* optional: make it a circle */
 }
+
+.footer-image {
+  width: 300px !important;  /* force override */
+  margin: 0 20px;
+}
+
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 1.5s ease forwards;
+}
+
+.fade-in-delay {
+  animation-delay: 0.5s;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 0.8; /* final transparency */
+    transform: translateY(0);
+  }
+}
+
