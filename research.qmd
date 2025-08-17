@@ -10,28 +10,25 @@ format:
 My research focuses on developing computational techniques for Bayesian spatial modeling. However, I am also is interested in numerical methods (within a deterministic approach) for spatial interpolation purposes.
 
 
-# Publications
-
-
 <div style="text-align:center; margin-top:50px;">
   <img src="images/hmat1.png" class="fade-in" style="width:150px; margin:0 20px;">
 </div>
 
 
-## In Progress
+# In Progress
 
 -   **Cavieres, J**., Krumscheid, S., 2025. Green's Function-Based Thin Plate Splines Via Karhunen–Loéve Expansion For Bayesian Modeling.
 
 -   **Cavieres, J**., Monnahan, C.C., Bolin., D, 2025. Approximated Gaussian random field: effects of parameterization on MCMC sampling.
 
-## Preprints
+# Preprints
 
 - [**Cavieres, J.**, Moraga, P., Monnahan, C.C. (2024). Why not a thin plate spline for spatial models? A comparative study using Bayesian inference. *arXiv*](https://arxiv.org/abs/2404.12756)
 
 - [**Cavieres, J.**, Karkulik, M. (2022). Efficient estimation for a smoothing thin plate spline in a two-dimensional space. *arXiv*](https://arxiv.org/abs/2404.01902)
 
 
-## Journal Publications
+# Journal Publications
 
 - [**Cavieres, J.**, Monnahan, C.C., Bolin, D., and Bergherr, E. (2024). Approximated Gaussian Random Field Under Different Parameterizations for MCMC. *Developments in Statistical Modelling*](https://doi.org/10.1007/978-3-031-65723-8_32)
 
