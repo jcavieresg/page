@@ -18,6 +18,20 @@ My research focuses on developing computational techniques for Bayesian spatial 
 </div>
 
 
+## In Progress
+
+-   **Cavieres, J**., Krumscheid, S., 2025. Green's Function-Based Thin Plate Splines Via Karhunen–Loéve Expansion For Bayesian Modeling.
+
+-   **Cavieres, J**., Monnahan, C.C., Bolin., D, 2025. Approximated Gaussian random field: effects of parameterization on MCMC sampling.
+
+## Preprints
+
+- [**Cavieres, J.**, Moraga, P., Monnahan, C.C. (2024). Why not a thin plate spline for spatial models? A comparative study using Bayesian inference. *arXiv*](https://arxiv.org/abs/2404.12756)
+
+- [**Cavieres, J.**, Karkulik, M. (2022). Efficient estimation for a smoothing thin plate spline in a two-dimensional space. *arXiv*](https://arxiv.org/abs/2404.01902)
+
+
+## Journal Publications
 
 - [**Cavieres, J.**, Monnahan, C.C., Bolin, D., and Bergherr, E. (2024). Approximated Gaussian Random Field Under Different Parameterizations for MCMC. *Developments in Statistical Modelling*](https://doi.org/10.1007/978-3-031-65723-8_32)
 
@@ -32,11 +46,6 @@ My research focuses on developing computational techniques for Bayesian spatial 
 - [**Cavieres, J.**, Nicolis, O. (2018). Using a spatio-temporal bayesian approach to estimate the relative abundance index of yellow squat lobster (Cervimunida johni) of Chile. *Fisheries Research*](https://doi.org/10.1016/j.fishres.2018.07.002)
 
 
-# Preprints
-
-- [**Cavieres, J.**, Moraga, P., Monnahan, C.C. (2024). Why not a thin plate spline for spatial models? A comparative study using Bayesian inference. *arXiv*](https://arxiv.org/abs/2404.12756)
-
-- [**Cavieres, J.**, Karkulik, M. (2022). Efficient estimation for a smoothing thin plate spline in a two-dimensional space. *arXiv*](https://arxiv.org/abs/2404.01902)
 
 <div style="text-align:center; margin-top:50px;">
   <img src="images/chart.jpg" class="fade-in fade-in-delay" style="width:150px; margin:0 20px;">
@@ -45,7 +54,7 @@ My research focuses on developing computational techniques for Bayesian spatial 
 
 # Conferences & Workshops
 
--   **Cavieres, J**., Monnahan, C.C., Bolin, D., Bergherr, E., 2024. Approximated Gaussian random field under different parameterizations for MCMC. International Workshop on Statistical Modelling 2024, Durham, England.}
+-   **Cavieres, J**., Monnahan, C.C., Bolin, D., Bergherr, E., 2024. Approximated Gaussian random field under different parameterizations for MCMC. International Workshop on Statistical Modelling 2024, Durham, England.
 
 -   **Cavieres, J**., Moraga, P., Monnahan, C.C., 2023. Bayesian semiparametric spatial model using Template Model Builder (\texttt{TMB}). CFE-CMStatistics Conference 2023, Berlin, Germany.
 
