@@ -17,7 +17,7 @@ My research focuses on developing computational techniques for Bayesian spatial 
 
 # In Progress
 
--   **Cavieres, J**., Krumscheid, S., 2025. Green's Function-Based Thin Plate Splines Via Karhunen–Loéve Expansion For Bayesian Modeling.
+-   **Cavieres, J**., Krumscheid, S., 2025. Green's Function-Based Thin Plate Splines Via Karhunen–Loéve Expansion For Bayesian Spatial Modeling.
 
 -   **Cavieres, J**., Monnahan, C.C., Bolin., D, 2025. Approximated Gaussian random field: effects of parameterization on MCMC sampling.
 

@@ -25,6 +25,6 @@ I am a postdoctoral researcher in the "[Chair of Spatial Data Science and Statis
 I have also worked as Data Scientist in the retail (Cencosud-Scotiabank) and the forest industry (Arauco Celulosa).
 Generally I use R, Template Model Builder (TMB) and Stan to develop probabilistic models, but I am also interested in numerical methods (from a  deterministic approach) for spatial models using Rcpp/RcppArmadillo. 
 
-Most of my life was in the beautiful **Valparaíso**. However (sorry to the this), my favorite place in the world is **Los Vilos**!
+Most of my life was in the beautiful Valparaíso. However (sorry to the this), my favorite place in the world is **Los Vilos**!
 
 ![](images/image_losvilos.jpeg)
