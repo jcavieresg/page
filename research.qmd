@@ -17,7 +17,11 @@ My research focuses on developing computational techniques for Bayesian spatial 
 
 # In Progress
 
--  **Cavieres, J**., Monnahan, C.C., Bolin., D, 2025. Approximated Gaussian random field: effects of parameterization on MCMC sampling.
+<div style="text-align: justify;">
+
+- **Cavieres, J**., Monnahan, C.C., Bolin., D, 2025. Approximated Gaussian random field: effects of parameterization on MCMC sampling.
+
+</div>
 
 
 # Preprints
