@@ -1,0 +1,45 @@
+---
+title: "Understanding Kriging (Part 2)"
+author: "Joaquin Cavieres"
+date: "2025-05-16"
+categories: [code, analysis]
+image: "images/plot1.jpg"
+---
+
+![](images/plot1.jpg){width="569"}
+
+# Introduction
+
+Let us continue our understanding of the Kriging method. It is important to recall that while Kriging can be treated as a deterministic problem solvable through linear algebra, we are now shifting our focus to the more common (statistical) Bayesian perspective. The primary objective of Kriging is to utilize observed values $y_1, \dots, y_N$ sampled at spatial locations $\mathbf{s}_1, \dots, \mathbf{s}_N$ to predict an unknown value $y_{\text{new}}$ at a specific location $\mathbf{s}_{\text{new}}$ (where $\mathbf{s}_{\text{new}} \notin \{\mathbf{s}_1, \dots, \mathbf{s}_N\}$). In addition to the deterministic approach previously discussed, we can address this problem using stochastic and Bayesian frameworks. Under this view, we assume the data values $y_i$ are observed realizations $y(\mathbf{s}_i)$ of a random variable $Y(\mathbf{s}_i)$ belonging to a spatial random field $Y$. Since the collected data $y(\mathbf{s}_1), \dots, y(\mathbf{s}_N)$ represent only a single realization of the random variables $Y(\mathbf{s}_1), \dots, Y(\mathbf{s}_N)$, our predictions are formulated using these random variables as inputs. Consequently, the predictor $\hat{Y}(\mathbf{s})$ is itself a random variable. *Note: While our previous post used* $Z(\mathbf{s}_1), \dots, Z(\mathbf{s}_N)$ *to denote data values, we will now use* $Y(\mathbf{s}_1), \dots, Y(\mathbf{s}_N)$*. This change is strictly notational to help distinguish the stochastic approach from the deterministic one*.
+
+# Random Fields
+
+Let $(\Omega, \mathcal{F}, \mathbb{P})$ be a probability space. A function $Y:\Omega \to \mathbb{R}$ is called a \emph{random variable} if it is $\mathcal{F}/\mathcal{B}(\mathbb{R})$–measurable, where $\mathcal{B}(\mathbb{R})$ denotes the Borel $\sigma$–algebra on on $\mathbb{R}$. Now, in the same space of probability and $D\subseteq\mathbb{R}^d$ a domain in $d$ dimensions a stochastic process, or more appropriately in our context a **random field** $Y$ on $D$ is a collection of random variables $\{Y(\mathbf{s}) : \mathbf{s}\in D\}$, where for each fixed $\mathbf{s}\in D$, the mapping $[Y(\mathbf{s}):\Omega\to\mathbb{R} ]$ is a random variable. Thus, a random field is just a [a collection of random variables \[\@]{style="color:blue;"}cressie1993spatial[\]]{style="color:blue;"}. Now, the *moments* of a random field $Y$ provide useful information, for example; the mean of a random field Y can be defined as:
+
+\begin{equation}
+\mu(\mathbf{s}) = \mathbb{E}[Y(\mathbf{s})], \qquad \mathbf{s} \in D,
+\end{equation}
+
+provided the expectation exists for all $\mathbf{s} \in D$. The second central moment of the random field $Y$ (variance) is given by:
+
+\begin{equation}
+\operatorname{Var}(Y(\mathbf{s})) = \mathbb{E}\!\left[(Y(\mathbf{s})  - \mu(\mathbf{s}))^2\right],
+\qquad \mathbf{s} \in D,
+\end{equation}
+
+where $\mu(\mathbf{s}) = \mathbb{E}[Y(\mathbf{s})]$ is the mean function previously defined. And, in general, the covariance $\mathbf{C}$ of the random field $Y$ is defined as:
+
+\begin{equation}
+\sigma^2 \mathbf{C}(\mathbf{s}, \mathbf{s'}) = \operatorname{Cov}(Y(\mathbf{s}), Y(\mathbf{s'}))
+= \mathbb{E}\!\left[(Y(\mathbf{s}) - \mu(\mathbf{s}))
+(Y(\mathbf{s'}) - \mu(\mathbf{s'}))\right],
+\quad \mathbf{s},\mathbf{s'}\in D.
+\end{equation}
+
+where the scalar parameter $\sigma^2$ is known as the process variance. In the statistics literature this parameter is often included in the definition of the covariance function. For example, for a Gaussian covariance, $\mathbf{C}(\mathbf{s}, \mathbf{s'}) = \sigma^2\exp\left(-\frac{(x - x')^2}{2\ell^2}\right)$, however in the numerical analysis texts they don't include this "amplification" factor. The reason is that in the deterministic/numerical analysis setting of scattered data interpolation, that factor is irrelevant since it will be absorbed in the expantions coefficients @fasshahuer2015kernel. However, in stochastics methods the variance process $\sigma^2$ plays an important role. Thus, considering this, the variance of the random field $Y$ is the diagonal of the covariance
+
+\begin{equation} 
+\operatorname{Var}(Y) = \sigma^2 \mathbf{C}(\mathbf{s}, \mathbf{s'})
+\end{equation}
+
+There are different kinds of spatial fields (spatial stochastic processes) but we will be interested in the called *Gaussian random fields (or also known as Gaussian processes).*

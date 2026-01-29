@@ -9,50 +9,41 @@ format:
 
 My research focuses on developing computational techniques for Bayesian spatial modeling. However, I am also is interested in numerical methods (within a deterministic approach) for spatial interpolation purposes.
 
-
-<div style="text-align:center; margin-top:50px;">
-  <img src="images/hmat1.png" class="fade-in" style="width:150px; margin:0 20px;">
-</div>
-
+::: {style="text-align:center; margin-top:50px;"}
+<img src="images/hmat1.png" class="fade-in" style="width:150px; margin:0 20px;"/>
+:::
 
 # In Progress
 
-<div style="text-align: justify;">
-
-- **Cavieres, J**., Monnahan, C.C., Bolin., D, 2025. Approximated Gaussian random field: effects of parameterization on MCMC sampling.
-
-</div>
-
+::: {style="text-align: justify;"}
+-   **Cavieres, J**., Monnahan, C.C., Bolin., D, 2025. Approximated Gaussian random field: effects of parameterization on MCMC sampling.
+:::
 
 # Preprints
 
-- [**Cavieres, J.**, Krumscheid, S., 2025. Green's Function-Based Thin Plate Splines Via Karhunen–Loéve Expansion For Bayesian Spatial Modeling. *arXiv*](https://arxiv.org/abs/2510.04256)
+-   [**Cavieres, J.**, Krumscheid, S., 2025. regTPS-KLE: A Novel Approach To Approximate A Gaussian Random Field for Bayesian Spatial Modeling. *arXiv*](https://arxiv.org/abs/2510.04256)
 
-- [**Cavieres, J.**, Moraga, P., Monnahan, C.C. (2024). Why not a thin plate spline for spatial models? A comparative study using Bayesian inference. *arXiv*](https://arxiv.org/abs/2404.12756)
+-   [**Cavieres, J.**, Moraga, P., Monnahan, C.C. (2024). Why not a thin plate spline for spatial models? A comparative study using Bayesian inference. *arXiv*](https://arxiv.org/abs/2404.12756)
 
-- [**Cavieres, J.**, Karkulik, M. (2022). Efficient estimation for a smoothing thin plate spline in a two-dimensional space. *arXiv*](https://arxiv.org/abs/2404.01902)
-
+-   [**Cavieres, J.**, Karkulik, M. (2022). Efficient estimation for a smoothing thin plate spline in a two-dimensional space. *arXiv*](https://arxiv.org/abs/2404.01902)
 
 # Journal Publications
 
-- [**Cavieres, J.**, Monnahan, C.C., Bolin, D., and Bergherr, E. (2024). Approximated Gaussian Random Field Under Different Parameterizations for MCMC. *Developments in Statistical Modelling*](https://doi.org/10.1007/978-3-031-65723-8_32)
+-   [**Cavieres, J.**, Monnahan, C.C., Bolin, D., and Bergherr, E. (2024). Approximated Gaussian Random Field Under Different Parameterizations for MCMC. *Developments in Statistical Modelling*](https://doi.org/10.1007/978-3-031-65723-8_32)
 
-- [Escárate, P., Curé, M., Araya, I., Coronel, M., Cedeño, A.L., Celedon, L., **Cavieres, J.**, et al. (2023). A method to deconvolve stellar profiles: The Non-Rotating Line utilizing Gaussian Sum Approximation. *Astronomy & Astrophysics*](https://doi.org/10.1051/0004-6361/202346587)
+-   [Escárate, P., Curé, M., Araya, I., Coronel, M., Cedeño, A.L., Celedon, L., **Cavieres, J.**, et al. (2023). A method to deconvolve stellar profiles: The Non-Rotating Line utilizing Gaussian Sum Approximation. *Astronomy & Astrophysics*](https://doi.org/10.1051/0004-6361/202346587)
 
-- [Lu, M., **Cavieres, J.**, Moraga, P. (2023). A comparison of spatial and non-spatial machine learning methods in NO2 modelling: prediction accuracy, uncertainty quantification, and model interpretation. *Geographical Analysis*](https://doi.org/10.1111/gean.12356)
+-   [Lu, M., **Cavieres, J.**, Moraga, P. (2023). A comparison of spatial and non-spatial machine learning methods in NO2 modelling: prediction accuracy, uncertainty quantification, and model interpretation. *Geographical Analysis*](https://doi.org/10.1111/gean.12356)
 
-- [**Cavieres, J.**, Ibacache-Pulgar, G., Contreras-Reyes, J.E. (2022). Thin plate spline model under skew-normal random errors: estimation and diagnostic analysis for spatial data. *Statistical Computation and Simulation*](https://doi.org/10.1080/00949655.2022.2090564)
+-   [**Cavieres, J.**, Ibacache-Pulgar, G., Contreras-Reyes, J.E. (2022). Thin plate spline model under skew-normal random errors: estimation and diagnostic analysis for spatial data. *Statistical Computation and Simulation*](https://doi.org/10.1080/00949655.2022.2090564)
 
-- [**Cavieres, J.**, Monnahan, C.C, Vehtari, A. (2021). Accounting for spatial dependence improves relative abundance estimates in a benthic marine species structured as a metapopulation. *Fisheries Research*](https://doi.org/10.1016/j.fishres.2021.105960)
+-   [**Cavieres, J.**, Monnahan, C.C, Vehtari, A. (2021). Accounting for spatial dependence improves relative abundance estimates in a benthic marine species structured as a metapopulation. *Fisheries Research*](https://doi.org/10.1016/j.fishres.2021.105960)
 
-- [**Cavieres, J.**, Nicolis, O. (2018). Using a spatio-temporal bayesian approach to estimate the relative abundance index of yellow squat lobster (Cervimunida johni) of Chile. *Fisheries Research*](https://doi.org/10.1016/j.fishres.2018.07.002)
+-   [**Cavieres, J.**, Nicolis, O. (2018). Using a spatio-temporal bayesian approach to estimate the relative abundance index of yellow squat lobster (Cervimunida johni) of Chile. *Fisheries Research*](https://doi.org/10.1016/j.fishres.2018.07.002)
 
-
-
-<div style="text-align:center; margin-top:50px;">
-  <img src="images/chart.jpg" class="fade-in fade-in-delay" style="width:150px; margin:0 20px;">
-</div>
-
+::: {style="text-align:center; margin-top:50px;"}
+<img src="images/chart.jpg" class="fade-in fade-in-delay" style="width:150px; margin:0 20px;"/>
+:::
 
 # Conferences & Workshops
 
