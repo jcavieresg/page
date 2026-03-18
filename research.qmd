@@ -7,7 +7,8 @@ format:
     number-sections: false
 ---
 
-My research focuses on developing computational techniques for Bayesian spatial modeling. However, I am also is interested in numerical methods (within a deterministic approach) for spatial interpolation purposes.
+My research previously focused on developing computational techniques for Bayesian spatial modeling. I am now exploring its connections with Bayesian inverse problems, which is central part of my current work. In parallel, I remain interested in numerical methods within a deterministic framework for spatial interpolation.
+
 
 ::: {style="text-align:center; margin-top:50px;"}
 <img src="images/hmat1.png" class="fade-in" style="width:150px; margin:0 20px;"/>
