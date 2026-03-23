@@ -51,7 +51,7 @@ There are different kinds of spatial fields (spatial stochastic processes) but w
 
 ## Gaussian Random Field
 
-Among all types of spatial random fields, we focus on **Gaussian Random Field (GRF)**, also known as **Gaussian Processes (GPs)**. A random field $Y$ on $D \subseteq \mathbb{R}^d$ is called a Gaussian random field if, for any finite collection of locations $\mathbf{s}_1, \dots, \mathbf{s}_n \in D$, the joint distribution of $(Y(\mathbf{s}_1), \dots, Y(\mathbf{s}_n))^\top$ is multivariate Gaussian:
+Among all types of spatial random fields, we focus on **Gaussian Random Field (GRF)**. A random field $Y$ on $D \subseteq \mathbb{R}^d$ is called a Gaussian random field if, for any finite collection of locations $\mathbf{s}_1, \dots, \mathbf{s}_n \in D$, the joint distribution of $(Y(\mathbf{s}_1), \dots, Y(\mathbf{s}_n))^\top$ is multivariate Gaussian:
 
 $$
 \begin{pmatrix} Y(\mathbf{s}_1) \\ \vdots \\ Y(\mathbf{s}_n) \end{pmatrix}
