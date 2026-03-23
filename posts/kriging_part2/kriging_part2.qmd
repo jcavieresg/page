@@ -3,7 +3,7 @@ title: "Understanding Kriging (Part 2)"
 author: "Joaquin Cavieres"
 date: "2026-03-23"
 categories: [code, analysis]
-image: "images/plot1.jpg"
+image: "images/kriging2.png"
 ---
 
 ![](images/plot1.jpg){width="569"}
@@ -323,7 +323,12 @@ grid.arrange(p_krig_mean, p_krig_sd, ncol = 2)
 
 # Conclusion
 
-In this post we have developed Kriging prediction unsder Bayesian inference. Here, the GRF assumption allow us making spatial interpolation into a conditional Gaussian inference: given observations $\mathbf{y}$, the posterior at any unobserved location $\mathbf{s}_*$ is a normal distribution whose mean $\hat{y}_*$ and variance $\sigma^2_*$ are available in closed form through simple linear algebra.
+In this post we have developed Kriging prediction unsder Bayesian inference. Here, the GRF assumption allow us making spatial interpolation into a conditional Gaussian inference: given observations $\mathbf{y}$, the posterior at any unobserved location $\mathbf{s}_*$ is a normal distribution whose mean $\hat{y}_*$ and variance $\sigma^2_*$ are available in closed form through simple linear algebra. The reason Bayesian Kriging delivers uncertainty estimates is structural: by treating the unobserved field $U(\mathbf{s})$ as a random variable rather than a fixed unknown, the prediction at any new location $\mathbf{s}_*$ is not a single number but a full posterior distribution $Y_* \mid \mathbf{y} \sim \mathcal{N}(\hat{y}_*, \sigma^2_*)$. The variance
+\begin{equation}
+    \sigma^2_* = \sigma^2 - \mathbf{k}_*^\top \boldsymbol{\Sigma}_{\mathbf{y}}^{-1} \mathbf{k}_*
+\end{equation}
+
+measures how much the observations have reduced our prior uncertainty $\sigma^2$ at that specific location. A purely deterministic interpolation method such as splines or inverse distance weighting would produce the same predicted surface but discard this second quantity entirely. The importance of retaining it is that predictions without uncertainty are incomplete: two locations can share the same predicted grade but one might sit surrounded by boreholes while the other lies in an unsampled region of the domain, and $\sigma^2_*$ distinguishes them exactly. In practice this matters for decision-making (whether to approve a mining block for extraction, allocate a drilling budget, or classify a resource as measured versus inferred) because all of those decisions depend not just on the expected value but on how much confidence one can attach to it.
 
 To extend the conclusion, also we have to consider several aspects of this framework:
 

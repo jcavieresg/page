@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Joaquin Cavieres">
-<meta name="dcterms.date" content="2025-05-16">
+<meta name="dcterms.date" content="2026-03-23">
 
 <title>Understanding Kriging (Part 2) – Joaquin Cavieres</title>
 <style>
@@ -209,7 +209,7 @@ window.Quarto = {
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">May 16, 2025</p>
+        <p class="date">March 23, 2026</p>
       </div>
     </div>
     
@@ -235,305 +235,272 @@ window.Quarto = {
 </section>
 <section id="random-fields" class="level1" data-number="2">
 <h1 data-number="2"><span class="header-section-number">2</span> Random Fields</h1>
-<p>Let <span class="math inline">\((\Omega, \mathcal{F}, \mathbb{P})\)</span> be a probability space. A function <span class="math inline">\(Y:\Omega \to \mathbb{R}\)</span> is called a if it is <span class="math inline">\(\mathcal{F}/\mathcal{B}(\mathbb{R})\)</span>–measurable, where <span class="math inline">\(\mathcal{B}(\mathbb{R})\)</span> denotes the Borel <span class="math inline">\(\sigma\)</span>–algebra on on <span class="math inline">\(\mathbb{R}\)</span>. Now, in the same space of probability and <span class="math inline">\(D\subseteq\mathbb{R}^d\)</span> a domain in <span class="math inline">\(d\)</span> dimensions a stochastic process, or more appropriately in our context a <strong>random field</strong> <span class="math inline">\(Y\)</span> on <span class="math inline">\(D\)</span> is a collection of random variables <span class="math inline">\(\{Y(\mathbf{s}) : \mathbf{s}\in D\}\)</span>, where for each fixed <span class="math inline">\(\mathbf{s}\in D\)</span>, the mapping <span class="math inline">\([Y(\mathbf{s}):\Omega\to\mathbb{R} ]\)</span> is a random variable. Thus, a random field is just a <span style="color:blue;">a collection of random variables [@</span>cressie1993spatial<span style="color:blue;">]</span>. Now, the <em>moments</em> of a random field <span class="math inline">\(Y\)</span> provide useful information, for example; the mean of a random field Y can be defined as:</p>
+<p>Let <span class="math inline">\((\Omega, \mathcal{F}, \mathbb{P})\)</span> be a probability space. A function <span class="math inline">\(Y:\Omega \to \mathbb{R}\)</span> is called a random variable if it is <span class="math inline">\(\mathcal{F}/\mathcal{B}(\mathbb{R})\)</span>-measurable, where <span class="math inline">\(\mathcal{B}(\mathbb{R})\)</span> denotes the Borel <span class="math inline">\(\sigma\)</span>-algebra on <span class="math inline">\(\mathbb{R}\)</span>. Now, in the same probability space, and with <span class="math inline">\(D\subseteq\mathbb{R}^d\)</span> a domain in <span class="math inline">\(d\)</span> dimensions, a stochastic process — or more appropriately in our context a <strong>random field</strong> — <span class="math inline">\(Y\)</span> on <span class="math inline">\(D\)</span> is a collection of random variables <span class="math inline">\(\{Y(\mathbf{s}) : \mathbf{s}\in D\}\)</span>, where for each fixed <span class="math inline">\(\mathbf{s}\in D\)</span> the mapping <span class="math inline">\(Y(\mathbf{s}):\Omega\to\mathbb{R}\)</span> is a random variable. The <em>moments</em> of a random field <span class="math inline">\(Y\)</span> provide useful summary information. For example, the mean of a random field <span class="math inline">\(Y\)</span> is defined as:</p>
 <p><span class="math display">\[\begin{equation}
 \mu(\mathbf{s}) = \mathbb{E}[Y(\mathbf{s})], \qquad \mathbf{s} \in D,
 \end{equation}\]</span></p>
-<p>provided the expectation exists for all <span class="math inline">\(\mathbf{s} \in D\)</span>. The second central moment of the random field <span class="math inline">\(Y\)</span> (variance) is given by:</p>
+<p>provided the expectation exists for all <span class="math inline">\(\mathbf{s} \in D\)</span>. The second central moment (variance) is:</p>
 <p><span class="math display">\[\begin{equation}
-\operatorname{Var}(Y(\mathbf{s})) = \mathbb{E}\!\left[(Y(\mathbf{s})  - \mu(\mathbf{s}))^2\right],
-\qquad \mathbf{s} \in D,
+\operatorname{Var}(Y(\mathbf{s})) = \mathbb{E}\!\left[(Y(\mathbf{s}) - \mu(\mathbf{s}))^2\right], \qquad \mathbf{s} \in D.
 \end{equation}\]</span></p>
-<p>where <span class="math inline">\(\mu(\mathbf{s}) = \mathbb{E}[Y(\mathbf{s})]\)</span> is the mean function previously defined. And, in general, the covariance <span class="math inline">\(\mathbf{C}\)</span> of the random field <span class="math inline">\(Y\)</span> is defined as:</p>
+<p>And the covariance between two locations is:</p>
 <p><span class="math display">\[\begin{equation}
-\sigma^2 \mathbf{C}(\mathbf{s}, \mathbf{s'}) = \operatorname{Cov}(Y(\mathbf{s}), Y(\mathbf{s'}))
-= \mathbb{E}\!\left[(Y(\mathbf{s}) - \mu(\mathbf{s}))
-(Y(\mathbf{s'}) - \mu(\mathbf{s'}))\right],
-\quad \mathbf{s},\mathbf{s'}\in D.
+\operatorname{Cov}(Y(\mathbf{s}), Y(\mathbf{s}'))
+= \mathbb{E}\!\left[(Y(\mathbf{s}) - \mu(\mathbf{s}))(Y(\mathbf{s'}) - \mu(\mathbf{s'}))\right]
+= \sigma^2 \mathbf{C}(\mathbf{s}, \mathbf{s}'),
+\quad \mathbf{s},\mathbf{s'}\in D,
 \end{equation}\]</span></p>
-<p>where the scalar parameter <span class="math inline">\(\sigma^2\)</span> is known as the process variance. In the statistics literature this parameter is often included in the definition of the covariance function. For example, for a Gaussian covariance, <span class="math inline">\(\mathbf{C}(\mathbf{s}, \mathbf{s'}) = \sigma^2\exp\left(-\frac{(x - x')^2}{2\ell^2}\right)\)</span>, however in the numerical analysis texts they don’t include this “amplification” factor. The reason is that in the deterministic/numerical analysis setting of scattered data interpolation, that factor is irrelevant since it will be absorbed in the expantions coefficients <span class="citation" data-cites="fasshahuer2015kernel">(<a href="#ref-fasshahuer2015kernel" role="doc-biblioref"><strong>fasshahuer2015kernel?</strong></a>)</span>. However, in stochastics methods the variance process <span class="math inline">\(\sigma^2\)</span> plays an important role. Thus, considering this, the variance of the random field <span class="math inline">\(Y\)</span> is the diagonal of the covariance</p>
+<p>where the scalar <span class="math inline">\(\sigma^2 &gt; 0\)</span> is the <strong>process variance</strong> and <span class="math inline">\(\mathbf{C}(\mathbf{s}, \mathbf{s}')\)</span> is the <strong>correlation function</strong>, normalized so that <span class="math inline">\(\mathbf{C}(\mathbf{s},\mathbf{s}) = 1\)</span>. Consequently, the marginal variance of <span class="math inline">\(Y\)</span> at any location is:</p>
 <p><span class="math display">\[\begin{equation}
-\operatorname{Var}(Y) = \sigma^2 \mathbf{C}(\mathbf{s}, \mathbf{s'})
+\operatorname{Var}(Y(\mathbf{s})) = \sigma^2 \mathbf{C}(\mathbf{s}, \mathbf{s}) = \sigma^2.
 \end{equation}\]</span></p>
-<p>There are different kinds of spatial fields (spatial stochastic processes) but we will be interested in the called <em>Gaussian random fields (or also known as Gaussian processes).</em></p>
+<p>In the statistics literature <span class="math inline">\(\sigma^2\)</span> is typically included in the definition of the covariance function (e.g.&nbsp;<span class="math inline">\(\sigma^2\exp(-(x-x')^2/2\ell^2)\)</span> for a Gaussian kernel), whereas in numerical analysis and scattered data interpolation it is omitted because it gets absorbed into the expansion coefficients. In the stochastic setting the process variance plays an important role and we keep it explicit throughout.</p>
+<p>There are many kinds of random fields, but we focus here on <strong>Gaussian random fields</strong>, also known as Gaussian processes.</p>
 </section>
-<section id="gaussian-random-field-and-kriging" class="level1" data-number="3">
-<h1 data-number="3"><span class="header-section-number">3</span> Gaussian Random Field and Kriging</h1>
-<section id="gaussian-random-field" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="gaussian-random-field"><span class="header-section-number">3.1</span> Gaussian Random Field</h2>
-<p>Among all types of spatial random fields, we focus on <strong>Gaussian Random Field (GRF)</strong>. A random field <span class="math inline">\(Y\)</span> on <span class="math inline">\(D \subseteq \mathbb{R}^d\)</span> is called a Gaussian random field if, for any finite collection of locations <span class="math inline">\(\mathbf{s}_1, \dots, \mathbf{s}_n \in D\)</span>, the joint distribution of <span class="math inline">\((Y(\mathbf{s}_1), \dots, Y(\mathbf{s}_n))^\top\)</span> is multivariate Gaussian:</p>
+<section id="gaussian-random-fields-and-kriging" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Gaussian Random Fields and Kriging</h1>
+<section id="gaussian-random-fields" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="gaussian-random-fields"><span class="header-section-number">3.1</span> Gaussian Random Fields</h2>
+<p>A random field <span class="math inline">\(Y\)</span> on <span class="math inline">\(D \subseteq \mathbb{R}^d\)</span> is called a <strong>Gaussian Random Field (GRF)</strong> if, for any finite collection of locations <span class="math inline">\(\mathbf{s}_1, \dots, \mathbf{s}_n \in D\)</span>, the joint distribution of <span class="math inline">\((Y(\mathbf{s}_1), \dots, Y(\mathbf{s}_n))^\top\)</span> is multivariate Gaussian:</p>
 <p><span class="math display">\[
 \begin{pmatrix} Y(\mathbf{s}_1) \\ \vdots \\ Y(\mathbf{s}_n) \end{pmatrix}
 \sim \mathcal{N}\!\left(\boldsymbol{\mu},\, \boldsymbol{\Sigma}\right),
 \]</span></p>
 <p>where <span class="math inline">\(\boldsymbol{\mu} = (\mu(\mathbf{s}_1), \dots, \mu(\mathbf{s}_n))^\top\)</span> is the mean vector and <span class="math inline">\(\boldsymbol{\Sigma}\)</span> is the <span class="math inline">\(n \times n\)</span> covariance matrix with entries <span class="math inline">\(\Sigma_{ij} = \sigma^2 \mathbf{C}(\mathbf{s}_i, \mathbf{s}_j)\)</span>.</p>
-<p>A GRF is therefore entirely characterized by its <strong>mean function</strong> <span class="math inline">\(\mu(\mathbf{s})\)</span> and <strong>covariance function</strong> <span class="math inline">\(\sigma^2 \mathbf{C}(\mathbf{s}, \mathbf{s}')\)</span>. We write <span class="math inline">\(Y \sim \mathcal{GP}(\mu, \sigma^2 \mathbf{C})\)</span> to denote this.</p>
-<hr>
+<p>A GRF is therefore entirely characterized by its mean function <span class="math inline">\(\mu(\mathbf{s})\)</span> and covariance function <span class="math inline">\(\sigma^2 \mathbf{C}(\mathbf{s}, \mathbf{s}')\)</span>. We write <span class="math inline">\(Y \sim \mathcal{GP}(\mu, \sigma^2 \mathbf{C})\)</span> to denote this. This characterization is what makes GRFs so tractable: all finite-dimensional distributions are Gaussian, and conditional distributions — the key operation for prediction — remain Gaussian and can be computed in closed form.</p>
 </section>
 <section id="stationarity" class="level2" data-number="3.2">
 <h2 data-number="3.2" class="anchored" data-anchor-id="stationarity"><span class="header-section-number">3.2</span> Stationarity</h2>
 <p>A GRF is called <strong>second-order stationary</strong> (or <strong>weakly stationary</strong>) if:</p>
 <ol type="1">
 <li>The mean is constant: <span class="math inline">\(\mu(\mathbf{s}) = \mu\)</span> for all <span class="math inline">\(\mathbf{s} \in D\)</span>.</li>
-<li>The covariance depends only on the difference <span class="math inline">\(\mathbf{h} = \mathbf{s} - \mathbf{s}'\)</span>:</li>
+<li>The covariance depends only on the lag vector <span class="math inline">\(\mathbf{h} = \mathbf{s} - \mathbf{s}'\)</span>:</li>
 </ol>
 <p><span class="math display">\[
 \operatorname{Cov}(Y(\mathbf{s}),\, Y(\mathbf{s}')) = \sigma^2 \mathbf{C}(\mathbf{s} - \mathbf{s}') = \sigma^2 \mathbf{C}(\mathbf{h}).
 \]</span></p>
-<p>If the covariance depends only on the Euclidean distance <span class="math inline">\(\|\mathbf{h}\|\)</span> (and not on the direction), the field is called <strong>isotropic</strong>:</p>
+<p>If the covariance depends only on the Euclidean distance <span class="math inline">\(r = \|\mathbf{h}\|\)</span> and not on the direction, the field is called <strong>isotropic</strong>:</p>
 <p><span class="math display">\[
 \operatorname{Cov}(Y(\mathbf{s}),\, Y(\mathbf{s}')) = \sigma^2 \mathbf{C}(\|\mathbf{s} - \mathbf{s}'\|).
 \]</span></p>
-<p>Under isotropy, the covariance is a function only of the scalar distance <span class="math inline">\(r = \|\mathbf{h}\|\)</span>, which greatly simplifies modeling and inference. We will assume isotropy throughout.</p>
-<hr>
+<p>Isotropy reduces the covariance function to a univariate function of distance, which greatly simplifies both modeling and parameter estimation. We assume isotropy throughout.</p>
 </section>
 <section id="the-matérn-covariance-family" class="level2" data-number="3.3">
 <h2 data-number="3.3" class="anchored" data-anchor-id="the-matérn-covariance-family"><span class="header-section-number">3.3</span> The Matérn Covariance Family</h2>
-<p>A flexible and widely used family of isotropic covariance functions is the <strong>Matérn class</strong>, defined as:</p>
+<p>A flexible and widely used family of isotropic covariance functions is the <strong>Matérn class</strong>:</p>
 <p><span class="math display">\[
 \mathbf{C}(r;\, \nu,\, \ell) = \frac{2^{1-\nu}}{\Gamma(\nu)} \left(\frac{\sqrt{2\nu}\, r}{\ell}\right)^{\!\nu} K_\nu\!\left(\frac{\sqrt{2\nu}\, r}{\ell}\right), \qquad r \geq 0,
 \]</span></p>
-<p>where <span class="math inline">\(r = \|\mathbf{s} - \mathbf{s}'\|\)</span> is the Euclidean distance, <span class="math inline">\(\ell &gt; 0\)</span> is the <strong>range</strong> (or length-scale) parameter controlling how quickly correlations decay with distance, <span class="math inline">\(\nu &gt; 0\)</span> is the <strong>smoothness</strong> parameter governing the mean-square differentiability of the field, and <span class="math inline">\(K_\nu\)</span> is the modified Bessel function of the second kind of order <span class="math inline">\(\nu\)</span>.</p>
-<p>Two notable special cases arise for half-integer values of <span class="math inline">\(\nu\)</span>:</p>
+<p>where <span class="math inline">\(r = \|\mathbf{s} - \mathbf{s}'\|\)</span> is the Euclidean distance, <span class="math inline">\(\ell &gt; 0\)</span> is the <strong>range</strong> (length-scale) parameter controlling how quickly correlations decay, <span class="math inline">\(\nu &gt; 0\)</span> is the <strong>smoothness</strong> parameter governing the mean-square differentiability of the field, and <span class="math inline">\(K_\nu\)</span> is the modified Bessel function of the second kind of order <span class="math inline">\(\nu\)</span>. The normalization <span class="math inline">\(\mathbf{C}(0;\nu,\ell) = 1\)</span> is immediate from the limits of the Bessel function.</p>
+<p>Three important special cases arise for half-integer values of <span class="math inline">\(\nu\)</span>:</p>
 <ul>
-<li><strong><span class="math inline">\(\nu = 1/2\)</span></strong> (exponential covariance): <span class="math inline">\(\mathbf{C}(r) = \exp\!\left(-r/\ell\right)\)</span>, giving a continuous but not differentiable field.</li>
-<li><strong><span class="math inline">\(\nu = 3/2\)</span></strong>: <span class="math inline">\(\mathbf{C}(r) = \left(1 + \frac{\sqrt{3}\,r}{\ell}\right)\exp\!\left(-\frac{\sqrt{3}\,r}{\ell}\right)\)</span>, giving a once mean-square differentiable field.</li>
-<li><strong><span class="math inline">\(\nu \to \infty\)</span></strong> (squared exponential / Gaussian): <span class="math inline">\(\mathbf{C}(r) = \exp\!\left(-r^2 / 2\ell^2\right)\)</span>, giving an infinitely differentiable field.</li>
+<li><strong><span class="math inline">\(\nu = 1/2\)</span></strong> (exponential): <span class="math inline">\(\mathbf{C}(r) = \exp(-r/\ell)\)</span>. The resulting field is continuous but nowhere mean-square differentiable — appropriate for rough phenomena.</li>
+<li><strong><span class="math inline">\(\nu = 3/2\)</span></strong>: <span class="math inline">\(\mathbf{C}(r) = (1 + \sqrt{3}\,r/\ell)\exp(-\sqrt{3}\,r/\ell)\)</span>. The field is once mean-square differentiable.</li>
+<li><strong><span class="math inline">\(\nu \to \infty\)</span></strong> (squared exponential / Gaussian): <span class="math inline">\(\mathbf{C}(r) = \exp(-r^2/2\ell^2)\)</span>. The field is infinitely differentiable, which is often too smooth for real geophysical data.</li>
 </ul>
-<p>The choice of <span class="math inline">\(\nu\)</span> encodes prior beliefs about the regularity of the spatial phenomenon being modeled. In practice, <span class="math inline">\(\nu = 1\)</span> or <span class="math inline">\(\nu = 3/2\)</span> are common choices that balance realism with computational tractability.</p>
-<hr>
+<p>The choice of <span class="math inline">\(\nu\)</span> encodes prior beliefs about the regularity of the spatial phenomenon. In practice, <span class="math inline">\(\nu = 1\)</span> or <span class="math inline">\(\nu = 3/2\)</span> strike a good balance between realism and tractability.</p>
 </section>
 <section id="kriging-as-bayesian-prediction" class="level2" data-number="3.4">
 <h2 data-number="3.4" class="anchored" data-anchor-id="kriging-as-bayesian-prediction"><span class="header-section-number">3.4</span> Kriging as Bayesian Prediction</h2>
-<p>We now frame spatial prediction within the Bayesian paradigm. Suppose we have observations <span class="math inline">\(\mathbf{y} = (y(\mathbf{s}_1), \dots, y(\mathbf{s}_N))^\top\)</span> collected at locations <span class="math inline">\(\mathbf{s}_1, \dots, \mathbf{s}_N\)</span>, and we wish to predict the unknown value <span class="math inline">\(Y(\mathbf{s}_*)\)</span> at a new location <span class="math inline">\(\mathbf{s}_*\)</span>.</p>
-<p>We adopt the following hierarchical model:</p>
+<p>We now frame spatial prediction within the Bayesian paradigm. Suppose we observe <span class="math inline">\(\mathbf{y} = (y(\mathbf{s}_1), \dots, y(\mathbf{s}_N))^\top\)</span> and wish to predict the unknown value <span class="math inline">\(Y(\mathbf{s}_*)\)</span> at a new location <span class="math inline">\(\mathbf{s}_*\)</span>. We adopt the hierarchical model:</p>
 <p><span class="math display">\[
 \begin{aligned}
 Y(\mathbf{s}) &amp;= \mu + U(\mathbf{s}), \qquad U \sim \mathcal{GP}(0,\, \sigma^2 \mathbf{C}), \\
 y(\mathbf{s}_i) &amp;= Y(\mathbf{s}_i) + \varepsilon_i, \qquad \varepsilon_i \overset{\text{iid}}{\sim} \mathcal{N}(0,\, \sigma_e^2),
 \end{aligned}
 \]</span></p>
-<p>where <span class="math inline">\(\mu\)</span> is a constant mean, <span class="math inline">\(U(\mathbf{s})\)</span> is the zero-mean latent Gaussian field with variance <span class="math inline">\(\sigma^2\)</span> and correlation function <span class="math inline">\(\mathbf{C}\)</span>, and <span class="math inline">\(\varepsilon_i\)</span> is independent measurement noise with variance <span class="math inline">\(\sigma_e^2\)</span> (the <strong>nugget</strong>).</p>
-<p>The joint distribution of the observations <span class="math inline">\(\mathbf{y}\)</span> and the prediction target <span class="math inline">\(Y_* = Y(\mathbf{s}_*)\)</span> is multivariate Gaussian:</p>
+<p>where <span class="math inline">\(\mu\)</span> is the constant mean, <span class="math inline">\(U(\mathbf{s})\)</span> is the zero-mean latent GRF with process variance <span class="math inline">\(\sigma^2\)</span> and correlation function <span class="math inline">\(\mathbf{C}\)</span>, and <span class="math inline">\(\varepsilon_i\)</span> is independent Gaussian measurement noise with variance <span class="math inline">\(\sigma_e^2\)</span> — called the <strong>nugget</strong> in geostatistics. The nugget accounts for both instrument error and microscale variability that cannot be resolved at the observation scale.</p>
+<p>Define the cross-covariance vector <span class="math inline">\(\mathbf{k}_* = \sigma^2\mathbf{c}_*\)</span>, where <span class="math inline">\(\mathbf{c}_* = (\mathbf{C}(\mathbf{s}_1, \mathbf{s}_*), \dots, \mathbf{C}(\mathbf{s}_N, \mathbf{s}_*))^\top\)</span> collects the correlations between the observation sites and the prediction site. The joint distribution of observations and prediction target is then:</p>
 <p><span class="math display">\[
 \begin{pmatrix} \mathbf{y} \\ Y_* \end{pmatrix}
 \sim \mathcal{N}\!\left(
 \begin{pmatrix} \mu \mathbf{1} \\ \mu \end{pmatrix},\;
-\begin{pmatrix} \sigma^2 \mathbf{C}(\mathbf{S}, \mathbf{S}) + \sigma_e^2 \mathbf{I} &amp; \sigma^2 \mathbf{c}_* \\ \sigma^2 \mathbf{c}_*^\top &amp; \sigma^2 \end{pmatrix}
+\begin{pmatrix} \boldsymbol{\Sigma}_{\mathbf{y}} &amp; \mathbf{k}_* \\ \mathbf{k}_*^\top &amp; \sigma^2 \end{pmatrix}
 \right),
 \]</span></p>
-<p>where <span class="math inline">\(\mathbf{C}(\mathbf{S}, \mathbf{S})\)</span> is the <span class="math inline">\(N \times N\)</span> matrix with <span class="math inline">\((i,j)\)</span> entry <span class="math inline">\(\mathbf{C}(\mathbf{s}_i, \mathbf{s}_j)\)</span>, and <span class="math inline">\(\mathbf{c}_* = (\mathbf{C}(\mathbf{s}_1, \mathbf{s}_*), \dots, \mathbf{C}(\mathbf{s}_N, \mathbf{s}_*))^\top\)</span> is the vector of cross-covariances between observations and the prediction site.</p>
+<p>where <span class="math inline">\(\boldsymbol{\Sigma}_{\mathbf{y}} = \sigma^2 \mathbf{C}(\mathbf{S}, \mathbf{S}) + \sigma_e^2 \mathbf{I}\)</span> is the <span class="math inline">\(N \times N\)</span> observation covariance matrix, with <span class="math inline">\((i,j)\)</span> entry <span class="math inline">\(\sigma^2\mathbf{C}(\mathbf{s}_i, \mathbf{s}_j) + \sigma_e^2\mathbf{1}_{[i=j]}\)</span>.</p>
 <section id="the-kriging-equations" class="level3" data-number="3.4.1">
 <h3 data-number="3.4.1" class="anchored" data-anchor-id="the-kriging-equations"><span class="header-section-number">3.4.1</span> The Kriging Equations</h3>
-<p>By the standard formula for the conditional distribution of a multivariate Gaussian, the posterior distribution of <span class="math inline">\(Y_*\)</span> given the observations <span class="math inline">\(\mathbf{y}\)</span> is:</p>
+<p>By the standard formula for the conditional distribution of a partitioned multivariate Gaussian, the posterior of <span class="math inline">\(Y_* = Y(\mathbf{s}_*)\)</span> given the data is:</p>
 <p><span class="math display">\[
 \boxed{Y_* \mid \mathbf{y} \sim \mathcal{N}\!\left(\hat{y}_*, \, \sigma^2_*\right),}
 \]</span></p>
-<p>with <strong>Kriging mean</strong> (the optimal linear unbiased predictor):</p>
+<p>with <strong>Kriging mean</strong>:</p>
 <p><span class="math display">\[
-\hat{y}_* = \mu + \sigma^2 \mathbf{c}_*^\top \boldsymbol{\Sigma}_{\mathbf{y}}^{-1} (\mathbf{y} - \mu \mathbf{1}),
+\hat{y}_* = \mu + \mathbf{k}_*^\top \boldsymbol{\Sigma}_{\mathbf{y}}^{-1} (\mathbf{y} - \mu \mathbf{1}),
 \]</span></p>
-<p>and <strong>Kriging variance</strong> (posterior uncertainty):</p>
+<p>and <strong>Kriging variance</strong>:</p>
 <p><span class="math display">\[
-\sigma^2_* = \sigma^2 - \sigma^2 \mathbf{c}_*^\top \boldsymbol{\Sigma}_{\mathbf{y}}^{-1} \sigma^2 \mathbf{c}_*,
+\sigma^2_* = \sigma^2 - \mathbf{k}_*^\top \boldsymbol{\Sigma}_{\mathbf{y}}^{-1} \mathbf{k}_*,
 \]</span></p>
-<p>where <span class="math inline">\(\boldsymbol{\Sigma}_{\mathbf{y}} = \sigma^2 \mathbf{C}(\mathbf{S}, \mathbf{S}) + \sigma_e^2 \mathbf{I}\)</span> is the observation covariance matrix.</p>
-<p>Several key properties follow immediately:</p>
+<p>where <span class="math inline">\(\mathbf{k}_* = \sigma^2\mathbf{c}_*\)</span> is the cross-covariance vector defined above. Several key properties follow immediately:</p>
 <ol type="1">
-<li><strong>At observation locations</strong>: if <span class="math inline">\(\sigma_e^2 = 0\)</span> (no nugget), the Kriging mean interpolates exactly, i.e.&nbsp;<span class="math inline">\(\hat{y}_{\mathbf{s}_i} = y(\mathbf{s}_i)\)</span>, and the Kriging variance collapses to zero.</li>
-<li><strong>Far from data</strong>: as <span class="math inline">\(\|\mathbf{s}_* - \mathbf{s}_i\| \to \infty\)</span> for all <span class="math inline">\(i\)</span>, the cross-covariance <span class="math inline">\(\mathbf{c}_* \to \mathbf{0}\)</span>, so <span class="math inline">\(\hat{y}_* \to \mu\)</span> and <span class="math inline">\(\sigma^2_* \to \sigma^2\)</span> — the prediction reverts to the prior mean with full prior variance.</li>
-<li><strong>Uncertainty is data-geometry dependent</strong>: <span class="math inline">\(\sigma^2_*\)</span> depends only on the locations <span class="math inline">\(\mathbf{s}_1, \dots, \mathbf{s}_N\)</span> and <span class="math inline">\(\mathbf{s}_*\)</span>, not on the observed values <span class="math inline">\(\mathbf{y}\)</span>. Regions densely observed have low uncertainty; regions far from data retain high uncertainty.</li>
+<li><strong>Exact interpolation</strong>: if <span class="math inline">\(\sigma_e^2 = 0\)</span> (no nugget), the Kriging mean passes exactly through the observations, i.e.&nbsp;<span class="math inline">\(\hat{y}_{\mathbf{s}_i} = y(\mathbf{s}_i)\)</span>, and the variance <span class="math inline">\(\sigma^2_*\)</span> collapses to zero at those locations.</li>
+<li><strong>Reversion to prior</strong>: as <span class="math inline">\(\mathbf{s}_*\)</span> moves far from all observation sites, <span class="math inline">\(\mathbf{k}_* \to \mathbf{0}\)</span>, so <span class="math inline">\(\hat{y}_* \to \mu\)</span> and <span class="math inline">\(\sigma^2_* \to \sigma^2\)</span> — the prediction falls back to the prior mean with full prior uncertainty.</li>
+<li><strong>Uncertainty is design-dependent</strong>: <span class="math inline">\(\sigma^2_*\)</span> depends only on the spatial configuration <span class="math inline">\(\{\mathbf{s}_i\}\)</span> and <span class="math inline">\(\mathbf{s}_*\)</span>, not on the observed values <span class="math inline">\(\mathbf{y}\)</span>. This means the prediction uncertainty can be evaluated — and the survey design can be optimized — before collecting data.</li>
 </ol>
 </section>
 <section id="practical-computation-via-cholesky" class="level3" data-number="3.4.2">
 <h3 data-number="3.4.2" class="anchored" data-anchor-id="practical-computation-via-cholesky"><span class="header-section-number">3.4.2</span> Practical Computation via Cholesky</h3>
-<p>Directly inverting <span class="math inline">\(\boldsymbol{\Sigma}_{\mathbf{y}}\)</span> is numerically unstable. In practice, we use the <strong>Cholesky decomposition</strong> <span class="math inline">\(\boldsymbol{\Sigma}_{\mathbf{y}} = \mathbf{L}\mathbf{L}^\top\)</span> to solve the linear system efficiently. Defining the Kriging weights vector <span class="math inline">\(\boldsymbol{\alpha} = \boldsymbol{\Sigma}_{\mathbf{y}}^{-1}(\mathbf{y} - \mu\mathbf{1})\)</span> via two triangular solves:</p>
+<p>Direct inversion of <span class="math inline">\(\boldsymbol{\Sigma}_{\mathbf{y}}\)</span> is numerically unstable for large <span class="math inline">\(N\)</span>. In practice we use the <strong>Cholesky decomposition</strong> <span class="math inline">\(\boldsymbol{\Sigma}_{\mathbf{y}} = \mathbf{L}\mathbf{L}^\top\)</span> and define the weight vector:</p>
 <p><span class="math display">\[
-\mathbf{L}\mathbf{v} = \mathbf{y} - \mu\mathbf{1}, \quad \mathbf{L}^\top \boldsymbol{\alpha} = \mathbf{v},
+\boldsymbol{\alpha} = \boldsymbol{\Sigma}_{\mathbf{y}}^{-1}(\mathbf{y} - \mu\mathbf{1}),
 \]</span></p>
-<p>the Kriging mean and variance for all prediction sites <span class="math inline">\(\{\mathbf{s}_*^{(k)}\}\)</span> become:</p>
+<p>computed via two triangular solves: forward-solve <span class="math inline">\(\mathbf{L}\mathbf{v} = \mathbf{y} - \mu\mathbf{1}\)</span>, then back-solve <span class="math inline">\(\mathbf{L}^\top\boldsymbol{\alpha} = \mathbf{v}\)</span>. The Kriging mean and variance then become:</p>
 <p><span class="math display">\[
-\hat{y}_* = \mu + \sigma^2 \mathbf{c}_*^\top \boldsymbol{\alpha}, \qquad
-\sigma^2_* = \sigma^2 - \|\mathbf{L}^{-1}(\sigma^2 \mathbf{c}_*)\|^2.
+\hat{y}_* = \mu + \mathbf{k}_*^\top \boldsymbol{\alpha}, \qquad
+\sigma^2_* = \sigma^2 - \|\mathbf{L}^{-1}\mathbf{k}_*\|^2,
 \]</span></p>
-<p>This approach reduces the computational cost from <span class="math inline">\(\mathcal{O}(N^3)\)</span> per prediction site to a single <span class="math inline">\(\mathcal{O}(N^3)\)</span> factorization followed by <span class="math inline">\(\mathcal{O}(N)\)</span> solves per prediction point.</p>
+<p>where <span class="math inline">\(\|\mathbf{L}^{-1}\mathbf{k}_*\|^2 = \mathbf{v}_*^\top\mathbf{v}_*\)</span> with <span class="math inline">\(\mathbf{v}_* = \mathbf{L}^{-1}\mathbf{k}_*\)</span> obtained by a forward solve. The Cholesky factorization costs <span class="math inline">\(\mathcal{O}(N^3)\)</span> and is performed once; each subsequent prediction requires only <span class="math inline">\(\mathcal{O}(N)\)</span> operations. This is the standard approach in all production Kriging implementations.</p>
 </section>
 </section>
 </section>
 <section id="r-code" class="level1" data-number="4">
-<h1 data-number="4"><span class="header-section-number">4</span> R code</h1>
-<p>Next, there is an R code to simulated spatial data and then using Kriging for interpolation purposes.</p>
+<h1 data-number="4"><span class="header-section-number">4</span> R Code</h1>
+<p>The following R code demonstrates the full Kriging workflow: simulating a GRF from a Matérn covariance, adding noise to create observations, and predicting on a dense grid.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#======================================================</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Kriging with Matérn covariance</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulate a GRF, fit (known parameters), predict on a</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># regular grid, and visualise results.</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">#======================================================</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gridExtra)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">#======================================================</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gridExtra)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Initial "true" Parameters</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>N_s     <span class="ot">&lt;-</span> <span class="dv">80</span>        <span class="co"># number of observation locations</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>range   <span class="ot">&lt;-</span> <span class="fl">0.25</span>      <span class="co"># Matérn spatial range (length-scale range)</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>nu      <span class="ot">&lt;-</span> <span class="dv">1</span>         <span class="co"># Matérn smoothness parameter</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>sigma_u <span class="ot">&lt;-</span> <span class="fl">1.0</span>       <span class="co"># latent field marginal SD</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>sigma_e <span class="ot">&lt;-</span> <span class="fl">0.15</span>      <span class="co"># measurement error SD (nugget)</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>mu_true <span class="ot">&lt;-</span> <span class="fl">0.0</span>       <span class="co"># constant mean      </span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Helper Matérn covariance function</span></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>matern_cov <span class="ot">&lt;-</span> <span class="cf">function</span>(coords1, <span class="at">coords2 =</span> <span class="cn">NULL</span>, <span class="at">nu =</span> <span class="dv">1</span>, range, <span class="at">sigma2 =</span> <span class="dv">1</span>) {</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">is.null</span>(coords2)) coords2 <span class="ot">&lt;-</span> coords1</span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>  n1 <span class="ot">&lt;-</span> <span class="fu">nrow</span>(coords1); n2 <span class="ot">&lt;-</span> <span class="fu">nrow</span>(coords2)</span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Euclidean distance matrix between the two sets of points</span></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>  D  <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(<span class="fu">dist</span>(<span class="fu">rbind</span>(coords1, coords2)))[<span class="dv">1</span><span class="sc">:</span>n1, (n1<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span>(n1<span class="sc">+</span>n2), drop <span class="ot">=</span> <span class="cn">FALSE</span>]</span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>  D[D <span class="sc">==</span> <span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="fl">1e-10</span>        <span class="co"># avoid exact zeros before Bessel evaluation</span></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>  s  <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="dv">2</span> <span class="sc">*</span> nu) <span class="sc">*</span> D <span class="sc">/</span> range</span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>  C  <span class="ot">&lt;-</span> (<span class="dv">2</span><span class="sc">^</span>(<span class="dv">1</span><span class="sc">-</span>nu)) <span class="sc">/</span> <span class="fu">gamma</span>(nu) <span class="sc">*</span> s<span class="sc">^</span>nu <span class="sc">*</span> <span class="fu">besselK</span>(s, nu)</span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Enforce unit variance on the diagonal (same set of points)</span></span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (n1 <span class="sc">==</span> n2 <span class="sc">&amp;&amp;</span> <span class="fu">isTRUE</span>(<span class="fu">all.equal</span>(coords1, coords2))) <span class="fu">diag</span>(C) <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>  sigma2 <span class="sc">*</span> C</span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulate observation locations  (uniform in [0,1]²)</span></span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>obs_locs <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">runif</span>(N_s <span class="sc">*</span> <span class="dv">2</span>), <span class="at">ncol =</span> <span class="dv">2</span>,</span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>            <span class="at">dimnames =</span> <span class="fu">list</span>(<span class="cn">NULL</span>, <span class="fu">c</span>(<span class="st">"s1"</span>, <span class="st">"s2"</span>)))</span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a><span class="co"># Build the latent covariance matrix and simulate</span></span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a><span class="co"># the true field U(s) via Cholesky factorisation</span></span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>Sigma_U <span class="ot">&lt;-</span> <span class="fu">matern_cov</span>(obs_locs, <span class="at">nu =</span> nu, <span class="at">range =</span> range, <span class="at">sigma2 =</span> sigma_u<span class="sc">^</span><span class="dv">2</span>)</span>
-<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a><span class="co"># Small jitter on the diagonal for numerical stability</span></span>
-<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a><span class="fu">diag</span>(Sigma_U) <span class="ot">&lt;-</span> <span class="fu">diag</span>(Sigma_U) <span class="sc">+</span> <span class="fl">1e-9</span></span>
-<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>L_U    <span class="ot">&lt;-</span> <span class="fu">t</span>(<span class="fu">chol</span>(Sigma_U))        <span class="co"># lower-triangular Cholesky factor</span></span>
-<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>U_true <span class="ot">&lt;-</span> <span class="fu">as.vector</span>(L_U <span class="sc">%*%</span> <span class="fu">rnorm</span>(N_s))   <span class="co"># one realisation of the latent field</span></span>
-<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a><span class="co"># Add measurement noise epsilon</span></span>
-<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>y_obs <span class="ot">&lt;-</span> mu_true <span class="sc">+</span> U_true <span class="sc">+</span> <span class="fu">rnorm</span>(N_s, <span class="at">sd =</span> sigma_e)</span>
-<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a><span class="co">#=========================================================</span></span>
-<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a><span class="co"># Kriging — build the observation covariance matrix</span></span>
-<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a><span class="co">#======================================================</span></span>
-<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>Sigma_y <span class="ot">&lt;-</span> Sigma_U <span class="sc">+</span> sigma_e<span class="sc">^</span><span class="dv">2</span> <span class="sc">*</span> <span class="fu">diag</span>(N_s)</span>
-<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a><span class="fu">diag</span>(Sigma_y) <span class="ot">&lt;-</span> <span class="fu">diag</span>(Sigma_y) <span class="sc">+</span> <span class="fl">1e-9</span></span>
-<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>L_obs  <span class="ot">&lt;-</span> <span class="fu">t</span>(<span class="fu">chol</span>(Sigma_y))</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">#------------------------------------------------------</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># True parameters</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">#------------------------------------------------------</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>N_s     <span class="ot">&lt;-</span> <span class="dv">80</span>        <span class="co"># number of observation locations</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>range   <span class="ot">&lt;-</span> <span class="fl">0.25</span>      <span class="co"># Matérn length-scale ℓ</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>nu      <span class="ot">&lt;-</span> <span class="dv">1</span>         <span class="co"># Matérn smoothness ν</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>sigma_u <span class="ot">&lt;-</span> <span class="fl">1.0</span>       <span class="co"># process SD σ</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>sigma_e <span class="ot">&lt;-</span> <span class="fl">0.15</span>      <span class="co"># nugget (measurement noise) SD σ_e</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>mu_true <span class="ot">&lt;-</span> <span class="fl">0.0</span>       <span class="co"># constant mean μ</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co">#------------------------------------------------------</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Matérn correlation function</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co">#------------------------------------------------------</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>matern_cov <span class="ot">&lt;-</span> <span class="cf">function</span>(coords1, <span class="at">coords2 =</span> <span class="cn">NULL</span>, <span class="at">nu =</span> <span class="dv">1</span>, range, <span class="at">sigma2 =</span> <span class="dv">1</span>) {</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">is.null</span>(coords2)) coords2 <span class="ot">&lt;-</span> coords1</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  n1 <span class="ot">&lt;-</span> <span class="fu">nrow</span>(coords1); n2 <span class="ot">&lt;-</span> <span class="fu">nrow</span>(coords2)</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>  D  <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(<span class="fu">dist</span>(<span class="fu">rbind</span>(coords1, coords2)))[<span class="dv">1</span><span class="sc">:</span>n1, (n1<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span>(n1<span class="sc">+</span>n2), drop <span class="ot">=</span> <span class="cn">FALSE</span>]</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>  D[D <span class="sc">==</span> <span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="fl">1e-10</span>          <span class="co"># avoid 0 argument to besselK</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>  s  <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="dv">2</span> <span class="sc">*</span> nu) <span class="sc">*</span> D <span class="sc">/</span> range</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>  C  <span class="ot">&lt;-</span> (<span class="dv">2</span><span class="sc">^</span>(<span class="dv">1</span> <span class="sc">-</span> nu)) <span class="sc">/</span> <span class="fu">gamma</span>(nu) <span class="sc">*</span> s<span class="sc">^</span>nu <span class="sc">*</span> <span class="fu">besselK</span>(s, nu)</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (n1 <span class="sc">==</span> n2 <span class="sc">&amp;&amp;</span> <span class="fu">isTRUE</span>(<span class="fu">all.equal</span>(coords1, coords2))) <span class="fu">diag</span>(C) <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>  sigma2 <span class="sc">*</span> C</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="co">#------------------------------------------------------</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="co"># Observation locations: N_s uniform points in [0,1]²</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="co">#------------------------------------------------------</span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>obs_locs <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">runif</span>(N_s <span class="sc">*</span> <span class="dv">2</span>), <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">dimnames =</span> <span class="fu">list</span>(<span class="cn">NULL</span>, <span class="fu">c</span>(<span class="st">"s1"</span>, <span class="st">"s2"</span>)))</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="co">#------------------------------------------------------</span></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulate the latent field U(s) ~ GP(0, sigma2 C) via Cholesky:</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="co">#------------------------------------------------------</span></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>Sigma_U <span class="ot">&lt;-</span> <span class="fu">matern_cov</span>(obs_locs, <span class="at">nu =</span> nu, <span class="at">range =</span> range, <span class="at">sigma2 =</span> sigma_u<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a><span class="fu">diag</span>(Sigma_U) <span class="ot">&lt;-</span> <span class="fu">diag</span>(Sigma_U) <span class="sc">+</span> <span class="fl">1e-9</span>     <span class="co"># small jitter for numerical stability</span></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>L_U    <span class="ot">&lt;-</span> <span class="fu">t</span>(<span class="fu">chol</span>(Sigma_U))</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>U_true <span class="ot">&lt;-</span> <span class="fu">as.vector</span>(L_U <span class="sc">%*%</span> <span class="fu">rnorm</span>(N_s))</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a><span class="co">#------------------------------------------------------</span></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a><span class="co"># Observations: y(s)</span></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a><span class="co">#------------------------------------------------------</span></span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>y_obs <span class="ot">&lt;-</span> mu_true <span class="sc">+</span> U_true <span class="sc">+</span> <span class="fu">rnorm</span>(N_s, <span class="at">sd =</span> sigma_e)</span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a><span class="co">#------------------------------------------------------</span></span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a><span class="co"># Kriging — build observation covariance Σ_y = sigma2_u C(S,S) + sigma2_e I</span></span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a><span class="co">#------------------------------------------------------</span></span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>Sigma_y <span class="ot">&lt;-</span> <span class="fu">matern_cov</span>(obs_locs, <span class="at">nu =</span> nu, <span class="at">range =</span> range, <span class="at">sigma2 =</span> sigma_u<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>           (sigma_e<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> <span class="fl">1e-9</span>) <span class="sc">*</span> <span class="fu">diag</span>(N_s)</span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>L_obs   <span class="ot">&lt;-</span> <span class="fu">t</span>(<span class="fu">chol</span>(Sigma_y))</span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a><span class="co"># Kriging weight vector "alpha" via two triangular solves</span></span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fu">backsolve</span>(<span class="fu">t</span>(L_obs), <span class="fu">forwardsolve</span>(L_obs, y_obs <span class="sc">-</span> mu_true))</span>
 <span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fu">backsolve</span>(<span class="fu">t</span>(L_obs), <span class="fu">forwardsolve</span>(L_obs, y_obs <span class="sc">-</span> mu_true))</span>
-<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a><span class="co"># Build a 30 × 30 regular grid for prediction/interpolation</span></span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a><span class="co">#------------------------------------------------------</span></span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a><span class="co"># Prediction: 30 × 30 regular grid on [0,1]^2</span></span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a><span class="co">#------------------------------------------------------</span></span>
 <span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a>N_grid    <span class="ot">&lt;-</span> <span class="dv">30</span></span>
 <span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a>pred_grid <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(<span class="fu">expand.grid</span>(<span class="at">s1 =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">length.out =</span> N_grid),</span>
-<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a>                       <span class="at">s2 =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">length.out =</span> N_grid)))</span>
-<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a>N_pred <span class="ot">&lt;-</span> <span class="fu">nrow</span>(pred_grid)</span>
-<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">s2 =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">length.out =</span> N_grid)))</span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a><span class="co">#------------------------------------------------------</span></span>
 <span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a><span class="co"># Kriging prediction at each grid point</span></span>
-<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a><span class="co"># Cross-covariance matrix: N_pred × N_obs</span></span>
-<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a>C_cross <span class="ot">&lt;-</span> <span class="fu">matern_cov</span>(pred_grid, obs_locs, <span class="at">nu =</span> nu, <span class="at">range =</span> range, <span class="at">sigma2 =</span> sigma_u<span class="sc">^</span><span class="dv">2</span>)</span>
-<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a><span class="co"># Kriging mean  (vectorised over all prediction sites)</span></span>
-<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a>krig_mean <span class="ot">&lt;-</span> mu_true <span class="sc">+</span> <span class="fu">as.vector</span>(C_cross <span class="sc">%*%</span> alpha)</span>
-<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a><span class="co"># Kriging SD via forward-solve:  V = L_obs⁻¹ (C_cross^T)</span></span>
-<span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a>V <span class="ot">&lt;-</span> <span class="fu">forwardsolve</span>(L_obs, <span class="fu">t</span>(C_cross))  <span class="co"># N_obs × N_pred</span></span>
-<span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a>krig_var <span class="ot">&lt;-</span> <span class="fu">pmax</span>(sigma_u<span class="sc">^</span><span class="dv">2</span> <span class="sc">-</span> <span class="fu">colSums</span>(V<span class="sc">^</span><span class="dv">2</span>), <span class="dv">0</span>)</span>
-<span id="cb1-80"><a href="#cb1-80" aria-hidden="true" tabindex="-1"></a>krig_sd  <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(krig_var)</span>
-<span id="cb1-81"><a href="#cb1-81" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-82"><a href="#cb1-82" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">Kriging mean range : [%.3f, %.3f]</span><span class="sc">\n</span><span class="st">"</span>, <span class="fu">min</span>(krig_mean), <span class="fu">max</span>(krig_mean)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Kriging mean range : [-1.825, 1.663]</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Kriging SD  range  : [%.4f, %.4f]</span><span class="sc">\n</span><span class="st">"</span>,   <span class="fu">min</span>(krig_sd),  <span class="fu">max</span>(krig_sd)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Kriging SD  range  : [0.1233, 0.7101]</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#==========================</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Plots</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#==========================</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Shared colour limits (mean / true field)</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>val_lim <span class="ot">&lt;-</span> <span class="fu">range</span>(<span class="fu">c</span>(U_true, y_obs, krig_mean))</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Data frames for ggplot</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>obs_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">s1 =</span> obs_locs[, <span class="st">"s1"</span>],</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>                     <span class="at">s2 =</span> obs_locs[, <span class="st">"s2"</span>],</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>                     <span class="at">U  =</span> U_true,</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>                     <span class="at">y  =</span> y_obs)</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>pred_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">s1   =</span> pred_grid[, <span class="st">"s1"</span>],</span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>                      <span class="at">s2   =</span> pred_grid[, <span class="st">"s2"</span>],</span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>                      <span class="at">mean =</span> krig_mean,</span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>                      <span class="at">sd   =</span> krig_sd)</span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="co"># p_true: latent field at observation locations</span></span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>p_true <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(obs_df, <span class="fu">aes</span>(s1, s2, <span class="at">colour =</span> U)) <span class="sc">+</span></span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">3.5</span>) <span class="sc">+</span></span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_distiller</span>(<span class="at">palette =</span> <span class="st">"RdBu"</span>, <span class="at">direction =</span> <span class="sc">-</span><span class="dv">1</span>,</span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>                         <span class="at">limits =</span> val_lim,</span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>                         <span class="at">name =</span> <span class="fu">expression</span>(<span class="fu">U</span>(<span class="fu">bold</span>(s)))) <span class="sc">+</span></span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_equal</span>() <span class="sc">+</span></span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>(<span class="at">base_size =</span> <span class="dv">11</span>) <span class="sc">+</span></span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span></span>
-<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title    =</span> <span class="st">"True latent field  U(s)"</span>,</span>
-<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="fu">bquote</span>(sigma <span class="sc">==</span> .(sigma_u) <span class="sc">~</span> <span class="st">"  range ="</span> <span class="sc">~</span> .(range) <span class="sc">~</span></span>
-<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>                           <span class="st">"  "</span> <span class="sc">*</span> nu <span class="sc">==</span> .(nu)),</span>
-<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="fu">expression</span>(s[<span class="dv">1</span>]), <span class="at">y =</span> <span class="fu">expression</span>(s[<span class="dv">2</span>]))</span>
-<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a><span class="co"># observations  y </span></span>
-<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>p_obs <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(obs_df, <span class="fu">aes</span>(s1, s2, <span class="at">colour =</span> y)) <span class="sc">+</span></span>
-<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">3.5</span>) <span class="sc">+</span></span>
-<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_distiller</span>(<span class="at">palette =</span> <span class="st">"RdBu"</span>, <span class="at">direction =</span> <span class="sc">-</span><span class="dv">1</span>,</span>
-<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>                         <span class="at">limits =</span> val_lim,</span>
-<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>                         <span class="at">name =</span> <span class="fu">expression</span>(<span class="fu">y</span>(<span class="fu">bold</span>(s)))) <span class="sc">+</span></span>
-<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_equal</span>() <span class="sc">+</span></span>
-<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>(<span class="at">base_size =</span> <span class="dv">11</span>) <span class="sc">+</span></span>
-<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span></span>
-<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title    =</span> <span class="st">"Observations  y(s)"</span>,</span>
-<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="fu">bquote</span>(sigma[e] <span class="sc">==</span> .(sigma_e)),</span>
-<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="fu">expression</span>(s[<span class="dv">1</span>]), <span class="at">y =</span> <span class="fu">expression</span>(s[<span class="dv">2</span>]))</span>
-<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a><span class="co"># Kriging mean  </span></span>
-<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a>p_krig_mean <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(pred_df, <span class="fu">aes</span>(s1, s2, <span class="at">fill =</span> mean)) <span class="sc">+</span></span>
-<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_raster</span>() <span class="sc">+</span></span>
-<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> obs_df, <span class="fu">aes</span>(s1, s2),</span>
-<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a>             <span class="at">inherit.aes =</span> <span class="cn">FALSE</span>, <span class="at">colour =</span> <span class="st">"black"</span>, <span class="at">size =</span> <span class="fl">1.2</span>) <span class="sc">+</span></span>
-<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_distiller</span>(<span class="at">palette =</span> <span class="st">"RdBu"</span>, <span class="at">direction =</span> <span class="sc">-</span><span class="dv">1</span>,</span>
-<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a>                       <span class="at">limits =</span> val_lim,</span>
-<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a>                       <span class="at">name =</span> <span class="fu">expression</span>(<span class="fu">hat</span>(y)(<span class="fu">bold</span>(s)[<span class="st">"*"</span>]))) <span class="sc">+</span></span>
-<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_equal</span>() <span class="sc">+</span></span>
-<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>(<span class="at">base_size =</span> <span class="dv">11</span>) <span class="sc">+</span></span>
-<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text  =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.ticks =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.grid =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span></span>
-<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title    =</span> <span class="st">"Kriging mean"</span>,</span>
-<span id="cb5-60"><a href="#cb5-60" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Black points = observation locations"</span>,</span>
-<span id="cb5-61"><a href="#cb5-61" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="cn">NULL</span>)</span>
-<span id="cb5-62"><a href="#cb5-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a><span class="co"># Kriging SD  </span></span>
-<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a>p_krig_sd <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(pred_df, <span class="fu">aes</span>(s1, s2, <span class="at">fill =</span> sd)) <span class="sc">+</span></span>
-<span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_raster</span>() <span class="sc">+</span></span>
-<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> obs_df, <span class="fu">aes</span>(s1, s2),</span>
-<span id="cb5-67"><a href="#cb5-67" aria-hidden="true" tabindex="-1"></a>             <span class="at">inherit.aes =</span> <span class="cn">FALSE</span>, <span class="at">colour =</span> <span class="st">"black"</span>, <span class="at">size =</span> <span class="fl">1.2</span>) <span class="sc">+</span></span>
-<span id="cb5-68"><a href="#cb5-68" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_distiller</span>(<span class="at">palette =</span> <span class="st">"YlOrRd"</span>, <span class="at">direction =</span> <span class="dv">1</span>,</span>
-<span id="cb5-69"><a href="#cb5-69" aria-hidden="true" tabindex="-1"></a>                       <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="cn">NA</span>),</span>
-<span id="cb5-70"><a href="#cb5-70" aria-hidden="true" tabindex="-1"></a>                       <span class="at">name =</span> <span class="fu">expression</span>(sigma[<span class="st">"*"</span>](<span class="fu">bold</span>(s)[<span class="st">"*"</span>]))) <span class="sc">+</span></span>
-<span id="cb5-71"><a href="#cb5-71" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_equal</span>() <span class="sc">+</span></span>
-<span id="cb5-72"><a href="#cb5-72" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>(<span class="at">base_size =</span> <span class="dv">11</span>) <span class="sc">+</span></span>
-<span id="cb5-73"><a href="#cb5-73" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text  =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb5-74"><a href="#cb5-74" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.ticks =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb5-75"><a href="#cb5-75" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.grid =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span></span>
-<span id="cb5-76"><a href="#cb5-76" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title    =</span> <span class="st">"Kriging uncertainty (posterior SD)"</span>,</span>
-<span id="cb5-77"><a href="#cb5-77" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="cn">NULL</span>)</span>
-<span id="cb5-78"><a href="#cb5-78" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-79"><a href="#cb5-79" aria-hidden="true" tabindex="-1"></a><span class="co"># Arrange the plots</span></span>
-<span id="cb5-80"><a href="#cb5-80" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(p_true, p_obs, <span class="at">ncol =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a><span class="co"># Cross-covariance  k_* = σ² c_*  (N_pred × N_obs matrix)</span></span>
+<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a><span class="co">#------------------------------------------------------</span></span>
+<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a>k_cross  <span class="ot">&lt;-</span> <span class="fu">matern_cov</span>(pred_grid, obs_locs, <span class="at">nu =</span> nu, <span class="at">range =</span> range, <span class="at">sigma2 =</span> sigma_u<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a>krig_mean <span class="ot">&lt;-</span> mu_true <span class="sc">+</span> <span class="fu">as.vector</span>(k_cross <span class="sc">%*%</span> alpha)</span>
+<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a>V <span class="ot">&lt;-</span> <span class="fu">forwardsolve</span>(L_obs, <span class="fu">t</span>(k_cross))</span>
+<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a>krig_var <span class="ot">&lt;-</span> <span class="fu">pmax</span>(sigma_u<span class="sc">^</span><span class="dv">2</span> <span class="sc">-</span> <span class="fu">colSums</span>(V<span class="sc">^</span><span class="dv">2</span>), <span class="dv">0</span>)</span>
+<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a>krig_sd  <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(krig_var)</span>
+<span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-80"><a href="#cb1-80" aria-hidden="true" tabindex="-1"></a><span class="co">#------------------------------------------------------</span></span>
+<span id="cb1-81"><a href="#cb1-81" aria-hidden="true" tabindex="-1"></a><span class="co"># Plots</span></span>
+<span id="cb1-82"><a href="#cb1-82" aria-hidden="true" tabindex="-1"></a><span class="co">#------------------------------------------------------</span></span>
+<span id="cb1-83"><a href="#cb1-83" aria-hidden="true" tabindex="-1"></a>val_lim <span class="ot">&lt;-</span> <span class="fu">range</span>(<span class="fu">c</span>(U_true, y_obs, krig_mean))</span>
+<span id="cb1-84"><a href="#cb1-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-85"><a href="#cb1-85" aria-hidden="true" tabindex="-1"></a>obs_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">s1 =</span> obs_locs[, <span class="st">"s1"</span>], <span class="at">s2 =</span> obs_locs[, <span class="st">"s2"</span>],</span>
+<span id="cb1-86"><a href="#cb1-86" aria-hidden="true" tabindex="-1"></a>                     <span class="at">U  =</span> U_true, <span class="at">y  =</span> y_obs)</span>
+<span id="cb1-87"><a href="#cb1-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-88"><a href="#cb1-88" aria-hidden="true" tabindex="-1"></a>pred_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">s1 =</span> pred_grid[, <span class="st">"s1"</span>], <span class="at">s2   =</span> pred_grid[, <span class="st">"s2"</span>],</span>
+<span id="cb1-89"><a href="#cb1-89" aria-hidden="true" tabindex="-1"></a>                      <span class="at">mean =</span> krig_mean, <span class="at">sd   =</span> krig_sd)</span>
+<span id="cb1-90"><a href="#cb1-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-91"><a href="#cb1-91" aria-hidden="true" tabindex="-1"></a><span class="co"># True latent field at observation locations</span></span>
+<span id="cb1-92"><a href="#cb1-92" aria-hidden="true" tabindex="-1"></a>p_true <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(obs_df, <span class="fu">aes</span>(s1, s2, <span class="at">colour =</span> U)) <span class="sc">+</span></span>
+<span id="cb1-93"><a href="#cb1-93" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">3.5</span>) <span class="sc">+</span></span>
+<span id="cb1-94"><a href="#cb1-94" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_distiller</span>(<span class="at">palette =</span> <span class="st">"RdBu"</span>, <span class="at">direction =</span> <span class="sc">-</span><span class="dv">1</span>,</span>
+<span id="cb1-95"><a href="#cb1-95" aria-hidden="true" tabindex="-1"></a>                         <span class="at">limits =</span> val_lim, <span class="at">name =</span> <span class="fu">expression</span>(<span class="fu">U</span>(<span class="fu">bold</span>(s)))) <span class="sc">+</span></span>
+<span id="cb1-96"><a href="#cb1-96" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_equal</span>() <span class="sc">+</span> <span class="fu">theme_bw</span>(<span class="at">base_size =</span> <span class="dv">11</span>) <span class="sc">+</span></span>
+<span id="cb1-97"><a href="#cb1-97" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span></span>
+<span id="cb1-98"><a href="#cb1-98" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title    =</span> <span class="st">"True latent field  U(s)"</span>,</span>
+<span id="cb1-99"><a href="#cb1-99" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="fu">bquote</span>(sigma <span class="sc">==</span> .(sigma_u) <span class="sc">~</span> <span class="st">"  range ="</span> <span class="sc">~</span> .(range) <span class="sc">~</span></span>
+<span id="cb1-100"><a href="#cb1-100" aria-hidden="true" tabindex="-1"></a>                           <span class="st">"  "</span> <span class="sc">*</span> nu <span class="sc">==</span> .(nu)),</span>
+<span id="cb1-101"><a href="#cb1-101" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="fu">expression</span>(s[<span class="dv">1</span>]), <span class="at">y =</span> <span class="fu">expression</span>(s[<span class="dv">2</span>]))</span>
+<span id="cb1-102"><a href="#cb1-102" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-103"><a href="#cb1-103" aria-hidden="true" tabindex="-1"></a><span class="co"># Observations</span></span>
+<span id="cb1-104"><a href="#cb1-104" aria-hidden="true" tabindex="-1"></a>p_obs <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(obs_df, <span class="fu">aes</span>(s1, s2, <span class="at">colour =</span> y)) <span class="sc">+</span></span>
+<span id="cb1-105"><a href="#cb1-105" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">3.5</span>) <span class="sc">+</span></span>
+<span id="cb1-106"><a href="#cb1-106" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_distiller</span>(<span class="at">palette =</span> <span class="st">"RdBu"</span>, <span class="at">direction =</span> <span class="sc">-</span><span class="dv">1</span>,</span>
+<span id="cb1-107"><a href="#cb1-107" aria-hidden="true" tabindex="-1"></a>                         <span class="at">limits =</span> val_lim, <span class="at">name =</span> <span class="fu">expression</span>(<span class="fu">y</span>(<span class="fu">bold</span>(s)))) <span class="sc">+</span></span>
+<span id="cb1-108"><a href="#cb1-108" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_equal</span>() <span class="sc">+</span> <span class="fu">theme_bw</span>(<span class="at">base_size =</span> <span class="dv">11</span>) <span class="sc">+</span></span>
+<span id="cb1-109"><a href="#cb1-109" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span></span>
+<span id="cb1-110"><a href="#cb1-110" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title    =</span> <span class="st">"Observations  y(s)"</span>,</span>
+<span id="cb1-111"><a href="#cb1-111" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="fu">bquote</span>(sigma[e] <span class="sc">==</span> .(sigma_e)),</span>
+<span id="cb1-112"><a href="#cb1-112" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="fu">expression</span>(s[<span class="dv">1</span>]), <span class="at">y =</span> <span class="fu">expression</span>(s[<span class="dv">2</span>]))</span>
+<span id="cb1-113"><a href="#cb1-113" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-114"><a href="#cb1-114" aria-hidden="true" tabindex="-1"></a><span class="co"># Kriging mean</span></span>
+<span id="cb1-115"><a href="#cb1-115" aria-hidden="true" tabindex="-1"></a>p_krig_mean <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(pred_df, <span class="fu">aes</span>(s1, s2, <span class="at">fill =</span> mean)) <span class="sc">+</span></span>
+<span id="cb1-116"><a href="#cb1-116" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_raster</span>() <span class="sc">+</span></span>
+<span id="cb1-117"><a href="#cb1-117" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> obs_df, <span class="fu">aes</span>(s1, s2),</span>
+<span id="cb1-118"><a href="#cb1-118" aria-hidden="true" tabindex="-1"></a>             <span class="at">inherit.aes =</span> <span class="cn">FALSE</span>, <span class="at">colour =</span> <span class="st">"black"</span>, <span class="at">size =</span> <span class="fl">1.2</span>) <span class="sc">+</span></span>
+<span id="cb1-119"><a href="#cb1-119" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_distiller</span>(<span class="at">palette =</span> <span class="st">"RdBu"</span>, <span class="at">direction =</span> <span class="sc">-</span><span class="dv">1</span>,</span>
+<span id="cb1-120"><a href="#cb1-120" aria-hidden="true" tabindex="-1"></a>                       <span class="at">limits =</span> val_lim,</span>
+<span id="cb1-121"><a href="#cb1-121" aria-hidden="true" tabindex="-1"></a>                       <span class="at">name =</span> <span class="fu">expression</span>(<span class="fu">hat</span>(y)(<span class="fu">bold</span>(s)[<span class="st">"*"</span>]))) <span class="sc">+</span></span>
+<span id="cb1-122"><a href="#cb1-122" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_equal</span>() <span class="sc">+</span> <span class="fu">theme_bw</span>(<span class="at">base_size =</span> <span class="dv">11</span>) <span class="sc">+</span></span>
+<span id="cb1-123"><a href="#cb1-123" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text =</span> <span class="fu">element_blank</span>(), <span class="at">axis.ticks =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb1-124"><a href="#cb1-124" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.grid =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span></span>
+<span id="cb1-125"><a href="#cb1-125" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title    =</span> <span class="st">"Kriging mean"</span>,</span>
+<span id="cb1-126"><a href="#cb1-126" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="cn">NULL</span>)</span>
+<span id="cb1-127"><a href="#cb1-127" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-128"><a href="#cb1-128" aria-hidden="true" tabindex="-1"></a><span class="co"># Kriging posterior SD</span></span>
+<span id="cb1-129"><a href="#cb1-129" aria-hidden="true" tabindex="-1"></a>p_krig_sd <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(pred_df, <span class="fu">aes</span>(s1, s2, <span class="at">fill =</span> sd)) <span class="sc">+</span></span>
+<span id="cb1-130"><a href="#cb1-130" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_raster</span>() <span class="sc">+</span></span>
+<span id="cb1-131"><a href="#cb1-131" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> obs_df, <span class="fu">aes</span>(s1, s2),</span>
+<span id="cb1-132"><a href="#cb1-132" aria-hidden="true" tabindex="-1"></a>             <span class="at">inherit.aes =</span> <span class="cn">FALSE</span>, <span class="at">colour =</span> <span class="st">"black"</span>, <span class="at">size =</span> <span class="fl">1.2</span>) <span class="sc">+</span></span>
+<span id="cb1-133"><a href="#cb1-133" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_distiller</span>(<span class="at">palette =</span> <span class="st">"YlOrRd"</span>, <span class="at">direction =</span> <span class="dv">1</span>,</span>
+<span id="cb1-134"><a href="#cb1-134" aria-hidden="true" tabindex="-1"></a>                       <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="cn">NA</span>),</span>
+<span id="cb1-135"><a href="#cb1-135" aria-hidden="true" tabindex="-1"></a>                       <span class="at">name =</span> <span class="fu">expression</span>(sigma[<span class="st">"*"</span>](<span class="fu">bold</span>(s)[<span class="st">"*"</span>]))) <span class="sc">+</span></span>
+<span id="cb1-136"><a href="#cb1-136" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_equal</span>() <span class="sc">+</span> <span class="fu">theme_bw</span>(<span class="at">base_size =</span> <span class="dv">11</span>) <span class="sc">+</span></span>
+<span id="cb1-137"><a href="#cb1-137" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text =</span> <span class="fu">element_blank</span>(), <span class="at">axis.ticks =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb1-138"><a href="#cb1-138" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.grid =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span></span>
+<span id="cb1-139"><a href="#cb1-139" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title    =</span> <span class="st">"Kriging uncertainty (posterior SD)"</span>,</span>
+<span id="cb1-140"><a href="#cb1-140" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="cn">NULL</span>)</span>
+<span id="cb1-141"><a href="#cb1-141" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-142"><a href="#cb1-142" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(p_true, p_obs,          <span class="at">ncol =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -541,7 +508,7 @@ Kriging mean range : [-1.825, 1.663]</code></pre>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(p_krig_mean, p_krig_sd, <span class="at">ncol =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(p_krig_mean, p_krig_sd, <span class="at">ncol =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -550,6 +517,19 @@ Kriging mean range : [-1.825, 1.663]</code></pre>
 </div>
 </div>
 </div>
+</section>
+<section id="conclusion" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Conclusion</h1>
+<p>In this post we have developed Kriging prediction unsder Bayesian inference. Here, the GRF assumption allow us making spatial interpolation into a conditional Gaussian inference: given observations <span class="math inline">\(\mathbf{y}\)</span>, the posterior at any unobserved location <span class="math inline">\(\mathbf{s}_*\)</span> is a normal distribution whose mean <span class="math inline">\(\hat{y}_*\)</span> and variance <span class="math inline">\(\sigma^2_*\)</span> are available in closed form through simple linear algebra. The reason Bayesian Kriging delivers uncertainty estimates is structural: by treating the unobserved field <span class="math inline">\(U(\mathbf{s})\)</span> as a random variable rather than a fixed unknown, the prediction at any new location <span class="math inline">\(\mathbf{s}_*\)</span> is not a single number but a full posterior distribution <span class="math inline">\(Y_* \mid \mathbf{y} \sim \mathcal{N}(\hat{y}_*, \sigma^2_*)\)</span>. The variance <span class="math display">\[\begin{equation}
+    \sigma^2_* = \sigma^2 - \mathbf{k}_*^\top \boldsymbol{\Sigma}_{\mathbf{y}}^{-1} \mathbf{k}_*
+\end{equation}\]</span></p>
+<p>measures how much the observations have reduced our prior uncertainty <span class="math inline">\(\sigma^2\)</span> at that specific location. A purely deterministic interpolation method such as splines or inverse distance weighting would produce the same predicted surface but discard this second quantity entirely. The importance of retaining it is that predictions without uncertainty are incomplete: two locations can share the same predicted grade but one might sit surrounded by boreholes while the other lies in an unsampled region of the domain, and <span class="math inline">\(\sigma^2_*\)</span> distinguishes them exactly. In practice this matters for decision-making (whether to approve a mining block for extraction, allocate a drilling budget, or classify a resource as measured versus inferred) because all of those decisions depend not just on the expected value but on how much confidence one can attach to it.</p>
+<p>To extend the conclusion, also we have to consider several aspects of this framework:</p>
+<ul>
+<li><p>The covariance function encodes all prior knowledge about the spatial structure <span class="math inline">\(\rightarrow\)</span> the Matérn family gives fine-grained control over both the smoothness (via <span class="math inline">\(\nu\)</span>) and the range of spatial dependence (via <span class="math inline">\(\ell\)</span>). Choosing these parameters (either by expert knowledge or by maximum likelihood) is the central modeling decision in any Kriging interpolation.</p></li>
+<li><p>The nugget <span class="math inline">\(\sigma_e^2\)</span> plays a dual role here, statistically it represents measurement error; geometrically it prevents the covariance matrix from becoming singular and controls the degree of interpolation versus. smoothing.</p></li>
+<li><p>The posterior variance <span class="math inline">\(\sigma^2_*\)</span> is a map of data coverage, hence it does not depend on the observed values, only on the sampling design. This property is central to optimal spatial design: one can identify under-sampled regions and guide where to collect future observations before seeing any data.</p></li>
+</ul>
 
 
 </section>
