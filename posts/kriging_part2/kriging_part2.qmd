@@ -177,3 +177,179 @@ $$
 
 This approach reduces the computational cost from $\mathcal{O}(N^3)$ per prediction site to a single $\mathcal{O}(N^3)$ factorization followed by $\mathcal{O}(N)$ solves per prediction point.
 
+
+# R code 
+
+Next, there is an R code to simulated spatial data and then using Kriging for interpolation purposes. 
+
+
+```{r}
+#======================================================
+# Kriging with Matérn covariance
+# Simulate a GRF, fit (known parameters), predict on a
+# regular grid, and visualise results.
+#======================================================
+library(ggplot2)
+library(gridExtra)
+
+set.seed(42)
+
+
+# Initial "true" Parameters
+N_s     <- 80        # number of observation locations
+range   <- 0.25      # Matérn spatial range (length-scale range)
+nu      <- 1         # Matérn smoothness parameter
+sigma_u <- 1.0       # latent field marginal SD
+sigma_e <- 0.15      # measurement error SD (nugget)
+mu_true <- 0.0       # constant mean      
+
+
+
+# Helper Matérn covariance function
+matern_cov <- function(coords1, coords2 = NULL, nu = 1, range, sigma2 = 1) {
+  if (is.null(coords2)) coords2 <- coords1
+  n1 <- nrow(coords1); n2 <- nrow(coords2)
+  # Euclidean distance matrix between the two sets of points
+  D  <- as.matrix(dist(rbind(coords1, coords2)))[1:n1, (n1+1):(n1+n2), drop = FALSE]
+  D[D == 0] <- 1e-10        # avoid exact zeros before Bessel evaluation
+  s  <- sqrt(2 * nu) * D / range
+  C  <- (2^(1-nu)) / gamma(nu) * s^nu * besselK(s, nu)
+  # Enforce unit variance on the diagonal (same set of points)
+  if (n1 == n2 && isTRUE(all.equal(coords1, coords2))) diag(C) <- 1
+  sigma2 * C
+}
+
+# Simulate observation locations  (uniform in [0,1]²)
+obs_locs <- matrix(runif(N_s * 2), ncol = 2,
+            dimnames = list(NULL, c("s1", "s2")))
+
+
+# Build the latent covariance matrix and simulate
+# the true field U(s) via Cholesky factorisation
+Sigma_U <- matern_cov(obs_locs, nu = nu, range = range, sigma2 = sigma_u^2)
+# Small jitter on the diagonal for numerical stability
+diag(Sigma_U) <- diag(Sigma_U) + 1e-9
+L_U    <- t(chol(Sigma_U))        # lower-triangular Cholesky factor
+U_true <- as.vector(L_U %*% rnorm(N_s))   # one realisation of the latent field
+
+
+# Add measurement noise epsilon
+y_obs <- mu_true + U_true + rnorm(N_s, sd = sigma_e)
+
+
+#=========================================================
+# Kriging — build the observation covariance matrix
+#======================================================
+Sigma_y <- Sigma_U + sigma_e^2 * diag(N_s)
+diag(Sigma_y) <- diag(Sigma_y) + 1e-9
+L_obs  <- t(chol(Sigma_y))
+
+alpha <- backsolve(t(L_obs), forwardsolve(L_obs, y_obs - mu_true))
+
+# Build a 30 × 30 regular grid for prediction/interpolation
+N_grid    <- 30
+pred_grid <- as.matrix(expand.grid(s1 = seq(0, 1, length.out = N_grid),
+                       s2 = seq(0, 1, length.out = N_grid)))
+N_pred <- nrow(pred_grid)
+
+# Kriging prediction at each grid point
+
+# Cross-covariance matrix: N_pred × N_obs
+C_cross <- matern_cov(pred_grid, obs_locs, nu = nu, range = range, sigma2 = sigma_u^2)
+
+# Kriging mean  (vectorised over all prediction sites)
+krig_mean <- mu_true + as.vector(C_cross %*% alpha)
+
+# Kriging SD via forward-solve:  V = L_obs⁻¹ (C_cross^T)
+V <- forwardsolve(L_obs, t(C_cross))  # N_obs × N_pred
+krig_var <- pmax(sigma_u^2 - colSums(V^2), 0)
+krig_sd  <- sqrt(krig_var)
+
+cat(sprintf("\nKriging mean range : [%.3f, %.3f]\n", min(krig_mean), max(krig_mean)))
+cat(sprintf("Kriging SD  range  : [%.4f, %.4f]\n",   min(krig_sd),  max(krig_sd)))
+
+
+#==========================
+# Plots
+#==========================
+
+# Shared colour limits (mean / true field)
+val_lim <- range(c(U_true, y_obs, krig_mean))
+
+# Data frames for ggplot
+obs_df <- data.frame(s1 = obs_locs[, "s1"],
+                     s2 = obs_locs[, "s2"],
+                     U  = U_true,
+                     y  = y_obs)
+
+pred_df <- data.frame(s1   = pred_grid[, "s1"],
+                      s2   = pred_grid[, "s2"],
+                      mean = krig_mean,
+                      sd   = krig_sd)
+
+# p_true: latent field at observation locations
+p_true <- ggplot(obs_df, aes(s1, s2, colour = U)) +
+  geom_point(size = 3.5) +
+  scale_colour_distiller(palette = "RdBu", direction = -1,
+                         limits = val_lim,
+                         name = expression(U(bold(s)))) +
+  coord_equal() +
+  theme_bw(base_size = 11) +
+  theme(panel.grid = element_blank()) +
+  labs(title    = "True latent field  U(s)",
+       subtitle = bquote(sigma == .(sigma_u) ~ "  range =" ~ .(range) ~
+                           "  " * nu == .(nu)),
+       x = expression(s[1]), y = expression(s[2]))
+
+# observations  y 
+p_obs <- ggplot(obs_df, aes(s1, s2, colour = y)) +
+  geom_point(size = 3.5) +
+  scale_colour_distiller(palette = "RdBu", direction = -1,
+                         limits = val_lim,
+                         name = expression(y(bold(s)))) +
+  coord_equal() +
+  theme_bw(base_size = 11) +
+  theme(panel.grid = element_blank()) +
+  labs(title    = "Observations  y(s)",
+       subtitle = bquote(sigma[e] == .(sigma_e)),
+       x = expression(s[1]), y = expression(s[2]))
+
+# Kriging mean  
+p_krig_mean <- ggplot(pred_df, aes(s1, s2, fill = mean)) +
+  geom_raster() +
+  geom_point(data = obs_df, aes(s1, s2),
+             inherit.aes = FALSE, colour = "black", size = 1.2) +
+  scale_fill_distiller(palette = "RdBu", direction = -1,
+                       limits = val_lim,
+                       name = expression(hat(y)(bold(s)["*"]))) +
+  coord_equal() +
+  theme_bw(base_size = 11) +
+  theme(axis.text  = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid = element_blank()) +
+  labs(title    = "Kriging mean",
+       subtitle = "Black points = observation locations",
+       x = NULL, y = NULL)
+
+# Kriging SD  
+p_krig_sd <- ggplot(pred_df, aes(s1, s2, fill = sd)) +
+  geom_raster() +
+  geom_point(data = obs_df, aes(s1, s2),
+             inherit.aes = FALSE, colour = "black", size = 1.2) +
+  scale_fill_distiller(palette = "YlOrRd", direction = 1,
+                       limits = c(0, NA),
+                       name = expression(sigma["*"](bold(s)["*"]))) +
+  coord_equal() +
+  theme_bw(base_size = 11) +
+  theme(axis.text  = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid = element_blank()) +
+  labs(title    = "Kriging uncertainty (posterior SD)",
+       x = NULL, y = NULL)
+
+# Arrange the plots
+grid.arrange(p_true, p_obs, ncol = 2)
+grid.arrange(p_krig_mean, p_krig_sd, ncol = 2)
+
+```
+
