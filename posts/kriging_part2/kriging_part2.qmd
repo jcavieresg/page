@@ -3,9 +3,10 @@ title: "Understanding Kriging (Part 2)"
 author: "Joaquin Cavieres"
 date: "2026-03-23"
 categories: [code, analysis]
-image: "images/krigingpart2.jpeg"
+# image: "images/krigingpart2.jpg"
 ---
 
+![](/images/krigingpart2.jpeg){fig-align="center" width="587" height="461"}
 
 # Introduction
 
@@ -44,7 +45,6 @@ In the statistics literature $\sigma^2$ is typically included in the definition 
 
 There are many kinds of random fields, but we focus here on **Gaussian random fields**, also known as Gaussian processes.
 
-
 # Gaussian Random Fields and Kriging
 
 ## Gaussian Random Fields
@@ -64,8 +64,8 @@ A GRF is therefore entirely characterized by its mean function $\mu(\mathbf{s})$
 
 A GRF is called **second-order stationary** (or **weakly stationary**) if:
 
-1. The mean is constant: $\mu(\mathbf{s}) = \mu$ for all $\mathbf{s} \in D$.
-2. The covariance depends only on the lag vector $\mathbf{h} = \mathbf{s} - \mathbf{s}'$:
+1.  The mean is constant: $\mu(\mathbf{s}) = \mu$ for all $\mathbf{s} \in D$.
+2.  The covariance depends only on the lag vector $\mathbf{h} = \mathbf{s} - \mathbf{s}'$:
 
 $$
 \operatorname{Cov}(Y(\mathbf{s}),\, Y(\mathbf{s}')) = \sigma^2 \mathbf{C}(\mathbf{s} - \mathbf{s}') = \sigma^2 \mathbf{C}(\mathbf{h}).
@@ -91,9 +91,9 @@ where $r = \|\mathbf{s} - \mathbf{s}'\|$ is the Euclidean distance, $\ell > 0$ i
 
 Three important special cases arise for half-integer values of $\nu$:
 
-- **$\nu = 1/2$** (exponential): $\mathbf{C}(r) = \exp(-r/\ell)$. The resulting field is continuous but nowhere mean-square differentiable — appropriate for rough phenomena.
-- **$\nu = 3/2$**: $\mathbf{C}(r) = (1 + \sqrt{3}\,r/\ell)\exp(-\sqrt{3}\,r/\ell)$. The field is once mean-square differentiable.
-- **$\nu \to \infty$** (squared exponential / Gaussian): $\mathbf{C}(r) = \exp(-r^2/2\ell^2)$. The field is infinitely differentiable, which is often too smooth for real geophysical data.
+-   $\nu = 1/2$ (exponential): $\mathbf{C}(r) = \exp(-r/\ell)$. The resulting field is continuous but nowhere mean-square differentiable — appropriate for rough phenomena.
+-   $\nu = 3/2$: $\mathbf{C}(r) = (1 + \sqrt{3}\,r/\ell)\exp(-\sqrt{3}\,r/\ell)$. The field is once mean-square differentiable.
+-   $\nu \to \infty$ (squared exponential / Gaussian): $\mathbf{C}(r) = \exp(-r^2/2\ell^2)$. The field is infinitely differentiable, which is often too smooth for real geophysical data.
 
 The choice of $\nu$ encodes prior beliefs about the regularity of the spatial phenomenon. In practice, $\nu = 1$ or $\nu = 3/2$ strike a good balance between realism and tractability.
 
@@ -144,9 +144,9 @@ $$
 
 where $\mathbf{k}_* = \sigma^2\mathbf{c}_*$ is the cross-covariance vector defined above. Several key properties follow immediately:
 
-1. **Exact interpolation**: if $\sigma_e^2 = 0$ (no nugget), the Kriging mean passes exactly through the observations, i.e. $\hat{y}_{\mathbf{s}_i} = y(\mathbf{s}_i)$, and the variance $\sigma^2_*$ collapses to zero at those locations.
-2. **Reversion to prior**: as $\mathbf{s}_*$ moves far from all observation sites, $\mathbf{k}_* \to \mathbf{0}$, so $\hat{y}_* \to \mu$ and $\sigma^2_* \to \sigma^2$ — the prediction falls back to the prior mean with full prior uncertainty.
-3. **Uncertainty is design-dependent**: $\sigma^2_*$ depends only on the spatial configuration $\{\mathbf{s}_i\}$ and $\mathbf{s}_*$, not on the observed values $\mathbf{y}$. This means the prediction uncertainty can be evaluated — and the survey design can be optimized — before collecting data.
+1.  **Exact interpolation**: if $\sigma_e^2 = 0$ (no nugget), the Kriging mean passes exactly through the observations, i.e. $\hat{y}_{\mathbf{s}_i} = y(\mathbf{s}_i)$, and the variance $\sigma^2_*$ collapses to zero at those locations.
+2.  **Reversion to prior**: as $\mathbf{s}_*$ moves far from all observation sites, $\mathbf{k}_* \to \mathbf{0}$, so $\hat{y}_* \to \mu$ and $\sigma^2_* \to \sigma^2$ — the prediction falls back to the prior mean with full prior uncertainty.
+3.  **Uncertainty is design-dependent**: $\sigma^2_*$ depends only on the spatial configuration $\{\mathbf{s}_i\}$ and $\mathbf{s}_*$, not on the observed values $\mathbf{y}$. This means the prediction uncertainty can be evaluated — and the survey design can be optimized — before collecting data.
 
 ### Practical Computation via Cholesky
 
@@ -187,11 +187,11 @@ set.seed(42)
 # True parameters
 #------------------------------------------------------
 N_s     <- 80        # number of observation locations
-range   <- 0.25      # Matérn length-scale ℓ
-nu      <- 1         # Matérn smoothness ν
+range   <- 0.25      # Matérn length-scale
+nu      <- 1         # Matérn smoothness 
 sigma_u <- 1.0       # process SD σ
-sigma_e <- 0.15      # nugget (measurement noise) SD σ_e
-mu_true <- 0.0       # constant mean μ
+sigma_e <- 0.15      # nugget (measurement noise) SD sigma_e
+mu_true <- 0.0       # constant mean mu
 
 #------------------------------------------------------
 # Matérn correlation function
@@ -208,15 +208,15 @@ matern_cov <- function(coords1, coords2 = NULL, nu = 1, range, sigma2 = 1) {
 }
 
 #------------------------------------------------------
-# Observation locations: N_s uniform points in [0,1]²
+# Observation locations: N_s uniform points in [0,1]^2
 #------------------------------------------------------
 obs_locs <- matrix(runif(N_s * 2), ncol = 2, dimnames = list(NULL, c("s1", "s2")))
 
 #------------------------------------------------------
-# Simulate the latent field U(s) ~ GP(0, sigma2 C) via Cholesky:
+# Simulate the latent field U(s) ~ GRF(0, sigma2 C) via Cholesky:
 #------------------------------------------------------
 Sigma_U <- matern_cov(obs_locs, nu = nu, range = range, sigma2 = sigma_u^2)
-diag(Sigma_U) <- diag(Sigma_U) + 1e-9     # small jitter for numerical stability
+diag(Sigma_U) <- diag(Sigma_U) + 1e-9     # For numerical stability
 L_U    <- t(chol(Sigma_U))
 U_true <- as.vector(L_U %*% rnorm(N_s))
 
@@ -244,7 +244,7 @@ pred_grid <- as.matrix(expand.grid(s1 = seq(0, 1, length.out = N_grid),
 
 #------------------------------------------------------
 # Kriging prediction at each grid point
-# Cross-covariance  k_* = σ² c_*  (N_pred × N_obs matrix)
+# Cross-covariance  k* = σ² c*  (N_pred × N_obs matrix)
 #------------------------------------------------------
 k_cross  <- matern_cov(pred_grid, obs_locs, nu = nu, range = range, sigma2 = sigma_u^2)
 krig_mean <- mu_true + as.vector(k_cross %*% alpha)
@@ -265,14 +265,14 @@ obs_df <- data.frame(s1 = obs_locs[, "s1"], s2 = obs_locs[, "s2"],
 pred_df <- data.frame(s1 = pred_grid[, "s1"], s2   = pred_grid[, "s2"],
                       mean = krig_mean, sd   = krig_sd)
 
-# True latent field at observation locations
+# True spatial field at observation locations
 p_true <- ggplot(obs_df, aes(s1, s2, colour = U)) +
   geom_point(size = 3.5) +
   scale_colour_distiller(palette = "RdBu", direction = -1,
                          limits = val_lim, name = expression(U(bold(s)))) +
   coord_equal() + theme_bw(base_size = 11) +
   theme(panel.grid = element_blank()) +
-  labs(title    = "True latent field  U(s)",
+  labs(title    = "True spatial field  U(s)",
        subtitle = bquote(sigma == .(sigma_u) ~ "  range =" ~ .(range) ~
                            "  " * nu == .(nu)),
        x = expression(s[1]), y = expression(s[2]))
@@ -322,8 +322,7 @@ grid.arrange(p_krig_mean, p_krig_sd, ncol = 2)
 
 # Conclusion
 
-In this post we have developed Kriging prediction unsder Bayesian inference. Here, the GRF assumption allow us making spatial interpolation into a conditional Gaussian inference: given observations $\mathbf{y}$, the posterior at any unobserved location $\mathbf{s}_*$ is a normal distribution whose mean $\hat{y}_*$ and variance $\sigma^2_*$ are available in closed form through simple linear algebra. The reason Bayesian Kriging delivers uncertainty estimates is structural: by treating the unobserved field $U(\mathbf{s})$ as a random variable rather than a fixed unknown, the prediction at any new location $\mathbf{s}_*$ is not a single number but a full posterior distribution $Y_* \mid \mathbf{y} \sim \mathcal{N}(\hat{y}_*, \sigma^2_*)$. The variance
-\begin{equation}
+In this post we have developed Kriging prediction unsder Bayesian inference. Here, the GRF assumption allow us making spatial interpolation into a conditional Gaussian inference: given observations $\mathbf{y}$, the posterior at any unobserved location $\mathbf{s}_*$ is a normal distribution whose mean $\hat{y}_*$ and variance $\sigma^2_*$ are available in closed form through simple linear algebra. The reason Bayesian Kriging delivers uncertainty estimates is structural: by treating the unobserved field $U(\mathbf{s})$ as a random variable rather than a fixed unknown, the prediction at any new location $\mathbf{s}_*$ is not a single number but a full posterior distribution $Y_* \mid \mathbf{y} \sim \mathcal{N}(\hat{y}_*, \sigma^2_*)$. The variance \begin{equation}
     \sigma^2_* = \sigma^2 - \mathbf{k}_*^\top \boldsymbol{\Sigma}_{\mathbf{y}}^{-1} \mathbf{k}_*
 \end{equation}
 
@@ -331,9 +330,8 @@ measures how much the observations have reduced our prior uncertainty $\sigma^2$
 
 To extend the conclusion, also we have to consider several aspects of this framework:
 
-- The covariance function encodes all prior knowledge about the spatial structure $\rightarrow$ the Matérn family gives fine-grained control over both the smoothness (via $\nu$) and the range of spatial dependence (via $\ell$). Choosing these parameters (either by expert knowledge or by maximum likelihood) is the central modeling decision in any Kriging interpolation.
+-   The covariance function encodes all prior knowledge about the spatial structure $\rightarrow$ the Matérn family gives fine-grained control over both the smoothness (via $\nu$) and the range of spatial dependence (via $\ell$). Choosing these parameters (either by expert knowledge or by maximum likelihood) is the central modeling decision in any Kriging interpolation.
 
-- The nugget $\sigma_e^2$ plays a dual role here, statistically it represents measurement error; geometrically it prevents the covariance matrix from becoming singular and controls the degree of interpolation versus. smoothing. 
+-   The nugget $\sigma_e^2$ plays a dual role here, statistically it represents measurement error; geometrically it prevents the covariance matrix from becoming singular and controls the degree of interpolation versus. smoothing.
 
-- The posterior variance $\sigma^2_*$ is a map of data coverage, hence it does not depend on the observed values, only on the sampling design. This property is central to optimal spatial design: one can identify under-sampled regions and guide where to collect future observations before seeing any data.
-
+-   The posterior variance $\sigma^2_*$ is a map of data coverage, hence it does not depend on the observed values, only on the sampling design. This property is central to optimal spatial design: one can identify under-sampled regions and guide where to collect future observations before seeing any data.
