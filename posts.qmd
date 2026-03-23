@@ -11,4 +11,3 @@ listing:
 Here you will find a selection of my blog posts on spatial modeling and statistical analysis.
 
 ![](images/main_plot.png)
-
