@@ -70,13 +70,6 @@
     "text": "Understanding Kriging (Part 2)\n\n\n\ncode\n\nanalysis\n\n\n\n\n\n\n\n\n\nMar 23, 2026\n\n\nJoaquin Cavieres\n\n\n\n\n\n\n\n\n\n\n\n\nUnderstanding Kriging (Part 1)\n\n\n\ncode\n\nanalysis\n\n\n\n\n\n\n\n\n\nMay 16, 2025\n\n\nJoaquin Cavieres\n\n\n\n\n\n\n\n\n\n\n\n\n.. in Germany (for now..)\n\n\n\n\n\n\n\n\nMay 11, 2025\n\n\nJoaquin Cavieres\n\n\n\n\n\nNo matching items"
   },
   {
-    "objectID": "posts/kriging_part2/kriging_part2.html",
-    "href": "posts/kriging_part2/kriging_part2.html",
-    "title": "Understanding Kriging (Part 2)",
-    "section": "",
-    "text": "Let us continue our understanding of the Kriging method. It is important to recall that while Kriging can be treated as a deterministic problem solvable through linear algebra, we are now shifting our focus to the more common (statistical) Bayesian perspective. The primary objective of Kriging is to utilize observed values \\(y_1, \\dots, y_N\\) sampled at spatial locations \\(\\mathbf{s}_1, \\dots, \\mathbf{s}_N\\) to predict an unknown value \\(y_{\\text{new}}\\) at a specific location \\(\\mathbf{s}_{\\text{new}}\\) (where \\(\\mathbf{s}_{\\text{new}} \\notin \\{\\mathbf{s}_1, \\dots, \\mathbf{s}_N\\}\\)). In addition to the deterministic approach previously discussed, we can address this problem using stochastic and Bayesian frameworks. Under this view, we assume the data values \\(y_i\\) are observed realizations \\(y(\\mathbf{s}_i)\\) of a random variable \\(Y(\\mathbf{s}_i)\\) belonging to a spatial random field \\(Y\\). Since the collected data \\(y(\\mathbf{s}_1), \\dots, y(\\mathbf{s}_N)\\) represent only a single realization of the random variables \\(Y(\\mathbf{s}_1), \\dots, Y(\\mathbf{s}_N)\\), our predictions are formulated using these random variables as inputs. Consequently, the predictor \\(\\hat{Y}(\\mathbf{s})\\) is itself a random variable. Note: While our previous post used \\(Z(\\mathbf{s}_1), \\dots, Z(\\mathbf{s}_N)\\) to denote data values, we will now use \\(Y(\\mathbf{s}_1), \\dots, Y(\\mathbf{s}_N)\\). This change is strictly notational to help distinguish the stochastic approach from the deterministic one."
-  },
-  {
     "objectID": "posts/kriging_part2/kriging_part2.html#gaussian-random-fields",
     "href": "posts/kriging_part2/kriging_part2.html#gaussian-random-fields",
     "title": "Understanding Kriging (Part 2)",

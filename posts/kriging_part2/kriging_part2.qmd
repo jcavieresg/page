@@ -189,7 +189,7 @@ set.seed(42)
 N_s     <- 80        # number of observation locations
 range   <- 0.25      # Matérn length-scale
 nu      <- 1         # Matérn smoothness 
-sigma_u <- 1.0       # process SD σ
+sigma_u <- 1.0       # process SD 
 sigma_e <- 0.15      # nugget (measurement noise) SD sigma_e
 mu_true <- 0.0       # constant mean mu
 
