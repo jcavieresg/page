@@ -338,5 +338,5 @@ To extend the conclusion, also we have to consider several aspects of this frame
 
 # Comments
 
-An interesting comment was made on Linkedin by Rubén Roa Ureta (\url{https://www.linkedin.com/feed/update/urn:li:activity:7441855117403828224?commentUrn=urn%3Ali%3Acomment%3A%28activity%3A7441855117403828224%2C7442123118283984897%29&dashCommentUrn=urn%3Ali%3Afsd_comment%3A%287442123118283984897%2Curn%3Ali%3Aactivity%3A7441855117403828224%29}). Thus, in the next post I will consider his observation to make a comparison between the Maximum Likelihood method and Bayesian inference using the MCMC method (only in estimation terms) along with the uncertainty quantification for predictions in Kriging!
+An interesting comment was made on Linkedin by Ruben Roa Ureta. Thus, in the next post I will consider his observation to make a comparison between the Maximum Likelihood method and Bayesian inference using the MCMC method (only in estimation terms) along with the uncertainty quantification for predictions in Kriging!
 
