@@ -336,7 +336,7 @@ To extend the conclusion, also we have to consider several aspects of this frame
 
 -   The posterior variance $\sigma^2_*$ is a map of data coverage, hence it does not depend on the observed values, only on the sampling design. This property is central to optimal spatial design: one can identify under-sampled regions and guide where to collect future observations before seeing any data.
 
-# Comments
+<!-- # Comments -->
 
-An interesting comment was made on Linkedin by Ruben Roa Ureta. Thus, in the next post I will consider his observation to make a comparison between the Maximum Likelihood method and Bayesian inference using the MCMC method (only in estimation terms) along with the uncertainty quantification for predictions in Kriging!
+<!-- An interesting comment was made on Linkedin by Ruben Roa Ureta. Thus, in the next post I will consider his observation to make a comparison between the Maximum Likelihood method and Bayesian inference using the MCMC method (only in estimation terms) along with the uncertainty quantification for predictions in Kriging! -->
 
