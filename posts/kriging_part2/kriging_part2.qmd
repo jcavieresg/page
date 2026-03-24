@@ -244,7 +244,7 @@ pred_grid <- as.matrix(expand.grid(s1 = seq(0, 1, length.out = N_grid),
 
 #------------------------------------------------------
 # Kriging prediction at each grid point
-# Cross-covariance  k* = sigma^2 c*  (N_pred × N_obs matrix)
+# Cross-covariance  k* = sigma2 c*  (N_pred × N_obs matrix)
 #------------------------------------------------------
 k_cross  <- matern_cov(pred_grid, obs_locs, nu = nu, range = range, sigma2 = sigma_u^2)
 krig_mean <- mu_true + as.vector(k_cross %*% alpha)
@@ -336,7 +336,7 @@ To extend the conclusion, also we have to consider several aspects of this frame
 
 -   The posterior variance $\sigma^2_*$ is a map of data coverage, hence it does not depend on the observed values, only on the sampling design. This property is central to optimal spatial design: one can identify under-sampled regions and guide where to collect future observations before seeing any data.
 
-<!-- # Comments -->
+# Comments
 
-<!-- An interesting comment was made on Linkedin by Ruben Roa Ureta. Thus, in the next post I will consider his observation to make a comparison between the Maximum Likelihood method and Bayesian inference using the MCMC method (only in estimation terms) along with the uncertainty quantification for predictions in Kriging! -->
+An interesting comment was made on Linkedin by Ruben Roa Ureta ([View the comment in LinkedIn here](https://www.linkedin.com/feed/update/urn:li:activity:7441855117403828224/)). Thus, in the next post I will consider his observation to make a comparison between the Maximum Likelihood method and Bayesian inference using the MCMC method (only in estimation terms) along with the uncertainty quantification for predictions in Kriging!
 

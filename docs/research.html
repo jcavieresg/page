@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>and here we are… – Joaquin Cavieres</title>
+<title>Research – Joaquin Cavieres</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -30,13 +30,10 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-listing/list.min.js"></script>
-<script src="site_libs/quarto-listing/quarto-listing.js"></script>
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
@@ -69,73 +66,15 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
 
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-date','listing-title','listing-author','listing-image','listing-description','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-date","listing-title","listing-author","listing-image","listing-description","listing-categories"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
-
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
 
-<body class="nav-fixed quarto-light">
+<body class="nav-fixed fullcontent quarto-light">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+  <header id="quarto-header" class="headroom fixed-top">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
@@ -150,7 +89,7 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./research.html"> 
+    <a class="nav-link active" href="./research.html" aria-current="page"> 
 <span class="menu-text">Research</span></a>
   </li>  
   <li class="nav-item">
@@ -179,142 +118,74 @@ window.Quarto = {
     </nav>
 </header>
 <!-- content -->
-<header id="title-block-header" class="quarto-title-block default page-columns page-full">
-  <div class="quarto-title-banner page-columns page-full">
-    <div class="quarto-title column-page-left">
-      <h1 class="title">and here we are…</h1>
-                      </div>
-  </div>
-    
-  
-  <div class="quarto-title-meta column-page-left">
-
-      
-    
-      
-    </div>
-    
-  
-  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(3)</span></div><div class="category" data-category="YW5hbHlzaXM=">analysis <span class="quarto-category-count">(2)</span></div><div class="category" data-category="Y29kZQ==">code <span class="quarto-category-count">(2)</span></div></div></div>
+    
 <!-- main -->
-<main class="content quarto-banner-title-block column-page-left" id="quarto-document-content">
-
-
-
-
-
-
-
-
-
-<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
-<div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-categories="Y29kZSUyQ2FuYWx5c2lz" data-listing-date-sort="1774220400000" data-listing-file-modified-sort="1774347670755" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="15" data-listing-word-count-sort="2891">
-<div class="thumbnail"><a href="./posts/kriging_part2/kriging_part2.html" class="no-external">
-
-<p class="card-img-top"><img src="images\krigingpart2.jpeg"  class="thumbnail-image card-img"/></p>
-
-</a></div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/kriging_part2/kriging_part2.html" class="no-external">Understanding Kriging (Part 2)</a>
-</h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('Y29kZQ=='); return false;">code</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('YW5hbHlzaXM='); return false;">analysis</div>
-
+<div class="quarto-about-jolla">
+ <header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Research</h1>
 </div>
-<div class="delink listing-description"><a href="./posts/kriging_part2/kriging_part2.html" class="no-external">
-Let us continue our understanding of the Kriging method. It is important to recall that while Kriging can be treated as a deterministic problem solvable through linear…<span class="math inline"></span><span class="math inline"></span><span class="math inline"></span><span class="math inline"></span><span class="math inline"></span><span class="math inline"></span><span class="math inline"></span><span class="math inline"></span><span class="math inline"></span><span class="math inline"></span><span class="math inline"></span><span class="math inline"></span><em></em><span class="math inline"></span><em></em><span class="math inline"></span><em></em>
-</a></div>
+<div class="quarto-title-meta">
+  </div>
+</header><main class="content" id="quarto-document-content">
+<p>My research previously focused on developing computational techniques for Bayesian spatial modeling. I am now exploring its connections with Bayesian inverse problems, which is central part of my current work. In parallel, I remain interested in numerical methods within a deterministic framework for spatial interpolation.</p>
+<div style="text-align:center; margin-top:50px;">
+<p><img src="images/hmat1.png" class="fade-in" style="width:150px; margin:0 20px;"></p>
 </div>
-<div class="metadata">
-<a href="./posts/kriging_part2/kriging_part2.html" class="no-external">
-<div class="listing-date">
-Mar 23, 2026
+<section id="in-progress" class="level1">
+<h1>In Progress</h1>
+<div style="text-align: justify;">
+<ul>
+<li><strong>Cavieres, J</strong>., Monnahan, C.C., Bolin., D, 2025. Approximated Gaussian random field: effects of parameterization on MCMC sampling.</li>
+</ul>
 </div>
-<div class="listing-author">
-Joaquin Cavieres
+</section>
+<section id="preprints" class="level1">
+<h1>Preprints</h1>
+<ul>
+<li><p><a href="https://arxiv.org/abs/2510.04256"><strong>Cavieres, J.</strong>, Krumscheid, S., 2025. regTPS-KLE: A Novel Approach To Approximate A Gaussian Random Field for Bayesian Spatial Modeling. <em>arXiv</em></a></p></li>
+<li><p><a href="https://arxiv.org/abs/2404.12756"><strong>Cavieres, J.</strong>, Moraga, P., Monnahan, C.C. (2024). Why not a thin plate spline for spatial models? A comparative study using Bayesian inference. <em>arXiv</em></a></p></li>
+<li><p><a href="https://arxiv.org/abs/2404.01902"><strong>Cavieres, J.</strong>, Karkulik, M. (2022). Efficient estimation for a smoothing thin plate spline in a two-dimensional space. <em>arXiv</em></a></p></li>
+</ul>
+</section>
+<section id="journal-publications" class="level1">
+<h1>Journal Publications</h1>
+<ul>
+<li><p><a href="https://doi.org/10.1007/978-3-031-65723-8_32"><strong>Cavieres, J.</strong>, Monnahan, C.C., Bolin, D., and Bergherr, E. (2024). Approximated Gaussian Random Field Under Different Parameterizations for MCMC. <em>Developments in Statistical Modelling</em></a></p></li>
+<li><p><a href="https://doi.org/10.1051/0004-6361/202346587">Escárate, P., Curé, M., Araya, I., Coronel, M., Cedeño, A.L., Celedon, L., <strong>Cavieres, J.</strong>, et al.&nbsp;(2023). A method to deconvolve stellar profiles: The Non-Rotating Line utilizing Gaussian Sum Approximation. <em>Astronomy &amp; Astrophysics</em></a></p></li>
+<li><p><a href="https://doi.org/10.1111/gean.12356">Lu, M., <strong>Cavieres, J.</strong>, Moraga, P. (2023). A comparison of spatial and non-spatial machine learning methods in NO2 modelling: prediction accuracy, uncertainty quantification, and model interpretation. <em>Geographical Analysis</em></a></p></li>
+<li><p><a href="https://doi.org/10.1080/00949655.2022.2090564"><strong>Cavieres, J.</strong>, Ibacache-Pulgar, G., Contreras-Reyes, J.E. (2022). Thin plate spline model under skew-normal random errors: estimation and diagnostic analysis for spatial data. <em>Statistical Computation and Simulation</em></a></p></li>
+<li><p><a href="https://doi.org/10.1016/j.fishres.2021.105960"><strong>Cavieres, J.</strong>, Monnahan, C.C, Vehtari, A. (2021). Accounting for spatial dependence improves relative abundance estimates in a benthic marine species structured as a metapopulation. <em>Fisheries Research</em></a></p></li>
+<li><p><a href="https://doi.org/10.1016/j.fishres.2018.07.002"><strong>Cavieres, J.</strong>, Nicolis, O. (2018). Using a spatio-temporal bayesian approach to estimate the relative abundance index of yellow squat lobster (Cervimunida johni) of Chile. <em>Fisheries Research</em></a></p></li>
+</ul>
+<div style="text-align:center; margin-top:50px;">
+<p><img src="images/chart.jpg" class="fade-in fade-in-delay" style="width:150px; margin:0 20px;"></p>
 </div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="1" data-categories="Y29kZSUyQ2FuYWx5c2lz" data-listing-date-sort="1747346400000" data-listing-file-modified-sort="1774262602579" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="21" data-listing-word-count-sort="4105">
-<div class="thumbnail"><a href="./posts/kriging_part1/kriging_part1.html" class="no-external">
+</section>
+<section id="conferences-workshops" class="level1">
+<h1>Conferences &amp; Workshops</h1>
+<ul>
+<li><p><strong>Cavieres, J</strong>., Monnahan, C.C., Bolin, D., Bergherr, E., 2024. Approximated Gaussian random field under different parameterizations for MCMC. International Workshop on Statistical Modelling 2024, Durham, England.</p></li>
+<li><p><strong>Cavieres, J</strong>., Moraga, P., Monnahan, C.C., 2023. Bayesian semiparametric spatial model using Template Model Builder (). CFE-CMStatistics Conference 2023, Berlin, Germany.</p></li>
+<li><p><strong>Cavieres, J</strong>., Monnahan, C.C., Moraga, P., 2023.A semiparametric thin plate spline spatial model using Bayesian computation. Statistical Computing 2023, Günzburg, Germany.</p></li>
+<li><p>Cure, M., Arcos, C., Araya, I., Escarate, P., Celedon, L., <strong>Cavieres, J</strong>., Pezoa, R., Olivares, E., Farias, G., 2022. Bayesian deconvolution of a rotating spectral line profile to a non-rotating one. XXXI General Assembly of international Astronomical Union, Busan, Republic of Korea.</p></li>
+<li><p><strong>Cavieres, J</strong>., 2021. Combining all the pieces together to create an efficient full Bayesian geostatistical model: The SPDE method in . 2do Workshop de Estadística: Contribuciones de Posgrado. Sociedad Chilena de Estatística (SOCHE).</p></li>
+<li><p><strong>Cavieres, J</strong>., Moraga, P., 2021. Fitting spatial random field models using and the SPDE approach: implementation via and a comparative study of two different parametrizations. End-to-end Bayesian learning, Marseille, France.</p></li>
+<li><p><strong>Cavieres, J</strong>., 2019. Incorporating the spatial dependence with physical barriers in a bayesian spatio-temporal model to obtain a relative index of abundance. StanCon2019, Cambridge, England.</p></li>
+<li><p>Plaza, F., <strong>Cavieres, J</strong>., Salas, R., Nicolis, O., 2018. Deep learning approach for seismic risk assessment in Chile. XIV IEEE Latin American Summer School in Computational Intelligence.</p></li>
+<li><p><strong>Cavieres, J</strong>., Nicolis, O. 2016. Bayesian spatio-temporal modelling for analyzing the sea urchin (<em>Loxechinus albus</em>) fishery in Chile. COBAL V (Congreso de Estadística Bayesiana de America Latina) , Guanajuato, México.</p></li>
+</ul>
 
-<img loading="lazy" src="./posts/kriging_part1/images/plot1.jpg" class="thumbnail-image">
 
-</a></div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/kriging_part1/kriging_part1.html" class="no-external">Understanding Kriging (Part 1)</a>
-</h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('Y29kZQ=='); return false;">code</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('YW5hbHlzaXM='); return false;">analysis</div>
-
+</section>
+</main>  
 </div>
-<div class="delink listing-description"><a href="./posts/kriging_part1/kriging_part1.html" class="no-external">
-In this first blog post, I would like to share my thoughts on how the Kriging method can often lead to confusion due to its different interpretations. My goal is to help…<strong></strong><strong></strong>
-</a></div>
-</div>
-<div class="metadata">
-<a href="./posts/kriging_part1/kriging_part1.html" class="no-external">
-<div class="listing-date">
-May 16, 2025
-</div>
-<div class="listing-author">
-Joaquin Cavieres
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="2" data-listing-date-sort="1746914400000" data-listing-file-modified-sort="1773848807720" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="86">
-<div class="thumbnail"><a href="./posts/welcome/index.html" class="no-external">
-
-<p class="card-img-top"><img src="images\gottingen3.jpeg"  class="thumbnail-image card-img"/></p>
-
-</a></div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/welcome/index.html" class="no-external">.. in Germany (for now..)</a>
-</h3>
-<div class="delink listing-description"><a href="./posts/welcome/index.html" class="no-external">
-This is my first post, a space that I wanted to build quite a long time ago… My main idea is to share with people interested in Spatial Statistics, Bayesian modeling and…
-</a></div>
-</div>
-<div class="metadata">
-<a href="./posts/welcome/index.html" class="no-external">
-<div class="listing-date">
-May 11, 2025
-</div>
-<div class="listing-author">
-Joaquin Cavieres
-</div>
-</a>
-</div>
-</div>
-</div>
-<div class="listing-no-matching d-none">No matching items</div>
-</div></main> <!-- /main -->
+ <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
-    const icon = "";
-    const anchorJS = new window.AnchorJS();
-    anchorJS.options = {
-      placement: 'right',
-      icon: icon
-    };
-    anchorJS.add('.anchored');
     const isCodeAnnotation = (el) => {
       for (const clz of el.classList) {
         if (clz.startsWith('code-annotation-')) {                     
