@@ -58,7 +58,7 @@ $$
 
 where $\boldsymbol{\mu} = (\mu(\mathbf{s}_1), \dots, \mu(\mathbf{s}_n))^\top$ is the mean vector and $\boldsymbol{\Sigma}$ is the $n \times n$ covariance matrix with entries $\Sigma_{ij} = \sigma^2 \mathbf{C}(\mathbf{s}_i, \mathbf{s}_j)$.
 
-A GRF is therefore entirely characterized by its mean function $\mu(\mathbf{s})$ and covariance function $\sigma^2 \mathbf{C}(\mathbf{s}, \mathbf{s}')$. We write $Y \sim \mathcal{GP}(\mu, \sigma^2 \mathbf{C})$ to denote this. This characterization is what makes GRFs so tractable: all finite-dimensional distributions are Gaussian, and conditional distributions — the key operation for prediction — remain Gaussian and can be computed in closed form.
+A GRF is therefore entirely characterized by its mean function $\mu(\mathbf{s})$ and covariance function $\sigma^2 \mathbf{C}(\mathbf{s}, \mathbf{s}')$. We write $Y \sim \mathcal{GRF}(\mu, \sigma^2 \mathbf{C})$ to denote this. This characterization is what makes GRFs so tractable: all finite-dimensional distributions are Gaussian, and conditional distributions — the key operation for prediction — remain Gaussian and can be computed in closed form.
 
 ## Stationarity
 
@@ -103,7 +103,7 @@ We now frame spatial prediction within the Bayesian paradigm. Suppose we observe
 
 $$
 \begin{aligned}
-Y(\mathbf{s}) &= \mu + U(\mathbf{s}), \qquad U \sim \mathcal{GP}(0,\, \sigma^2 \mathbf{C}), \\
+Y(\mathbf{s}) &= \mu + U(\mathbf{s}), \qquad U \sim \mathcal{GRF}(0,\, \sigma^2 \mathbf{C}), \\
 y(\mathbf{s}_i) &= Y(\mathbf{s}_i) + \varepsilon_i, \qquad \varepsilon_i \overset{\text{iid}}{\sim} \mathcal{N}(0,\, \sigma_e^2),
 \end{aligned}
 $$
