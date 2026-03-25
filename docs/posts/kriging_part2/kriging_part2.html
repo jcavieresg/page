@@ -271,7 +271,7 @@ window.Quarto = {
 \sim \mathcal{N}\!\left(\boldsymbol{\mu},\, \boldsymbol{\Sigma}\right),
 \]</span></p>
 <p>where <span class="math inline">\(\boldsymbol{\mu} = (\mu(\mathbf{s}_1), \dots, \mu(\mathbf{s}_n))^\top\)</span> is the mean vector and <span class="math inline">\(\boldsymbol{\Sigma}\)</span> is the <span class="math inline">\(n \times n\)</span> covariance matrix with entries <span class="math inline">\(\Sigma_{ij} = \sigma^2 \mathbf{C}(\mathbf{s}_i, \mathbf{s}_j)\)</span>.</p>
-<p>A GRF is therefore entirely characterized by its mean function <span class="math inline">\(\mu(\mathbf{s})\)</span> and covariance function <span class="math inline">\(\sigma^2 \mathbf{C}(\mathbf{s}, \mathbf{s}')\)</span>. We write <span class="math inline">\(Y \sim \mathcal{GP}(\mu, \sigma^2 \mathbf{C})\)</span> to denote this. This characterization is what makes GRFs so tractable: all finite-dimensional distributions are Gaussian, and conditional distributions — the key operation for prediction — remain Gaussian and can be computed in closed form.</p>
+<p>A GRF is therefore entirely characterized by its mean function <span class="math inline">\(\mu(\mathbf{s})\)</span> and covariance function <span class="math inline">\(\sigma^2 \mathbf{C}(\mathbf{s}, \mathbf{s}')\)</span>. We write <span class="math inline">\(Y \sim \mathcal{GRF}(\mu, \sigma^2 \mathbf{C})\)</span> to denote this. This characterization is what makes GRFs so tractable: all finite-dimensional distributions are Gaussian, and conditional distributions — the key operation for prediction — remain Gaussian and can be computed in closed form.</p>
 </section>
 <section id="stationarity" class="level2" data-number="3.2">
 <h2 data-number="3.2" class="anchored" data-anchor-id="stationarity"><span class="header-section-number">3.2</span> Stationarity</h2>
@@ -309,7 +309,7 @@ window.Quarto = {
 <p>We now frame spatial prediction within the Bayesian paradigm. Suppose we observe <span class="math inline">\(\mathbf{y} = (y(\mathbf{s}_1), \dots, y(\mathbf{s}_N))^\top\)</span> and wish to predict the unknown value <span class="math inline">\(Y(\mathbf{s}_*)\)</span> at a new location <span class="math inline">\(\mathbf{s}_*\)</span>. We adopt the hierarchical model:</p>
 <p><span class="math display">\[
 \begin{aligned}
-Y(\mathbf{s}) &amp;= \mu + U(\mathbf{s}), \qquad U \sim \mathcal{GP}(0,\, \sigma^2 \mathbf{C}), \\
+Y(\mathbf{s}) &amp;= \mu + U(\mathbf{s}), \qquad U \sim \mathcal{GRF}(0,\, \sigma^2 \mathbf{C}), \\
 y(\mathbf{s}_i) &amp;= Y(\mathbf{s}_i) + \varepsilon_i, \qquad \varepsilon_i \overset{\text{iid}}{\sim} \mathcal{N}(0,\, \sigma_e^2),
 \end{aligned}
 \]</span></p>
@@ -537,7 +537,7 @@ y(\mathbf{s}_i) &amp;= Y(\mathbf{s}_i) + \varepsilon_i, \qquad \varepsilon_i \ov
 </section>
 <section id="comments" class="level1" data-number="6">
 <h1 data-number="6"><span class="header-section-number">6</span> Comments</h1>
-<p>An interesting comment was made on Linkedin by Ruben Roa Ureta (<a href="https://www.linkedin.com/feed/update/urn:li:activity:7441855117403828224/">View the comment in LinkedIn here</a>). Thus, in the next post I will consider his observation to make a comparison between the Maximum Likelihood method and Bayesian inference using the MCMC method (only in estimation terms) along with the uncertainty quantification for predictions in Kriging!</p>
+<p>An interesting comment was made on Linkedin by Ruben Roa Ureta (<a href="https://www.linkedin.com/feed/update/urn:li:activity:7441855117403828224/">View here the comment in LinkedIn</a>). Thus, in the next post I will consider his observation to make a comparison between the Maximum Likelihood method and Bayesian inference using the MCMC method (only in estimation terms) along with the uncertainty quantification for predictions in Kriging!</p>
 
 
 </section>
