@@ -17,6 +17,12 @@ My research has been oriented on developing computational techniques for Bayesia
 # In Progress
 
 ::: {style="text-align: justify;"}
+-   **Cavieres, J**., Hahn-Rigaud, Bernadette, 2026. Bayesian Treatment of Model Inexactness in
+Dynamic Inverse Problems.
+:::
+
+
+::: {style="text-align: justify;"}
 -   **Cavieres, J**., Monnahan, C.C., Bolin., D, 2025. Approximated Gaussian random field: effects of parameterization on MCMC sampling.
 :::
 
