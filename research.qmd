@@ -14,11 +14,10 @@ My research has been oriented on developing computational techniques for Bayesia
 <img src="images/hmat1.png" class="fade-in" style="width:150px; margin:0 20px;"/>
 :::
 
-# In Progress
+# In Preparation
 
 ::: {style="text-align: justify;"}
--   **Cavieres, J**., Hahn-Rigaud, Bernadette, 2026. Bayesian Treatment of Model Inexactness in
-Dynamic Inverse Problems.
+-   **Cavieres, J**., Hahn-Rigaud, B, 2026. Bayesian Image Reconstruction in Dynamic Inverse Problems: Temporal Coupling, Sampling Design and Uncertainty Quantification.
 :::
 
 
