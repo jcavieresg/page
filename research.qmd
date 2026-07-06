@@ -17,8 +17,7 @@ My research has been oriented on developing computational techniques for Bayesia
 # In Preparation
 
 ::: {style="text-align: justify;"}
--   **Cavieres, J**., Hahn-Rigaud, B, 2026. Bayesian Image Reconstruction in Dynamic Inverse Problems:
-Spatio-Temporal Priors, Acquisition Design, and Scalable Uncertainty Quantification.
+-   **Cavieres, J**., Hahn-Rigaud, B, 2026. Bayesian Image Reconstruction in Dynamic Inverse Problems: Spatial Priors and Temporal Dynamics for Scalable Uncertainty Quantification.
 :::
 
 
