@@ -55,14 +55,3 @@ a:visited {
 }
 
 
-/* Links in the page content */
-main a,
-main a:visited {
-  color: #0066cc !important;
-}
-
-main a:hover,
-main a:focus {
-  color: #004c99 !important;
-  text-decoration: underline;
-}
