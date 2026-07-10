@@ -40,4 +40,17 @@ p {
 }
 
 
+/* Hyperlinks */
+a {
+  color: #0066cc;
+}
+
+a:hover {
+  color: #004c99;
+  text-decoration: underline;
+}
+
+a:visited {
+  color: #5a4fcf;
+}
 
