@@ -53,20 +53,20 @@ My research has been oriented on developing computational techniques for Bayesia
 
 # Conferences & Workshops
 
--   **Cavieres, J.**, Krumscheid, S., 2026. regTPS-KLE: A Novel Approach To Approximate A Gaussian Random Field for Bayesian Spatial Modeling. Statistical Computing 2026, G\"unzburg, Germany.
+-   **Cavieres, J.**, Krumscheid, S., 2026. regTPS-KLE: A Novel Approach To Approximate A Gaussian Random Field for Bayesian Spatial Modeling. Statistical Computing 2026, Gunzburg, Germany.
 
 
 -   **Cavieres, J**., Monnahan, C.C., Bolin, D., Bergherr, E., 2024. Approximated Gaussian random field under different parameterizations for MCMC. International Workshop on Statistical Modelling 2024, Durham, England.
 
--   **Cavieres, J**., Moraga, P., Monnahan, C.C., 2023. Bayesian semiparametric spatial model using Template Model Builder (\texttt{TMB}). CFE-CMStatistics Conference 2023, Berlin, Germany.
+-   **Cavieres, J**., Moraga, P., Monnahan, C.C., 2023. Bayesian semiparametric spatial model using Template Model Builder ($\texttt{TMB}$). CFE-CMStatistics Conference 2023, Berlin, Germany.
 
 -   **Cavieres, J**., Monnahan, C.C., Moraga, P., 2023.A semiparametric thin plate spline spatial model using Bayesian computation. Statistical Computing 2023, Günzburg, Germany.
 
 -   Cure, M., Arcos, C., Araya, I., Escarate, P., Celedon, L., **Cavieres, J**., Pezoa, R., Olivares, E., Farias, G., 2022. Bayesian deconvolution of a rotating spectral line profile to a non-rotating one. XXXI General Assembly of international Astronomical Union, Busan, Republic of Korea.
 
--   **Cavieres, J**., 2021. Combining all the pieces together to create an efficient full Bayesian geostatistical model: The SPDE method in \texttt{Stan}. 2do Workshop de Estadística: Contribuciones de Posgrado. Sociedad Chilena de Estatística (SOCHE).
+-   **Cavieres, J**., 2021. Combining all the pieces together to create an efficient full Bayesian geostatistical model: The SPDE method in $\texttt{Stan}$. 2do Workshop de Estadística: Contribuciones de Posgrado. Sociedad Chilena de Estatística (SOCHE).
 
--   **Cavieres, J**., Moraga, P., 2021. Fitting spatial random field models using \texttt{Stan} and the SPDE approach: implementation via \texttt{TMB} and a comparative study of two different parametrizations. End-to-end Bayesian learning, Marseille, France.
+-   **Cavieres, J**., Moraga, P., 2021. Fitting spatial random field models using $\texttt{Stan}$ and the SPDE approach: implementation via $\texttt{TMB}$ and a comparative study of two different parametrizations. End-to-end Bayesian learning, Marseille, France.
 
 -   **Cavieres, J**., 2019. Incorporating the spatial dependence with physical barriers in a bayesian spatio-temporal model to obtain a relative index of abundance. StanCon2019, Cambridge, England.
 
