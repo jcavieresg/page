@@ -53,6 +53,9 @@ My research has been oriented on developing computational techniques for Bayesia
 
 # Conferences & Workshops
 
+-   **Cavieres, J.**, Krumscheid, S., 2026. regTPS-KLE: A Novel Approach To Approximate A Gaussian Random Field for Bayesian Spatial Modeling. Statistical Computing 2026, G\"unzburg, Germany.
+
+
 -   **Cavieres, J**., Monnahan, C.C., Bolin, D., Bergherr, E., 2024. Approximated Gaussian random field under different parameterizations for MCMC. International Workshop on Statistical Modelling 2024, Durham, England.
 
 -   **Cavieres, J**., Moraga, P., Monnahan, C.C., 2023. Bayesian semiparametric spatial model using Template Model Builder (\texttt{TMB}). CFE-CMStatistics Conference 2023, Berlin, Germany.
