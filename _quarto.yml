@@ -6,6 +6,8 @@ project:
     - images/chart.jpg
     - images/hmat1.png
     - images/main_plot.png
+  exclude: 
+    - posts/regTPS/
 website:
   title: "Joaquin Cavieres"
   navbar:

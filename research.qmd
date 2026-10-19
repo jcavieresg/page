@@ -25,7 +25,7 @@ My research has been oriented on developing computational techniques for Bayesia
 -   **Cavieres, J**., Monnahan, C.C., Bolin., D, 2025. Approximated Gaussian random field: effects of parameterization on MCMC sampling.
 :::
 
-# Preprints
+# Preprints/Arkiv
 
 -   [**Cavieres, J.**, Krumscheid, S., 2025. regTPS-KLE: A Novel Approach To Approximate A Gaussian Random Field for Bayesian Spatial Modeling. *arXiv*](https://arxiv.org/abs/2510.04256)
 
