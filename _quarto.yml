@@ -1,13 +1,21 @@
 project:
   type: website
   output-dir: docs
+  render:
+    - index.qmd
+    - index2.qmd
+    - posts.qmd
+    - research.qmd
+    - posts/kriging_part1/kriging_part1.qmd
+    - posts/kriging_part2/kriging_part2.qmd
+    - posts/welcome/index.qmd
+
   resources:
     - posts/CV_JoaquinCavieres.pdf
     - images/chart.jpg
     - images/hmat1.png
     - images/main_plot.png
-  exclude: 
-    - posts/regTPS/
+
 website:
   title: "Joaquin Cavieres"
   navbar:

@@ -1,7 +1,10 @@
 ---
 title: "Blog Posts"
 listing:
-  contents: posts
+  contents: 
+    - posts/kriging_part1
+    - posts/kriging_part2
+    - posts/welcome
   type: default
   sort: "date desc"
   categories: true
