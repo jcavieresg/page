@@ -15,7 +15,7 @@ My research has been oriented on developing computational techniques for Bayesia
   <img src="images/image_template.jpg" style="width: 80%;" />
 </div>
 
-*This image was created with Gemini!!!*
+*(The previous image was created with Gemini!!!)*
 
 # In Preparation
 
