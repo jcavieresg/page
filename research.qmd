@@ -12,7 +12,7 @@ My research has been oriented on developing computational techniques for Bayesia
 <!-- ![](images/image_template.jpg){width="80%" fig-align="center"}  -->
 
 <div style="text-align: center;">
-  <img src="images/image_template.jpg" style="width: 80%;" />
+<img src="images/image_template.jpg" style="width: 80%;" />
 </div>
 
 *(The previous image was created with Gemini!!!)*
