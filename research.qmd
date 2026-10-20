@@ -9,7 +9,7 @@ format:
 
 My research has been oriented on developing computational techniques for Bayesian spatial modeling, however now I am exploring its connections with Bayesian inverse problems, which is a central part of my current work. In parallel, I remain interested in numerical methods within a deterministic framework for spatial interpolation.
 
-![](images/image_template.jpg){width="80%" fig-align="center"} \
+![](images/image_template.jpg){width="80%" fig-align="center"} 
 
 *This image was created with Gemini!!!*
 
