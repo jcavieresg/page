@@ -15,24 +15,49 @@ project:
     - images/chart.jpg
     - images/hmat1.png
     - images/main_plot.png
+    - images/image_template.jpg
 
 website:
   title: "Joaquin Cavieres"
   navbar:
+    background: light
+    search: true
+    left:
+      - text: "About"
+        href: index.qmd
+      - text: "Research"
+        href: research.qmd
+      - text: "Posts"
+        menu:
+          - text: "All posts"
+            href: posts.qmd
+          - text: "Kriging, part 1"
+            href: posts/kriging_part1/kriging_part1.qmd
+          - text: "Kriging, part 2"
+            href: posts/kriging_part2/kriging_part2.qmd
+          - text: "Welcome!"
+            href: posts/welcome/index.qmd
     right:
-      - research.qmd
-      - posts.qmd
       - icon: github
         href: https://github.com/jcavieresg
       - icon: twitter
         href: https://x.com/jcavieresg
       - text: "CV"
         href: posts/CV_JoaquinCavieres.pdf
+  page-footer:
+    left: "© 2026 Joaquin Cavieres"
+    right: "Made with [Quarto](https://quarto.org)"
 
 format:
   html:
-    theme: flatly
+    theme: cosmo
     css: styles.css
+    toc: false
+    grid:
+      sidebar-width: 250px
+      body-width: 1000px
+      margin-width: 200px
+      gutter-width: 1.5rem
     number-sections: true
     number-equations: true
     bibliography: references.bib

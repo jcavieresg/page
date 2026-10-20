@@ -41,7 +41,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-6b423f165eeea3787de40cb4f8e821c3.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-66409522edc5af4bde5a7a85a5ddaf27.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -119,15 +119,40 @@ window.Quarto = {
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
-            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
   <li class="nav-item">
     <a class="nav-link active" href="./research.html" aria-current="page"> 
 <span class="menu-text">Research</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./posts.html"> 
-<span class="menu-text">Blog Posts</span></a>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-posts" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Posts</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-posts">    
+        <li>
+    <a class="dropdown-item" href="./posts.html">
+ <span class="dropdown-text">All posts</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="./posts/kriging_part1/kriging_part1.html">
+ <span class="dropdown-text">Kriging, part 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./posts/kriging_part2/kriging_part2.html">
+ <span class="dropdown-text">Kriging, part 2</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./posts/welcome/index.html">
+ <span class="dropdown-text">Welcome!</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/jcavieresg"> <i class="bi bi-github" role="img">
 </i> 
@@ -164,8 +189,10 @@ window.Quarto = {
   </div>
 </header><main class="content" id="quarto-document-content">
 <p>My research has been oriented on developing computational techniques for Bayesian spatial modeling, however now I am exploring its connections with Bayesian inverse problems, which is a central part of my current work. In parallel, I remain interested in numerical methods within a deterministic framework for spatial interpolation.</p>
-<div style="text-align:center; margin-top:50px;">
-<p><img src="images/hmat1.png" class="fade-in" style="width:150px; margin:0 20px;"></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/image_template.jpg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%"></p>
+</figure>
 </div>
 <section id="in-preparation" class="level1">
 <h1>In Preparation</h1>
@@ -179,11 +206,14 @@ window.Quarto = {
 <li><strong>Cavieres, J</strong>., Monnahan, C.C., Bolin., D, 2025. Approximated Gaussian random field: effects of parameterization on MCMC sampling.</li>
 </ul>
 </div>
+<div style="text-align:center; margin-top:50px;">
+<p><img src="images/hmat1.png" class="fade-in" style="width:150px; margin:0 20px;"></p>
+</div>
 </section>
 <section id="preprintsarkiv" class="level1">
 <h1>Preprints/Arkiv</h1>
 <ul>
-<li><p><a href="https://arxiv.org/abs/2510.04256"><strong>Cavieres, J.</strong>, Krumscheid, S., 2025. regTPS-KLE: A Novel Approach To Approximate A Gaussian Random Field for Bayesian Spatial Modeling. <em>arXiv</em></a></p></li>
+<li><p><a href="https://arxiv.org/abs/2510.04256"><strong>Cavieres, J.</strong>, Krumscheid, S., 2025. regTPS: A Novel Approach To Approximate A Gaussian Random Field for Bayesian Spatial Modeling. <em>arXiv</em></a></p></li>
 <li><p><a href="https://arxiv.org/abs/2404.12756"><strong>Cavieres, J.</strong>, Moraga, P., Monnahan, C.C. (2024). Why not a thin plate spline for spatial models? A comparative study using Bayesian inference. <em>arXiv</em></a></p></li>
 <li><p><a href="https://arxiv.org/abs/2404.01902"><strong>Cavieres, J.</strong>, Karkulik, M. (2022). Efficient estimation for a smoothing thin plate spline in a two-dimensional space. <em>arXiv</em></a></p></li>
 </ul>
@@ -616,6 +646,19 @@ window.Quarto = {
   });
   </script>
 </div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© 2026 Joaquin Cavieres</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>Made with <a href="https://quarto.org">Quarto</a></p>
+</div>
+  </div>
+</footer>
 
 
 

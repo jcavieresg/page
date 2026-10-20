@@ -40,4 +40,82 @@ p {
 }
 
 
+/*-- scss:defaults --*/
+$primary: #2c5282;
+$font-family-sans-serif: "Inter", sans-serif;
+$navbar-bg: #ffffff;
 
+
+/* Slightly larger, softer profile photo */
+.about-image {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Cleaner link buttons in the sidebar */
+.about-link {
+  border-radius: 6px;
+}
+
+/* Keep the navbar aligned with the wider body */
+.navbar-container {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Only the page content, not the navbar or footer */
+main.content {
+  font-size: 1.2rem;
+}
+
+/* Site title in the navbar ("Joaquin Cavieres") */
+.navbar-title {
+  font-size: 1.6rem;   /* default is about 1.25rem; try 1.5 to 2 */
+  font-weight: 700;
+}
+
+
+/* Navbar links */
+.navbar-nav .nav-link {
+  font-size: 1.3rem;
+}
+
+/* Listing on the Posts page (titles and descriptions) */
+.quarto-listing .listing-title {
+  font-size: 1.3rem;
+}
+.quarto-listing .listing-description {
+  font-size: 1.3rem;
+}
+
+/* Subtitle on the About page */
+.quarto-title .subtitle {
+  font-size: 1.8rem;
+}
+
+
+
+
+/* Pull the image closer to the text above */
+figure:has(.bottom-img),
+.bottom-img {
+  margin-top: 0;
+}
+
+.quarto-figure {
+  margin-top: -1.5rem;
+  margin-bottom: 0;
+}
+
+/* Remove the empty space under the image and before the footer */
+main.content {
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+#quarto-content {
+  padding-bottom: 0;
+}
+
+.nav-footer {
+  margin-top: 0;
+}
