@@ -11,13 +11,13 @@ My research has been oriented on developing computational techniques for Bayesia
 
 ![](images/image_template.jpg){width="90%" fig-align="center"}
 
-
 <!-- <div style="display: flex; justify-content: center;"> -->
+
 <!--   <img src="images/image_template.jpg" style="width: 80%; height: auto;" alt="Image template" /> -->
+
 <!-- </div> -->
 
 (*The previous image was done by Gemini!!*)
-
 
 # In Preparation
 
