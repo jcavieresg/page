@@ -19,6 +19,8 @@ My research has been oriented on developing computational techniques for Bayesia
 
 (*The previous image was created by Gemini!!*)
 
+<div style="height: 30px;"></div>
+
 # In Preparation
 
 ::: {style="text-align: justify;"}
