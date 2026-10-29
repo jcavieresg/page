@@ -12,12 +12,12 @@ My research has been oriented on developing computational techniques for Bayesia
 <!-- ![](images/image_template.jpg){width="80%" fig-align="center"} -->
 
 
-<div style="text-align: center; margin-top: 30px; margin-bottom: 25px;">
-  <img src="images/image_template.jpg" style="width: 80%; height: auto;" alt="Image template">
+<div style="display: flex; justify-content: center; margin-top: 30px; margin-bottom: 25px;">
+  <img src="images/image_template.jpg" style="width: 80%; height: auto; display: block;" alt="Image template">
 </div>
 
 
-(*The previous image was done by Gemini!!*)
+(*The previous image was created by Gemini!!*)
 
 # In Preparation
 
