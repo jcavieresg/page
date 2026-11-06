@@ -131,3 +131,29 @@ main.content {
   text-decoration: none;
   font-size: 0.9em;
 }
+
+
+/* Profile image floating beside the biography */
+.about-profile {
+  float: right;
+  width: 180px;
+  height: 180px;
+  object-fit: contain;
+  border-radius: 50%;
+  margin: 5px 0 20px 30px;
+}
+
+/* Clear the floating image before the personal section */
+.about-clear {
+  clear: both;
+}
+
+
+/* Increase the main content width */
+@media (min-width: 992px) {
+  #quarto-content {
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
