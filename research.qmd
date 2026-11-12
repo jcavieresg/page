@@ -28,12 +28,12 @@ My research has been oriented on developing computational techniques for Bayesia
 :::
 
 ::: {style="text-align: justify;"}
-- **Cavieres, J**., Krumscheid, S, 2026. Bayesian Spatio-Temporal Models via regTPS: Separable and Non-Separable Latent Fields using MCMC.
+- **Cavieres, J**., Krumscheid, S, 2026. Bayesian Spatio-Temporal Modelling via regTPS: Spearabla and Non-separable Approximations.
 :::
 
 
 ::: {style="text-align: justify;"}
-- Curé, M., Cassetti, J., Sarni, M., **Cavieres, J**, 2026. Decoding Stellar Rotation Regularised Inversion of Projected Rotational Velocities. 
+- Curé, M., Cassetti, J., Sarni, M., **Cavieres, J**., 2026. Decoding Stellar Rotation Regularised Inversion of Projected Rotational Velocities. 
 :::
 
 
