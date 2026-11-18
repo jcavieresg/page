@@ -183,6 +183,10 @@ window.Quarto = {
  <span class="dropdown-text">regTPS (PART 1)</span></a>
   </li>  
         <li>
+    <a class="dropdown-item" href="../../posts/regTPS/regTPS_part2.html">
+ <span class="dropdown-text">regTPS (PART 2)</span></a>
+  </li>  
+        <li>
     <a class="dropdown-item" href="../../posts/kriging_part1/kriging_part1.html">
  <span class="dropdown-text">Kriging, part 1</span></a>
   </li>  
@@ -269,21 +273,21 @@ window.Quarto = {
 <p>This tutorial explains and implements <strong>regTPS</strong> (<a href="https://link.springer.com/article/10.1007/s11222-026-10990-x">link to the paper</a>), a way of approximating a Gaussian random field (GRF) for Bayesian spatial models. The idea is to build the covariance of the field from a <strong>regularized thin plate spline (TPS) operator</strong>, expand it with a <strong>Karhunen-Loève expansion (KLE)</strong>, and fit the resulting low-dimensional model by MCMC.</p>
 <p>Let consider the following spatial model</p>
 <p><span class="math display">\[y_i = u(\mathbf{s}_i) + \varepsilon_i, \qquad \varepsilon_i \overset{\text{iid}}{\sim} \mathcal{N}(0, \sigma_\varepsilon^2), \qquad i = 1, \dots, N,\]</span></p>
-<p>where <span class="math inline">\(\mathbf{s}_i \in \mathcal{D} \subset \mathbb{R}^2\)</span> and <span class="math inline">\(u(\cdot)\)</span> is a GRF. No separate mean is included: the constant function belongs to the polynomial null space of the TPS penalty and is handled by the field itself.</p>
+<p>where <span class="math inline">\(\mathbf{s}_i \in \mathcal{D} \subset \mathbb{R}^2\)</span> is a vector of spatial coordinates <span class="math inline">\(\mathbf{s} = (s_1, s_2)\)</span> and <span class="math inline">\(u(\cdot)\)</span> is a GRF. In this example, no separate mean is included: the constant function belongs to the polynomial null space of the TPS penalty and is handled by the field itself.</p>
 <p>The main steps to follow are:</p>
 <ol type="1">
 <li>Build a TPS basis and its penalty matrix <span class="math inline">\(\mathbf{S}\)</span> (with <code>mgcv</code>).</li>
 <li>Eigendecompose <span class="math inline">\(\mathbf{S}\)</span> and order the eigenvalues <span class="math inline">\(v_k\)</span> in ascending order.</li>
 <li>Truncate the expansion at <span class="math inline">\(M\)</span> modes using a variance-retention rule.</li>
 <li>Place the prior <span class="math inline">\(z_k \sim \mathcal{N}\big(0, (1+\alpha v_k)^{-1}\big)\)</span> on the coefficients, written in non-centered form.</li>
-<li>Sample <span class="math inline">\((\tilde{\mathbf{z}}, \alpha, \sigma_\varepsilon)\)</span> with HMC in Stan.</li>
+<li>Sample <span class="math inline">\((\tilde{\mathbf{z}}, \alpha, \sigma_\varepsilon)\)</span> with Stan.</li>
 </ol>
-<p>The sections below give the theory, then the code, then a simulation study.</p>
+<p>The sections below give the theory, the code and a simulation study.</p>
 </section>
 <section id="theory" class="level1" data-number="2">
 <h1 data-number="2"><span class="header-section-number">2</span> Theory</h1>
-<section id="gaussian-random-fields-and-the-karhunen-loève-expansion" class="level2" data-number="2.1">
-<h2 data-number="2.1" class="anchored" data-anchor-id="gaussian-random-fields-and-the-karhunen-loève-expansion"><span class="header-section-number">2.1</span> Gaussian random fields and the Karhunen-Loève expansion</h2>
+<section id="gaussian-random-field-and-the-karhunen-loève-expansion" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="gaussian-random-field-and-the-karhunen-loève-expansion"><span class="header-section-number">2.1</span> Gaussian random field and the Karhunen-Loève expansion</h2>
 <p>A GRF <span class="math inline">\(u(\mathbf{s})\)</span> is a collection of random variables such that every finite subset is multivariate normal. It is fully specified by its mean and its covariance function <span class="math inline">\(C(\mathbf{s}, \mathbf{s}')\)</span>. Covariance functions are symmetric and positive semidefinite, and under mild conditions they are Hilbert-Schmidt kernels. <strong>Mercer’s theorem</strong> then gives</p>
 <p><span class="math display">\[C(\mathbf{s}, \mathbf{s}') = \sum_{k=1}^{\infty} \lambda_k \, \phi_k(\mathbf{s})\, \phi_k(\mathbf{s}'),\]</span></p>
 <p>where <span class="math inline">\((\lambda_k, \phi_k)\)</span> solve the Fredholm eigenproblem</p>
@@ -291,7 +295,7 @@ window.Quarto = {
 \qquad \langle \phi_k, \phi_\ell \rangle_{L^2} = \delta_{k\ell}.\]</span></p>
 <p>Truncating at <span class="math inline">\(M\)</span> terms gives the KLE of the field,</p>
 <p><span class="math display">\[u(\mathbf{s}) \approx \sum_{k=1}^{M} \sqrt{\lambda_k}\, \phi_k(\mathbf{s})\, \epsilon_k, \qquad \epsilon_k \overset{\text{iid}}{\sim} \mathcal{N}(0,1).\]</span></p>
-<p>The practical difficulty is that the eigenpairs are known in closed form only for a few covariances. The regTPS-KLE construction avoids this by obtaining the eigensystem from a penalty matrix that is already available in standard spline software.</p>
+<p>The practical difficulty is that the eigenpairs are known in closed form only for a few covariances. The regTPS construction avoids this by obtaining the eigensystem from a penalty matrix that is already available in standard spline R package (<code>mgcv</code>).</p>
 </section>
 <section id="thin-plate-splines-and-the-bending-energy" class="level2" data-number="2.2">
 <h2 data-number="2.2" class="anchored" data-anchor-id="thin-plate-splines-and-the-bending-energy"><span class="header-section-number">2.2</span> Thin plate splines and the bending energy</h2>
@@ -301,11 +305,11 @@ window.Quarto = {
 <p><span class="math display">\[d_{\text{null}} = \binom{d + m - 1}{d} = 3 \qquad (d = 2,\ m = 2).\]</span></p>
 <p>A smoothing TPS minimizes the penalized least squares functional</p>
 <p><span class="math display">\[\mathcal{L}(f) = \sum_{i=1}^{N} \big(y_i - f(\mathbf{s}_i)\big)^2 + \alpha\, J(f), \qquad \alpha &gt; 0.\]</span></p>
-<p>The TPS kernel <span class="math inline">\(\eta(d) = d^2 \log d\)</span> is the Green’s function of <span class="math inline">\(\Delta^2\)</span> in <span class="math inline">\(\mathbb{R}^2\)</span> (up to the constant <span class="math inline">\(1/8\pi\)</span>). It is only <strong>conditionally</strong> positive definite, so it is not a valid covariance function, and Mercer’s theorem and the KLE cannot be applied to it directly.</p>
+<p>The TPS kernel <span class="math inline">\(\phi(\mathbf{d}) = \mathbf{d}^2 \log \mathbf{d}\)</span>, with <span class="math inline">\(\mathbf{d} = ||\mathbf{s} - \mathbf{s'}||\)</span> is the Euclidean distance, is the Green’s function of <span class="math inline">\(\Delta^2\)</span> in <span class="math inline">\(\mathbb{R}^2\)</span> (up to the constant <span class="math inline">\(1/8\pi\)</span>). It is only <strong>conditionally</strong> positive definite, so it is not a valid covariance function, and Mercer’s theorem and the KLE cannot be applied to it directly.</p>
 </section>
 <section id="regularizing-the-operator" class="level2" data-number="2.3">
 <h2 data-number="2.3" class="anchored" data-anchor-id="regularizing-the-operator"><span class="header-section-number">2.3</span> Regularizing the operator</h2>
-<p>To obtain a proper covariance, regTPS-KLE replaces the singular biharmonic operator by the <strong>regularized elliptic operator</strong></p>
+<p>To obtain a proper covariance, regTPS replaces the singular biharmonic operator by the <strong>regularized elliptic operator</strong></p>
 <p><span class="math display">\[L_\alpha = \mathbf{I} + \alpha \Delta^2, \qquad \alpha &gt; 0.\]</span></p>
 <p>It arises from the continuous variational problem</p>
 <p><span class="math display">\[\min_{f \in H^2(\mathcal{D})} \int_{\mathcal{D}} (f - g)^2\, d\mathbf{s} + \alpha J(f),\]</span></p>
@@ -757,13 +761,13 @@ window.Quarto = {
 <span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a><span class="co"># Gaussian observation noise</span></span>
 <span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>y_obs <span class="ot">&lt;-</span> u_true_sp <span class="sc">+</span> <span class="fu">rnorm</span>(n_sp, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> sigma_e)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div class="cell">
+<div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">image</span>(g, g, <span class="fu">matrix</span>(u_true_grid, n_grid_pred, n_grid_pred),</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>      <span class="at">xlab =</span> <span class="st">"s1"</span>, <span class="at">ylab =</span> <span class="st">"s2"</span>, <span class="at">main =</span> <span class="st">"True field"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div>
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="regTPS_part1_files/figure-html/plot-true-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="regTPS_part1_files/figure-html/plot-true-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -771,21 +775,22 @@ window.Quarto = {
 </section>
 <section id="build-the-regtps-basis" class="level2" data-number="5.2">
 <h2 data-number="5.2" class="anchored" data-anchor-id="build-the-regtps-basis"><span class="header-section-number">5.2</span> Build the regTPS basis</h2>
-<p>We use <span class="math inline">\(K = 150\)</span> basis functions and keep 95% of the KLE variance.</p>
+<p>We use <span class="math inline">\(K_{\text{ini}} = 199\)</span> basis functions (one fewer than the number of observed sites, to avoid singularities) and keep 95% of the KLE variance.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>variance_threshold <span class="ot">&lt;-</span> <span class="fl">0.95</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>reg <span class="ot">&lt;-</span> <span class="fu">regTPS_s</span>(sp_points, grid_total, y_obs, <span class="at">k_basis =</span> <span class="dv">150</span>,</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">variance_threshold =</span> variance_threshold, <span class="at">alpha_ref =</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>K_ini <span class="ot">&lt;-</span> <span class="dv">199</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>variance_threshold <span class="ot">&lt;-</span> <span class="fl">0.95</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>reg <span class="ot">&lt;-</span> <span class="fu">regTPS_s</span>(sp_points, grid_total, y_obs, <span class="at">k_basis =</span> K_ini,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">variance_threshold =</span> variance_threshold, <span class="at">alpha_ref =</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Null space dim: 3 | basis: 150 | non-zero eig: 147 
-alpha_ref scaled: 0.000408 | M_truncation: 123 | variance explained: 95.07 %</code></pre>
+<pre><code>Null space dim: 3 | basis: 199 | non-zero eig: 196 
+alpha_ref scaled: 0.020242 | M_truncation: 151 | variance explained: 95.04 %</code></pre>
 </div>
 </div>
 <section id="inspecting-the-spectrum-and-the-truncation" class="level3" data-number="5.2.1">
 <h3 data-number="5.2.1" class="anchored" data-anchor-id="inspecting-the-spectrum-and-the-truncation"><span class="header-section-number">5.2.1</span> Inspecting the spectrum and the truncation</h3>
 <p>The penalty eigenvalues are zero for the first <span class="math inline">\(d_{\text{null}} = 3\)</span> modes and then grow quickly. The KLE variances <span class="math inline">\(\lambda_k\)</span> therefore decay, and the cumulative variance saturates well before <span class="math inline">\(K\)</span> modes.</p>
-<div class="cell">
+<div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>M  <span class="ot">&lt;-</span> reg<span class="sc">$</span>M_truncation</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>M0 <span class="ot">&lt;-</span> reg<span class="sc">$</span>M_P_null_space</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>K  <span class="ot">&lt;-</span> <span class="fu">length</span>(reg<span class="sc">$</span>S_diag_full)</span>
@@ -809,13 +814,13 @@ alpha_ref scaled: 0.000408 | M_truncation: 123 | variance explained: 95.07 %</co
 <span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> M, <span class="at">linetype =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
 <span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">paste0</span>(<span class="st">"Cumulative variance (M = "</span>, M, <span class="st">")"</span>),</span>
 <span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Number of basis functions"</span>, <span class="at">y =</span> <span class="st">"Cumulative proportion"</span>) <span class="sc">+</span></span>
-<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span>
 <span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(p_spec, p_cum, <span class="at">ncol =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div>
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="regTPS_part1_files/figure-html/spectrum-1.png" class="img-fluid figure-img" width="864"></p>
+<p><img src="regTPS_part1_files/figure-html/spectrum-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="864"></p>
 </figure>
 </div>
 </div>
@@ -827,55 +832,68 @@ alpha_ref scaled: 0.000408 | M_truncation: 123 | variance explained: 95.07 %</co
 <h1 data-number="6"><span class="header-section-number">6</span> Bayesian inference with Stan</h1>
 <section id="data-priors-and-initial-values" class="level2" data-number="6.1">
 <h2 data-number="6.1" class="anchored" data-anchor-id="data-priors-and-initial-values"><span class="header-section-number">6.1</span> Data, priors and initial values</h2>
-<p>The PC prior for <span class="math inline">\(\sigma_\varepsilon\)</span> states <span class="math inline">\(\Pr(\sigma_\varepsilon &gt; 0.5) = 0.05\)</span>. For <span class="math inline">\(\log\alpha\)</span> we use <span class="math inline">\(\mathcal{N}(0, \sigma_\alpha^2)\)</span>. The paper reports <span class="math inline">\(\sigma_\alpha = 3\)</span>, while the TMB and Stan code used so far in this project fixed it at 1, so it is exposed as a data input (see the notes at the end).</p>
+<p>The PC prior for <span class="math inline">\(\sigma_\varepsilon\)</span> states <span class="math inline">\(\Pr(\sigma_\varepsilon &gt; 1) = 0.05\)</span>. For <span class="math inline">\(\log\alpha\)</span> we use <span class="math inline">\(\mathcal{N}(0, \sigma_\alpha^2)\)</span>. The value of <span class="math inline">\(\sigma_{\alpha}\)</span> is fixed at 1 in this example and passed to Stan as a data input.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>sigma_prior_s0    <span class="ot">&lt;-</span> <span class="fl">0.5</span>     <span class="co"># P(sigma &gt; 0.5) = 0.05</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>sigma_prior_alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>lambda_sigma_e    <span class="ot">&lt;-</span> <span class="sc">-</span><span class="fu">log</span>(sigma_prior_alpha) <span class="sc">/</span> sigma_prior_s0</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>sigma_logalpha    <span class="ot">&lt;-</span> <span class="fl">1.0</span>       </span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>stan_dat <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">N                =</span> <span class="fu">length</span>(y_obs),</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>                 <span class="at">N_grid           =</span> <span class="fu">nrow</span>(reg<span class="sc">$</span>Phi_kle_grid),</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>                 <span class="at">M                =</span> reg<span class="sc">$</span>M_truncation,</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>                 <span class="at">M0               =</span> reg<span class="sc">$</span>M_P_null_space,</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>                 <span class="at">y_obs            =</span> <span class="fu">as.vector</span>(y_obs),</span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>                 <span class="at">Phi_kle_sp       =</span> <span class="fu">unname</span>(<span class="fu">as.matrix</span>(reg<span class="sc">$</span>Phi_kle_sp)),</span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>                 <span class="at">Phi_kle_grid     =</span> <span class="fu">unname</span>(<span class="fu">as.matrix</span>(reg<span class="sc">$</span>Phi_kle_grid)),</span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>                 <span class="at">S_diag_truncated =</span> <span class="fu">as.vector</span>(reg<span class="sc">$</span>S_diag_truncated),</span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>                 <span class="at">lambda_sigma_e   =</span> lambda_sigma_e,</span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>                 <span class="at">sigma_logalpha   =</span> sigma_logalpha)</span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>logalpha_init <span class="ot">&lt;-</span> <span class="fu">max</span>(<span class="fu">min</span>(<span class="fu">log</span>(reg<span class="sc">$</span>alpha_ref_scaled), <span class="dv">3</span>), <span class="sc">-</span><span class="dv">3</span>)</span>
-<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>sigma_init    <span class="ot">&lt;-</span> <span class="fu">sd</span>(y_obs)</span>
-<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>stan_init <span class="ot">&lt;-</span> <span class="cf">function</span>(chain_id) {</span>
-<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">z_tilde  =</span> <span class="fu">as.array</span>(<span class="fu">rep</span>(<span class="dv">0</span>, reg<span class="sc">$</span>M_truncation)),</span>
-<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>       <span class="at">logalpha =</span> logalpha_init,</span>
-<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>       <span class="at">sigma_e  =</span> sigma_init)</span>
-<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>no_cores <span class="ot">&lt;-</span> <span class="fu">max</span>(<span class="dv">1</span>, <span class="fu">min</span>(<span class="dv">4</span>, parallel<span class="sc">::</span><span class="fu">detectCores</span>() <span class="sc">-</span> <span class="dv">1</span>))</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">mc.cores =</span> no_cores)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rstan_options</span>(<span class="at">auto_write =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>sigma_prior_s0    <span class="ot">&lt;-</span> <span class="fl">1.0</span>     <span class="co"># P(sigma &gt; 1) = 0.05</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>sigma_prior_alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>lambda_sigma_e    <span class="ot">&lt;-</span> <span class="sc">-</span><span class="fu">log</span>(sigma_prior_alpha) <span class="sc">/</span> sigma_prior_s0</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>sigma_logalpha    <span class="ot">&lt;-</span> <span class="fl">1.0</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>stan_dat <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">N                =</span> <span class="fu">length</span>(y_obs),</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>                 <span class="at">N_grid           =</span> <span class="fu">nrow</span>(reg<span class="sc">$</span>Phi_kle_grid),</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>                 <span class="at">M                =</span> reg<span class="sc">$</span>M_truncation,</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>                 <span class="at">M0               =</span> reg<span class="sc">$</span>M_P_null_space,</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>                 <span class="at">y_obs            =</span> <span class="fu">as.vector</span>(y_obs),</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>                 <span class="at">Phi_kle_sp       =</span> <span class="fu">unname</span>(<span class="fu">as.matrix</span>(reg<span class="sc">$</span>Phi_kle_sp)),</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>                 <span class="at">Phi_kle_grid     =</span> <span class="fu">unname</span>(<span class="fu">as.matrix</span>(reg<span class="sc">$</span>Phi_kle_grid)),</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>                 <span class="at">S_diag_truncated =</span> <span class="fu">as.vector</span>(reg<span class="sc">$</span>S_diag_truncated),</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>                 <span class="at">lambda_sigma_e   =</span> lambda_sigma_e,</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>                 <span class="at">sigma_logalpha   =</span> sigma_logalpha)</span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>logalpha_init <span class="ot">&lt;-</span> <span class="fu">max</span>(<span class="fu">min</span>(<span class="fu">log</span>(reg<span class="sc">$</span>alpha_ref_scaled), <span class="dv">3</span>), <span class="sc">-</span><span class="dv">3</span>)</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>sigma_init    <span class="ot">&lt;-</span> <span class="fu">sd</span>(y_obs)</span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>stan_init <span class="ot">&lt;-</span> <span class="cf">function</span>(chain_id) {</span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">z_tilde  =</span> <span class="fu">as.array</span>(<span class="fu">rep</span>(<span class="dv">0</span>, reg<span class="sc">$</span>M_truncation)),</span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>       <span class="at">logalpha =</span> logalpha_init,</span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>       <span class="at">sigma_e  =</span> sigma_init)</span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="sampling" class="level2" data-number="6.2">
 <h2 data-number="6.2" class="anchored" data-anchor-id="sampling"><span class="header-section-number">6.2</span> Sampling</h2>
-<p>The fit is cached in an <code>.rds</code> file so that re-knitting does not resample. Delete <code>regTPS_fit.rds</code> after changing the data, the basis or the Stan program.</p>
+<p>The fit is cached in <code>regTPS_fit.rds</code>. If the file exists and matches the current basis, it is read and no sampling is done; otherwise the model is sampled and the file is written. Delete <code>regTPS_fit.rds</code> after changing the data, the priors or the Stan program.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>fit_file <span class="ot">&lt;-</span> <span class="st">"regTPS_fit.rds"</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">file.exists</span>(fit_file)) {</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  stan_fit <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(fit_file)</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  stan_fit <span class="ot">&lt;-</span> <span class="fu">sampling</span>(regTPS_mod,</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>                       <span class="at">data    =</span> stan_dat,</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>                       <span class="at">init    =</span> stan_init,</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>                       <span class="at">chains  =</span> <span class="dv">4</span>,</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>                       <span class="at">iter    =</span> <span class="dv">2000</span>,</span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>                       <span class="at">warmup  =</span> <span class="dv">1000</span>,</span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>                       <span class="at">seed    =</span> <span class="dv">123</span>,</span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>                       <span class="at">control =</span> <span class="fu">list</span>(<span class="at">max_treedepth =</span> <span class="dv">12</span>, <span class="at">adapt_delta =</span> <span class="fl">0.9</span>),</span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>                       <span class="at">cores =</span> no_cores, </span>
-<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>                       <span class="at">refresh =</span> <span class="dv">0</span>)</span>
-<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">saveRDS</span>(stan_fit, fit_file)</span>
-<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># read the saved fit if there is one</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>stan_fit <span class="ot">&lt;-</span> <span class="cf">if</span> (<span class="fu">file.exists</span>(fit_file)) <span class="fu">readRDS</span>(fit_file) <span class="cf">else</span> <span class="cn">NULL</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co"># the saved fit must have the same number of modes as the current basis</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>fit_ok <span class="ot">&lt;-</span> <span class="sc">!</span><span class="fu">is.null</span>(stan_fit) <span class="sc">&amp;&amp;</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ncol</span>(rstan<span class="sc">::</span><span class="fu">extract</span>(stan_fit, <span class="at">pars =</span> <span class="st">"z"</span>)<span class="sc">$</span>z) <span class="sc">==</span> reg<span class="sc">$</span>M_truncation</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span>fit_ok) {</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">exists</span>(<span class="st">"regTPS_mod"</span>))</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stop</span>(<span class="st">"No valid saved fit and the Stan model was not compiled. "</span>,</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>         <span class="st">"Enable the stan-model chunk and render again."</span>)</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>  stan_fit <span class="ot">&lt;-</span> <span class="fu">sampling</span>(regTPS_mod,</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>                       <span class="at">data    =</span> stan_dat,</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>                       <span class="at">init    =</span> stan_init,</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>                       <span class="at">chains  =</span> <span class="dv">3</span>, <span class="at">iter =</span> <span class="dv">2000</span>, <span class="at">warmup =</span> <span class="dv">1000</span>, <span class="at">seed =</span> <span class="dv">123</span>,</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>                       <span class="at">control =</span> <span class="fu">list</span>(<span class="at">max_treedepth =</span> <span class="dv">12</span>, <span class="at">adapt_delta =</span> <span class="fl">0.9</span>),</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>                       <span class="at">cores   =</span> no_cores,</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>                       <span class="at">refresh =</span> <span class="dv">0</span>)</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">saveRDS</span>(stan_fit, fit_file)</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract the posteriors</span></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>post <span class="ot">&lt;-</span> rstan<span class="sc">::</span><span class="fu">extract</span>(stan_fit)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="convergence-and-hyperparameters" class="level2" data-number="6.3">
@@ -884,14 +902,14 @@ alpha_ref scaled: 0.000408 | M_truncation: 123 | variance explained: 95.07 %</co
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(stan_fit, <span class="at">pars =</span> <span class="fu">c</span>(<span class="st">"alpha"</span>, <span class="st">"sigma_e"</span>), <span class="at">probs =</span> <span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.5</span>, <span class="fl">0.975</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Inference for Stan model: anon_model.
-4 chains, each with iter=2000; warmup=1000; thin=1; 
-post-warmup draws per chain=1000, total post-warmup draws=4000.
+3 chains, each with iter=2000; warmup=1000; thin=1; 
+post-warmup draws per chain=1000, total post-warmup draws=3000.
 
-        mean se_mean   sd 2.5%  50% 97.5% n_eff Rhat
-alpha   1.19    0.01 0.28 0.73 1.16  1.85   665 1.01
-sigma_e 0.30    0.00 0.02 0.27 0.30  0.34  2135 1.00
+         mean se_mean    sd  2.5%   50%  97.5% n_eff Rhat
+alpha   69.40     0.9 20.64 37.22 66.84 116.36   530 1.01
+sigma_e  0.49     0.0  0.03  0.43  0.49   0.55  2140 1.00
 
-Samples were drawn using NUTS(diag_e) at Wed Oct  7 13:43:08 2026.
+Samples were drawn using NUTS(diag_e) at Wed Nov 18 09:38:35 2026.
 For each parameter, n_eff is a crude measure of effective sample size,
 and Rhat is the potential scale reduction factor on split chains (at 
 convergence, Rhat=1).</code></pre>
@@ -901,49 +919,38 @@ convergence, Rhat=1).</code></pre>
 <pre><code>
 Divergences:</code></pre>
 </div>
-<div class="cell-output cell-output-stderr">
-<pre><code>0 of 4000 iterations ended with a divergence.</code></pre>
-</div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Tree depth:</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>0 of 4000 iterations saturated the maximum tree depth of 10.</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Energy:</code></pre>
 </div>
-<div class="cell-output cell-output-stderr">
-<pre><code>E-BFMI indicated no pathological behavior.</code></pre>
 </div>
-</div>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>rstan<span class="sc">::</span><span class="fu">traceplot</span>(stan_fit, <span class="at">pars =</span> <span class="fu">c</span>(<span class="st">"alpha"</span>, <span class="st">"sigma_e"</span>), <span class="at">ncol =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>rstan<span class="sc">::</span><span class="fu">traceplot</span>(stan_fit, <span class="at">pars =</span> <span class="fu">c</span>(<span class="st">"alpha"</span>, <span class="st">"sigma_e"</span>), <span class="at">ncol =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div>
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="regTPS_part1_files/figure-html/traces-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="regTPS_part1_files/figure-html/traces-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>The true noise standard deviation is 0.5. The posterior of <span class="math inline">\(\log\alpha\)</span> can be compared with its prior to see how much the data inform the smoothing:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>post <span class="ot">&lt;-</span> rstan<span class="sc">::</span><span class="fu">extract</span>(stan_fit)</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(<span class="at">logalpha =</span> post<span class="sc">$</span>logalpha), <span class="fu">aes</span>(logalpha)) <span class="sc">+</span></span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">fill =</span> <span class="st">"steelblue"</span>, <span class="at">alpha =</span> <span class="fl">0.4</span>) <span class="sc">+</span></span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_function</span>(<span class="at">fun =</span> dnorm, <span class="at">args =</span> <span class="fu">list</span>(<span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> sigma_logalpha),</span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">colour =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">expression</span>(<span class="st">"Posterior (blue) and prior (red) of"</span><span class="sc">~</span>log<span class="sc">~</span>alpha),</span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="fu">expression</span>(log<span class="sc">~</span>alpha), <span class="at">y =</span> <span class="st">"Density"</span>) <span class="sc">+</span></span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(<span class="at">logalpha =</span> post<span class="sc">$</span>logalpha), <span class="fu">aes</span>(logalpha)) <span class="sc">+</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">fill =</span> <span class="st">"steelblue"</span>, <span class="at">alpha =</span> <span class="fl">0.4</span>) <span class="sc">+</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_function</span>(<span class="at">fun =</span> dnorm, <span class="at">args =</span> <span class="fu">list</span>(<span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> sigma_logalpha),</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">colour =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">expression</span>(<span class="st">"Posterior (blue) and prior (red) of"</span><span class="sc">~</span>log<span class="sc">~</span>alpha),</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="fu">expression</span>(log<span class="sc">~</span>alpha), <span class="at">y =</span> <span class="st">"Density"</span>) <span class="sc">+</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div>
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="regTPS_part1_files/figure-html/alpha-posterior-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="regTPS_part1_files/figure-html/alpha-posterior-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -952,23 +959,26 @@ Energy:</code></pre>
 <section id="how-the-prior-and-the-data-interact-mode-by-mode" class="level2" data-number="6.4">
 <h2 data-number="6.4" class="anchored" data-anchor-id="how-the-prior-and-the-data-interact-mode-by-mode"><span class="header-section-number">6.4</span> How the prior and the data interact mode by mode</h2>
 <p>For each retained mode we compare the posterior mean of <span class="math inline">\(|z_k|\)</span> with the prior standard deviation <span class="math inline">\(\sqrt{\lambda_{k,\alpha}}\)</span> (averaged over the posterior of <span class="math inline">\(\alpha\)</span>). Under a prior-dominated mode, <span class="math inline">\(\mathbb{E}|z_k| = \sqrt{2/\pi}\,\text{SD}_{\text{prior}}(z_k)\)</span>, which is the dashed line. Points above the line indicate that the data push the coefficient to larger values than the prior alone would; points near or below it indicate little data-driven learning. The null-space modes (unit prior SD) separate clearly from the penalized ones.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>df_z <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">prior_sd =</span> <span class="fu">colMeans</span>(post<span class="sc">$</span>scale),</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">abs_z    =</span> <span class="fu">abs</span>(<span class="fu">colMeans</span>(post<span class="sc">$</span>z)),</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">type     =</span> <span class="fu">ifelse</span>(<span class="dv">1</span><span class="sc">:</span>M <span class="sc">&lt;=</span> M0, <span class="st">"Null space"</span>, <span class="st">"Penalized"</span>))</span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_z, <span class="fu">aes</span>(prior_sd, abs_z, <span class="at">colour =</span> type, <span class="at">shape =</span> type)) <span class="sc">+</span></span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">slope =</span> <span class="dv">1</span>, <span class="at">intercept =</span> <span class="fu">log10</span>(<span class="fu">sqrt</span>(<span class="dv">2</span> <span class="sc">/</span> pi)), <span class="at">linetype =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_log10</span>() <span class="sc">+</span> <span class="fu">scale_y_log10</span>() <span class="sc">+</span></span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">expression</span>(<span class="st">"Prior SD"</span><span class="sc">~</span><span class="fu">sqrt</span>(lambda[k])),</span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="fu">expression</span>(<span class="st">"|Posterior mean of"</span><span class="sc">~</span>z[k]<span class="sc">~</span><span class="st">"|"</span>),</span>
-<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">colour =</span> <span class="cn">NULL</span>, <span class="at">shape =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
-<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>M  <span class="ot">&lt;-</span> reg<span class="sc">$</span>M_truncation</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>M0 <span class="ot">&lt;-</span> reg<span class="sc">$</span>M_P_null_space</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>df_z <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">prior_sd =</span> <span class="fu">colMeans</span>(post<span class="sc">$</span>scale),</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>                   <span class="at">abs_z    =</span> <span class="fu">abs</span>(<span class="fu">colMeans</span>(post<span class="sc">$</span>z)),</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>                   <span class="at">type     =</span> <span class="fu">ifelse</span>(<span class="dv">1</span><span class="sc">:</span>M <span class="sc">&lt;=</span> M0, <span class="st">"Null space"</span>, <span class="st">"Penalized"</span>))</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_z, <span class="fu">aes</span>(prior_sd, abs_z, <span class="at">colour =</span> type, <span class="at">shape =</span> type)) <span class="sc">+</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">slope =</span> <span class="dv">1</span>, <span class="at">intercept =</span> <span class="fu">log10</span>(<span class="fu">sqrt</span>(<span class="dv">2</span> <span class="sc">/</span> pi)), <span class="at">linetype =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_log10</span>() <span class="sc">+</span> <span class="fu">scale_y_log10</span>() <span class="sc">+</span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">expression</span>(<span class="st">"Prior SD"</span><span class="sc">~</span><span class="fu">sqrt</span>(lambda[k])),</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="fu">expression</span>(<span class="st">"|Posterior mean of"</span><span class="sc">~</span>z[k]<span class="sc">~</span><span class="st">"|"</span>),</span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">colour =</span> <span class="cn">NULL</span>, <span class="at">shape =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div>
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="regTPS_part1_files/figure-html/z-vs-prior-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="regTPS_part1_files/figure-html/z-vs-prior-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -980,77 +990,77 @@ Energy:</code></pre>
 <section id="posterior-summaries-on-the-grid" class="level2" data-number="7.1">
 <h2 data-number="7.1" class="anchored" data-anchor-id="posterior-summaries-on-the-grid"><span class="header-section-number">7.1</span> Posterior summaries on the grid</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>spat_field <span class="ot">&lt;-</span> post<span class="sc">$</span>field_grid        <span class="co"># draws x N_grid</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>post_mean <span class="ot">&lt;-</span> <span class="fu">colMeans</span>(spat_field)</span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>post_sd   <span class="ot">&lt;-</span> <span class="fu">apply</span>(spat_field, <span class="dv">2</span>, sd)</span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>post_lo   <span class="ot">&lt;-</span> <span class="fu">apply</span>(spat_field, <span class="dv">2</span>, quantile, <span class="fl">0.025</span>)</span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>post_hi   <span class="ot">&lt;-</span> <span class="fu">apply</span>(spat_field, <span class="dv">2</span>, quantile, <span class="fl">0.975</span>)</span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">s1 =</span> grid_total<span class="sc">$</span>s1, <span class="at">s2 =</span> grid_total<span class="sc">$</span>s2,</span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>                 <span class="at">truth =</span> u_true_grid, <span class="at">post_mean =</span> post_mean, <span class="at">post_sd =</span> post_sd,</span>
-<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>                 <span class="at">err =</span> post_mean <span class="sc">-</span> u_true_grid,</span>
-<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>                 <span class="at">inside =</span> u_true_grid <span class="sc">&gt;=</span> post_lo <span class="sc">&amp;</span> u_true_grid <span class="sc">&lt;=</span> post_hi)</span>
-<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>rmse     <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>(df<span class="sc">$</span>err<span class="sc">^</span><span class="dv">2</span>))</span>
-<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>mae      <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">abs</span>(df<span class="sc">$</span>err))</span>
-<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>r2       <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> <span class="fu">sum</span>(df<span class="sc">$</span>err<span class="sc">^</span><span class="dv">2</span>) <span class="sc">/</span> <span class="fu">sum</span>((df<span class="sc">$</span>truth <span class="sc">-</span> <span class="fu">mean</span>(df<span class="sc">$</span>truth))<span class="sc">^</span><span class="dv">2</span>)</span>
-<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>corr     <span class="ot">&lt;-</span> <span class="fu">cor</span>(df<span class="sc">$</span>truth, df<span class="sc">$</span>post_mean)</span>
-<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>coverage <span class="ot">&lt;-</span> <span class="fu">mean</span>(df<span class="sc">$</span>inside)</span>
-<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">RMSE =</span> rmse, <span class="at">MAE =</span> mae, <span class="at">R2 =</span> r2, <span class="at">Correlation =</span> corr,</span>
-<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a>           <span class="at">Coverage95 =</span> coverage)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>spat_field <span class="ot">&lt;-</span> post<span class="sc">$</span>field_grid        <span class="co"># draws x N_grid</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>post_mean <span class="ot">&lt;-</span> <span class="fu">colMeans</span>(spat_field)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>post_sd   <span class="ot">&lt;-</span> <span class="fu">apply</span>(spat_field, <span class="dv">2</span>, sd)</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>post_lo   <span class="ot">&lt;-</span> <span class="fu">apply</span>(spat_field, <span class="dv">2</span>, quantile, <span class="fl">0.025</span>)</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>post_hi   <span class="ot">&lt;-</span> <span class="fu">apply</span>(spat_field, <span class="dv">2</span>, quantile, <span class="fl">0.975</span>)</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">s1 =</span> grid_total<span class="sc">$</span>s1, <span class="at">s2 =</span> grid_total<span class="sc">$</span>s2,</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>                 <span class="at">truth =</span> u_true_grid, <span class="at">post_mean =</span> post_mean, <span class="at">post_sd =</span> post_sd,</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>                 <span class="at">err =</span> post_mean <span class="sc">-</span> u_true_grid,</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>                 <span class="at">inside =</span> u_true_grid <span class="sc">&gt;=</span> post_lo <span class="sc">&amp;</span> u_true_grid <span class="sc">&lt;=</span> post_hi)</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>rmse     <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>(df<span class="sc">$</span>err<span class="sc">^</span><span class="dv">2</span>))</span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>mae      <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">abs</span>(df<span class="sc">$</span>err))</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>r2       <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> <span class="fu">sum</span>(df<span class="sc">$</span>err<span class="sc">^</span><span class="dv">2</span>) <span class="sc">/</span> <span class="fu">sum</span>((df<span class="sc">$</span>truth <span class="sc">-</span> <span class="fu">mean</span>(df<span class="sc">$</span>truth))<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>corr     <span class="ot">&lt;-</span> <span class="fu">cor</span>(df<span class="sc">$</span>truth, df<span class="sc">$</span>post_mean)</span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>coverage <span class="ot">&lt;-</span> <span class="fu">mean</span>(df<span class="sc">$</span>inside)</span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">RMSE =</span> rmse, <span class="at">MAE =</span> mae, <span class="at">R2 =</span> r2, <span class="at">Correlation =</span> corr,</span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a>           <span class="at">Coverage95 =</span> coverage)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>       RMSE      MAE        R2 Correlation Coverage95
-1 0.1957667 0.150504 0.9485536   0.9742802       0.91</code></pre>
+<pre><code>       RMSE       MAE        R2 Correlation Coverage95
+1 0.2567231 0.2020202 0.9115277   0.9561553  0.9433333</code></pre>
 </div>
 </div>
 <p>Here <span class="math inline">\(R^2 = 1 - \sum_i (\hat u_i - u_i)^2 / \sum_i (u_i - \bar u)^2\)</span> and <code>Coverage95</code> is the proportion of grid points whose true value lies inside the 95% credible interval.</p>
 </section>
 <section id="maps" class="level2" data-number="7.2">
 <h2 data-number="7.2" class="anchored" data-anchor-id="maps"><span class="header-section-number">7.2</span> Maps</h2>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>lims       <span class="ot">&lt;-</span> <span class="fu">range</span>(<span class="fu">c</span>(df<span class="sc">$</span>truth, df<span class="sc">$</span>post_mean))</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>fld_scale  <span class="ot">&lt;-</span> <span class="fu">scale_fill_viridis_c</span>(<span class="at">limits =</span> lims, <span class="at">option =</span> <span class="st">"D"</span>)</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>base_theme <span class="ot">&lt;-</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>())</span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>p_true <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(s1, s2, <span class="at">fill =</span> truth)) <span class="sc">+</span></span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_raster</span>() <span class="sc">+</span> fld_scale <span class="sc">+</span> <span class="fu">coord_equal</span>() <span class="sc">+</span></span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"True GRF"</span>, <span class="at">fill =</span> <span class="st">"u"</span>) <span class="sc">+</span> base_theme</span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>p_est <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(s1, s2, <span class="at">fill =</span> post_mean)) <span class="sc">+</span></span>
-<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_raster</span>() <span class="sc">+</span> fld_scale <span class="sc">+</span> <span class="fu">coord_equal</span>() <span class="sc">+</span></span>
-<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Posterior mean"</span>, <span class="at">fill =</span> <span class="st">"u"</span>) <span class="sc">+</span> base_theme</span>
-<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>p_err <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(s1, s2, <span class="at">fill =</span> err)) <span class="sc">+</span></span>
-<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_raster</span>() <span class="sc">+</span> <span class="fu">coord_equal</span>() <span class="sc">+</span></span>
-<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradient2</span>(<span class="at">low =</span> <span class="st">"blue"</span>, <span class="at">mid =</span> <span class="st">"white"</span>, <span class="at">high =</span> <span class="st">"red"</span>, <span class="at">midpoint =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
-<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Error (posterior mean - truth)"</span>, <span class="at">fill =</span> <span class="st">"err"</span>) <span class="sc">+</span> base_theme</span>
-<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>p_sd <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(s1, s2, <span class="at">fill =</span> post_sd)) <span class="sc">+</span></span>
-<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_raster</span>() <span class="sc">+</span> <span class="fu">coord_equal</span>() <span class="sc">+</span></span>
-<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(<span class="at">option =</span> <span class="st">"magma"</span>) <span class="sc">+</span></span>
-<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Posterior SD"</span>, <span class="at">fill =</span> <span class="st">"sd"</span>) <span class="sc">+</span> base_theme</span>
-<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a>p_scatter <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(truth, post_mean)) <span class="sc">+</span></span>
-<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.4</span>, <span class="at">size =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
-<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">slope =</span> <span class="dv">1</span>, <span class="at">intercept =</span> <span class="dv">0</span>, <span class="at">colour =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
-<span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">sprintf</span>(<span class="st">"Truth vs estimate (RMSE = %.3f)"</span>, rmse),</span>
-<span id="cb25-27"><a href="#cb25-27" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"True field"</span>, <span class="at">y =</span> <span class="st">"Posterior mean"</span>) <span class="sc">+</span></span>
-<span id="cb25-28"><a href="#cb25-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
-<span id="cb25-29"><a href="#cb25-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-30"><a href="#cb25-30" aria-hidden="true" tabindex="-1"></a>p_cover <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(s1, s2, <span class="at">fill =</span> inside)) <span class="sc">+</span></span>
-<span id="cb25-31"><a href="#cb25-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_raster</span>() <span class="sc">+</span> <span class="fu">coord_equal</span>() <span class="sc">+</span></span>
-<span id="cb25-32"><a href="#cb25-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"TRUE"</span> <span class="ot">=</span> <span class="st">"grey85"</span>, <span class="st">"FALSE"</span> <span class="ot">=</span> <span class="st">"red"</span>),</span>
-<span id="cb25-33"><a href="#cb25-33" aria-hidden="true" tabindex="-1"></a>                    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"TRUE"</span> <span class="ot">=</span> <span class="st">"inside"</span>, <span class="st">"FALSE"</span> <span class="ot">=</span> <span class="st">"outside"</span>)) <span class="sc">+</span></span>
-<span id="cb25-34"><a href="#cb25-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">sprintf</span>(<span class="st">"95%% CI coverage: %.1f%%"</span>, <span class="dv">100</span> <span class="sc">*</span> coverage),</span>
-<span id="cb25-35"><a href="#cb25-35" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">"truth"</span>) <span class="sc">+</span> base_theme</span>
-<span id="cb25-36"><a href="#cb25-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-37"><a href="#cb25-37" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(p_true, p_est, p_err, p_sd, p_scatter, p_cover, <span class="at">ncol =</span> <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>lims       <span class="ot">&lt;-</span> <span class="fu">range</span>(<span class="fu">c</span>(df<span class="sc">$</span>truth, df<span class="sc">$</span>post_mean))</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>fld_scale  <span class="ot">&lt;-</span> <span class="fu">scale_fill_viridis_c</span>(<span class="at">limits =</span> lims, <span class="at">option =</span> <span class="st">"D"</span>)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>base_theme <span class="ot">&lt;-</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>())</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>p_true <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(s1, s2, <span class="at">fill =</span> truth)) <span class="sc">+</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_raster</span>() <span class="sc">+</span> fld_scale <span class="sc">+</span> <span class="fu">coord_equal</span>() <span class="sc">+</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"True GRF"</span>, <span class="at">fill =</span> <span class="st">"u"</span>) <span class="sc">+</span> base_theme</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>p_est <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(s1, s2, <span class="at">fill =</span> post_mean)) <span class="sc">+</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_raster</span>() <span class="sc">+</span> fld_scale <span class="sc">+</span> <span class="fu">coord_equal</span>() <span class="sc">+</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Posterior mean"</span>, <span class="at">fill =</span> <span class="st">"u"</span>) <span class="sc">+</span> base_theme</span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>p_err <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(s1, s2, <span class="at">fill =</span> err)) <span class="sc">+</span></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_raster</span>() <span class="sc">+</span> <span class="fu">coord_equal</span>() <span class="sc">+</span></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradient2</span>(<span class="at">low =</span> <span class="st">"blue"</span>, <span class="at">mid =</span> <span class="st">"white"</span>, <span class="at">high =</span> <span class="st">"red"</span>, <span class="at">midpoint =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Error (posterior mean - truth)"</span>, <span class="at">fill =</span> <span class="st">"err"</span>) <span class="sc">+</span> base_theme</span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>p_sd <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(s1, s2, <span class="at">fill =</span> post_sd)) <span class="sc">+</span></span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_raster</span>() <span class="sc">+</span> <span class="fu">coord_equal</span>() <span class="sc">+</span></span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(<span class="at">option =</span> <span class="st">"magma"</span>) <span class="sc">+</span></span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Posterior SD"</span>, <span class="at">fill =</span> <span class="st">"sd"</span>) <span class="sc">+</span> base_theme</span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a>p_scatter <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(truth, post_mean)) <span class="sc">+</span></span>
+<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.4</span>, <span class="at">size =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">slope =</span> <span class="dv">1</span>, <span class="at">intercept =</span> <span class="dv">0</span>, <span class="at">colour =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">sprintf</span>(<span class="st">"Truth vs estimate (RMSE = %.3f)"</span>, rmse),</span>
+<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"True field"</span>, <span class="at">y =</span> <span class="st">"Posterior mean"</span>) <span class="sc">+</span></span>
+<span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span>
+<span id="cb22-29"><a href="#cb22-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-30"><a href="#cb22-30" aria-hidden="true" tabindex="-1"></a>p_cover <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(s1, s2, <span class="at">fill =</span> inside)) <span class="sc">+</span></span>
+<span id="cb22-31"><a href="#cb22-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_raster</span>() <span class="sc">+</span> <span class="fu">coord_equal</span>() <span class="sc">+</span></span>
+<span id="cb22-32"><a href="#cb22-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"TRUE"</span> <span class="ot">=</span> <span class="st">"grey85"</span>, <span class="st">"FALSE"</span> <span class="ot">=</span> <span class="st">"red"</span>),</span>
+<span id="cb22-33"><a href="#cb22-33" aria-hidden="true" tabindex="-1"></a>                    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"TRUE"</span> <span class="ot">=</span> <span class="st">"inside"</span>, <span class="st">"FALSE"</span> <span class="ot">=</span> <span class="st">"outside"</span>)) <span class="sc">+</span></span>
+<span id="cb22-34"><a href="#cb22-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">sprintf</span>(<span class="st">"95%% CI coverage: %.1f%%"</span>, <span class="dv">100</span> <span class="sc">*</span> coverage),</span>
+<span id="cb22-35"><a href="#cb22-35" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">"truth"</span>) <span class="sc">+</span> base_theme</span>
+<span id="cb22-36"><a href="#cb22-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-37"><a href="#cb22-37" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(p_true, p_est, p_err, p_sd, p_scatter, p_cover, <span class="at">ncol =</span> <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div>
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="regTPS_part1_files/figure-html/maps-1.png" class="img-fluid figure-img" width="1056"></p>
+<p><img src="regTPS_part1_files/figure-html/maps-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="1056"></p>
 </figure>
 </div>
 </div>
@@ -1059,48 +1069,38 @@ Energy:</code></pre>
 </section>
 <section id="posterior-predictive-check" class="level2" data-number="7.3">
 <h2 data-number="7.3" class="anchored" data-anchor-id="posterior-predictive-check"><span class="header-section-number">7.3</span> Posterior predictive check</h2>
-<p>Each posterior draw produces a replicated data set <code>y_sim</code>. The thin lines are the densities of 100 replicates and the thick line is the observed data.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>y_sim <span class="ot">&lt;-</span> post<span class="sc">$</span>y_sim</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ppc_dens_overlay</span>(<span class="at">y =</span> y_obs, <span class="at">yrep =</span> y_sim[<span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>, ]) <span class="sc">+</span></span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">12</span>),</span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text  =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">12</span>),</span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">12</span>),</span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.text  =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Each posterior draw produces a replicated data set <code>y_sim</code>. We compare the observed data with the replicates through the density overlay, the distribution of the sample mean, and predictive intervals.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>y_sim  <span class="ot">&lt;-</span> post<span class="sc">$</span>y_sim</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>rep_id <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">nrow</span>(y_sim), <span class="dv">100</span>)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>ppc_theme <span class="ot">&lt;-</span> <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.title   =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">12</span>),</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text    =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">12</span>),</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">12</span>),</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.text  =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>))</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>bayesplot<span class="sc">::</span><span class="fu">ppc_dens_overlay</span>(<span class="at">y =</span> y_obs, <span class="at">yrep =</span> y_sim[rep_id, ]) <span class="sc">+</span> ppc_theme</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div>
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="regTPS_part1_files/figure-html/ppc-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="regTPS_part1_files/figure-html/ppc-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare summary statistics (e.g., mean or max) across all posterior draws</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ppc_stat</span>(<span class="at">y =</span> y_obs, <span class="at">yrep =</span> y_sim, <span class="at">stat =</span> <span class="st">"mean"</span>) <span class="sc">+</span></span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">12</span>),</span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text  =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">12</span>),</span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">12</span>),</span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.text  =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>bayesplot<span class="sc">::</span><span class="fu">ppc_stat</span>(<span class="at">y =</span> y_obs, <span class="at">yrep =</span> y_sim, <span class="at">stat =</span> <span class="st">"mean"</span>) <span class="sc">+</span> ppc_theme</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div>
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="regTPS_part1_files/figure-html/ppc-2.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="regTPS_part1_files/figure-html/ppc-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare predictive intervals against actual observed values</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ppc_intervals</span>(<span class="at">y =</span> y_obs, <span class="at">yrep =</span> y_sim) <span class="sc">+</span></span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">12</span>),</span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text  =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">12</span>),</span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">12</span>),</span>
-<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.text  =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>bayesplot<span class="sc">::</span><span class="fu">ppc_intervals</span>(<span class="at">y =</span> y_obs, <span class="at">yrep =</span> y_sim[rep_id, ]) <span class="sc">+</span> ppc_theme</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div>
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="regTPS_part1_files/figure-html/ppc-3.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="regTPS_part1_files/figure-html/ppc-3.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
 </figure>
 </div>
 </div>
