@@ -273,11 +273,11 @@ window.Quarto = {
 <p>In this tutorial we will reuses <code>regTPS_s()</code> presented in PART 1. The basis, the penalty eigendecomposition, the truncation rule and the non-centered prior on the field are unchanged. Only the likelihood and the linear predictor change.</p>
 <section id="model" class="level2" data-number="1.1">
 <h2 data-number="1.1" class="anchored" data-anchor-id="model"><span class="header-section-number">1.1</span> Model</h2>
-<p>Let <span class="math inline">\(y_i \in \{0, 1, 2, \dots\}\)</span> be a count observed at site <span class="math inline">\(\mathbf{s}_i\)</span>, with a numeric covariate <span class="math inline">\(x_i\)</span>. Write <span class="math inline">\(\mu_i\)</span> for the Poisson mean (we avoid <span class="math inline">\(\lambda\)</span>, which already denotes the KLE variances):</p>
+<p>Let <span class="math inline">\(y_i \in \{1, 2, \dots\}\)</span> be a count observed at site <span class="math inline">\(\mathbf{s}_i\)</span>, with a numeric covariate <span class="math inline">\(x_i\)</span>. For this specific example, we will use <span class="math inline">\(\mu_i\)</span> for the Poisson mean (and so avoid using <span class="math inline">\(\lambda\)</span>, which already denotes the KLE variances):</p>
 <p><span class="math display">\[y_i \mid \mu_i \sim \text{Poisson}(\mu_i), \qquad
 \log \mu_i = \eta_i = \beta_0 + \beta\, x_i + u(\mathbf{s}_i), \qquad
 u(\mathbf{s}) = \boldsymbol\Phi(\mathbf{s})^\top \mathbf{z},\]</span></p>
-<p>with the same prior on the coefficients as before, in non-centered form,</p>
+<p>with the same prior on the coefficients as in PART 1, in non-centered form,</p>
 <p><span class="math display">\[z_k = \frac{\tilde z_k}{\sqrt{1 + \alpha v_k}} \ (k &gt; d_{\text{null}}), \qquad z_k = \tilde z_k \ (k \le d_{\text{null}}), \qquad \tilde z_k \overset{\text{iid}}{\sim} \mathcal{N}(0,1).\]</span></p>
 <p>The hyperpriors are</p>
 <p><span class="math display">\[\log\alpha \sim \mathcal{N}(0, \sigma_\alpha^2), \qquad \beta_0 \sim \mathcal{N}(0, \sigma_{\beta_0}^2), \qquad \beta \sim \mathcal{N}(0, \sigma_\beta^2).\]</span></p>
@@ -515,9 +515,9 @@ u(\mathbf{s}) = \boldsymbol\Phi(\mathbf{s})^\top \mathbf{z},\]</span></p>
 </section>
 <section id="simulation-study" class="level1" data-number="3">
 <h1 data-number="3"><span class="header-section-number">3</span> Simulation study</h1>
-<section id="simulating-a-numeric-covariate-a-latent-field-and-counts" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="simulating-a-numeric-covariate-a-latent-field-and-counts"><span class="header-section-number">3.1</span> Simulating a numeric covariate, a latent field and counts</h2>
-<p>The covariate is a standardized spatial field with its own range, so it is spatially structured but independent of the latent field <span class="math inline">\(u\)</span>. We also simulate it on the prediction grid, as one would with a raster covariate. The true parameters are <span class="math inline">\(\beta_0 = 1.5\)</span> and <span class="math inline">\(\beta = 0.5\)</span>.</p>
+<section id="simulating-a-numeric-covariate-a-spatial-field-and-counts" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="simulating-a-numeric-covariate-a-spatial-field-and-counts"><span class="header-section-number">3.1</span> Simulating a numeric covariate, a spatial field and counts</h2>
+<p>The covariate is a standardized spatial field with its own range, so it is spatially structured but independent of the spatial field <span class="math inline">\(u\)</span>. We also simulate it on the prediction grid, as one would with a raster covariate. The true parameters are <span class="math inline">\(\beta_0 = 1.5\)</span> and <span class="math inline">\(\beta = 0.5\)</span>.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2026</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -526,7 +526,7 @@ u(\mathbf{s}) = \boldsymbol\Phi(\mathbf{s})^\top \mathbf{z},\]</span></p>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>n_grid_pred <span class="ot">&lt;-</span> <span class="dv">30</span></span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>beta0_true  <span class="ot">&lt;-</span> <span class="fl">1.5</span></span>
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>beta1_true  <span class="ot">&lt;-</span> <span class="fl">0.5</span>     <span class="co"># per one-SD increase of x</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>sigma_u     <span class="ot">&lt;-</span> <span class="fl">0.7</span>     <span class="co"># sd of the latent field (moderate amplitude, see notes)</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>sigma_u     <span class="ot">&lt;-</span> <span class="fl">0.7</span>     <span class="co"># sd of the spatial field (moderate amplitude, see notes)</span></span>
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>range_u     <span class="ot">&lt;-</span> <span class="fl">0.25</span></span>
 <span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>range_x     <span class="ot">&lt;-</span> <span class="fl">0.15</span></span>
 <span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
@@ -550,7 +550,7 @@ u(\mathbf{s}) = \boldsymbol\Phi(\mathbf{s})^\top \mathbf{z},\]</span></p>
 <span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.vector</span>(<span class="fu">t</span>(L) <span class="sc">%*%</span> <span class="fu">rnorm</span>(<span class="fu">nrow</span>(Cov)))</span>
 <span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Latent field and covariate, jointly at observed sites and grid</span></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Spatial field and covariate, jointly at observed sites and grid</span></span>
 <span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>u_all <span class="ot">&lt;-</span> <span class="fu">draw_gp</span>(<span class="fu">matern32</span>(D, sigma_u, range_u))</span>
 <span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>x_all <span class="ot">&lt;-</span> <span class="fu">as.vector</span>(<span class="fu">scale</span>(<span class="fu">draw_gp</span>(<span class="fu">matern32</span>(D, <span class="dv">1</span>, range_x))))</span>
 <span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a></span>
@@ -645,7 +645,7 @@ alpha_ref scaled: 0.000627 | M_truncation: 83 | variance explained: 95.04 %</cod
 <span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>                            <span class="at">iter    =</span> <span class="dv">2000</span>,</span>
 <span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>                            <span class="at">warmup  =</span> <span class="dv">1000</span>,</span>
 <span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>                            <span class="at">seed    =</span> <span class="dv">123</span>,</span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>                            <span class="at">control =</span> <span class="fu">list</span>(<span class="at">max_treedepth =</span> <span class="dv">12</span>, <span class="at">adapt_delta =</span> <span class="fl">0.9</span>),</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>                            <span class="at">control =</span> <span class="fu">list</span>(<span class="at">max_treedepth =</span> <span class="dv">12</span>, <span class="at">adapt_delta =</span> <span class="fl">0.95</span>),</span>
 <span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>                            <span class="at">cores =</span> no_cores, </span>
 <span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>                            <span class="at">refresh =</span> <span class="dv">0</span>)</span>
 <span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">saveRDS</span>(stan_fit_pois, fit_file)</span>
@@ -873,8 +873,8 @@ Energy:</code></pre>
 </div>
 <p>This interval is for the expected count. For an interval on a new observed count, also draw <code>rpois(length(mu_new), mu_new)</code> and summarize those draws.</p>
 </section>
-<section id="notes" class="level1" data-number="7">
-<h1 data-number="7"><span class="header-section-number">7</span> Notes</h1>
+<section id="final-comments" class="level1" data-number="7">
+<h1 data-number="7"><span class="header-section-number">7</span> Final Comments</h1>
 <ul>
 <li><strong>Spatial confounding.</strong> The covariate here is spatially smooth, and the null space contains linear trends in <span class="math inline">\(s_1\)</span> and <span class="math inline">\(s_2\)</span>. When <span class="math inline">\(x\)</span> is smooth, <span class="math inline">\(\beta\)</span> competes with the low-frequency modes of the field, and the prior on the field, not the data, decides how the shared signal is split. Expect the posterior of <span class="math inline">\(\beta\)</span> to be wider than the GLM interval, which is the honest outcome, and check how sensitive it is to <span class="math inline">\(\sigma_\alpha\)</span> and to the truncation level.</li>
 <li><strong>Truncation.</strong> The rule that chooses <span class="math inline">\(M\)</span> uses only the prior variances at a fixed reference <span class="math inline">\(\alpha\)</span>, so it does not depend on the likelihood and is identical to the Gaussian case.</li>
