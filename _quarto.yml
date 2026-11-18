@@ -67,5 +67,10 @@ format:
     number-sections: true
     number-equations: true
     bibliography: references.bib
+    execute:
+      cache: false
+      freeze: false
+      warning: false
+      message: false
 
 editor: visual
