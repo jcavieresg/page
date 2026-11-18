@@ -575,13 +575,13 @@ u(\mathbf{s}) = \boldsymbol\Phi(\mathbf{s})^\top \mathbf{z},\]</span></p>
 <pre><code>Proportion of zeros: 0.073 </code></pre>
 </div>
 </div>
-<div class="cell">
+<div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">image</span>(g, g, <span class="fu">matrix</span>(eta_true_grid, n_grid_pred, n_grid_pred),</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>      <span class="at">xlab =</span> <span class="st">"s1"</span>, <span class="at">ylab =</span> <span class="st">"s2"</span>, <span class="at">main =</span> <span class="st">"True log-intensity and observed counts"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div>
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="regTPS_part2_files/figure-html/pois-plot-true-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="regTPS_part2_files/figure-html/pois-plot-true-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -676,38 +676,29 @@ convergence, Rhat=1).</code></pre>
 <pre><code>
 Divergences:</code></pre>
 </div>
-<div class="cell-output cell-output-stderr">
-<pre><code>0 of 4000 iterations ended with a divergence.</code></pre>
-</div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Tree depth:</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>0 of 4000 iterations saturated the maximum tree depth of 10.</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Energy:</code></pre>
 </div>
-<div class="cell-output cell-output-stderr">
-<pre><code>E-BFMI indicated no pathological behavior.</code></pre>
-</div>
 </div>
 <p>The true slope is 0.5. The next plot shows its posterior; the red line marks the truth.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>post <span class="ot">&lt;-</span> rstan<span class="sc">::</span><span class="fu">extract</span>(stan_fit_pois)</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(<span class="at">beta =</span> post<span class="sc">$</span>beta), <span class="fu">aes</span>(beta)) <span class="sc">+</span></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">fill =</span> <span class="st">"steelblue"</span>, <span class="at">alpha =</span> <span class="fl">0.4</span>) <span class="sc">+</span></span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> beta1_true, <span class="at">colour =</span> <span class="st">"red"</span>, <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">expression</span>(<span class="st">"Posterior of the covariate effect"</span><span class="sc">~</span>beta),</span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="fu">expression</span>(beta), <span class="at">y =</span> <span class="st">"Density"</span>) <span class="sc">+</span></span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>post <span class="ot">&lt;-</span> rstan<span class="sc">::</span><span class="fu">extract</span>(stan_fit_pois)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(<span class="at">beta =</span> post<span class="sc">$</span>beta), <span class="fu">aes</span>(beta)) <span class="sc">+</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">fill =</span> <span class="st">"steelblue"</span>, <span class="at">alpha =</span> <span class="fl">0.4</span>) <span class="sc">+</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> beta1_true, <span class="at">colour =</span> <span class="st">"red"</span>, <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">expression</span>(<span class="st">"Posterior of the covariate effect"</span><span class="sc">~</span>beta),</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="fu">expression</span>(beta), <span class="at">y =</span> <span class="st">"Density"</span>) <span class="sc">+</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div>
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="regTPS_part2_files/figure-html/pois-beta-posterior-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="regTPS_part2_files/figure-html/pois-beta-posterior-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -716,21 +707,21 @@ Energy:</code></pre>
 <h3 data-number="4.3.1" class="anchored" data-anchor-id="comparison-with-a-non-spatial-poisson-regression"><span class="header-section-number">4.3.1</span> Comparison with a non-spatial Poisson regression</h3>
 <p>A Poisson GLM ignores the latent field. If the spatial structure matters, the GLM slope will typically be less accurate and its interval too narrow, and the Pearson dispersion will exceed 1. Only the slope is compared, because the regTPS intercept is not identified separately from the null-space constant.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>glm_fit <span class="ot">&lt;-</span> <span class="fu">glm</span>(y <span class="sc">~</span> x_sp, <span class="at">family =</span> poisson)</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>glm_ci  <span class="ot">&lt;-</span> <span class="fu">confint.default</span>(glm_fit)[<span class="st">"x_sp"</span>, ]</span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">method =</span> <span class="fu">c</span>(<span class="st">"Truth"</span>, <span class="st">"Poisson GLM"</span>, <span class="st">"regTPS"</span>),</span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">slope  =</span> <span class="fu">c</span>(beta1_true, <span class="fu">coef</span>(glm_fit)[<span class="st">"x_sp"</span>], <span class="fu">mean</span>(post<span class="sc">$</span>beta)),</span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>           <span class="at">lower  =</span> <span class="fu">c</span>(<span class="cn">NA</span>, glm_ci[<span class="dv">1</span>], <span class="fu">quantile</span>(post<span class="sc">$</span>beta, <span class="fl">0.025</span>)),</span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>           <span class="at">upper  =</span> <span class="fu">c</span>(<span class="cn">NA</span>, glm_ci[<span class="dv">2</span>], <span class="fu">quantile</span>(post<span class="sc">$</span>beta, <span class="fl">0.975</span>)),</span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>           <span class="at">row.names =</span> <span class="cn">NULL</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>glm_fit <span class="ot">&lt;-</span> <span class="fu">glm</span>(y <span class="sc">~</span> x_sp, <span class="at">family =</span> poisson)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>glm_ci  <span class="ot">&lt;-</span> <span class="fu">confint.default</span>(glm_fit)[<span class="st">"x_sp"</span>, ]</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">method =</span> <span class="fu">c</span>(<span class="st">"Truth"</span>, <span class="st">"Poisson GLM"</span>, <span class="st">"regTPS"</span>),</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">slope  =</span> <span class="fu">c</span>(beta1_true, <span class="fu">coef</span>(glm_fit)[<span class="st">"x_sp"</span>], <span class="fu">mean</span>(post<span class="sc">$</span>beta)),</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>           <span class="at">lower  =</span> <span class="fu">c</span>(<span class="cn">NA</span>, glm_ci[<span class="dv">1</span>], <span class="fu">quantile</span>(post<span class="sc">$</span>beta, <span class="fl">0.025</span>)),</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>           <span class="at">upper  =</span> <span class="fu">c</span>(<span class="cn">NA</span>, glm_ci[<span class="dv">2</span>], <span class="fu">quantile</span>(post<span class="sc">$</span>beta, <span class="fl">0.975</span>)),</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>           <span class="at">row.names =</span> <span class="cn">NULL</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>       method     slope     lower     upper
 1       Truth 0.5000000        NA        NA
 2 Poisson GLM 0.5596463 0.5108736 0.6084190
 3      regTPS 0.5546755 0.4473814 0.6590164</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"GLM Pearson dispersion:"</span>, <span class="fu">round</span>(<span class="fu">sum</span>(<span class="fu">residuals</span>(glm_fit, <span class="st">"pearson"</span>)<span class="sc">^</span><span class="dv">2</span>) <span class="sc">/</span> glm_fit<span class="sc">$</span>df.residual, <span class="dv">2</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"GLM Pearson dispersion:"</span>, <span class="fu">round</span>(<span class="fu">sum</span>(<span class="fu">residuals</span>(glm_fit, <span class="st">"pearson"</span>)<span class="sc">^</span><span class="dv">2</span>) <span class="sc">/</span> glm_fit<span class="sc">$</span>df.residual, <span class="dv">2</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>GLM Pearson dispersion: 4.55 </code></pre>
 </div>
@@ -744,25 +735,25 @@ Energy:</code></pre>
 <h2 data-number="5.1" class="anchored" data-anchor-id="posterior-summaries-on-the-grid"><span class="header-section-number">5.1</span> Posterior summaries on the grid</h2>
 <p>We compare the full log-intensity <span class="math inline">\(\eta\)</span>, which includes the covariate effect, rather than the field <span class="math inline">\(u\)</span> alone, because <span class="math inline">\(u\)</span> is not separately identified from the intercept.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>eta_draws <span class="ot">&lt;-</span> post<span class="sc">$</span>eta_grid          <span class="co"># draws x N_grid</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>mu_draws  <span class="ot">&lt;-</span> post<span class="sc">$</span>mu_grid</span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>eta_mean <span class="ot">&lt;-</span> <span class="fu">colMeans</span>(eta_draws)</span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>eta_sd   <span class="ot">&lt;-</span> <span class="fu">apply</span>(eta_draws, <span class="dv">2</span>, sd)</span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>eta_lo   <span class="ot">&lt;-</span> <span class="fu">apply</span>(eta_draws, <span class="dv">2</span>, quantile, <span class="fl">0.025</span>)</span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>eta_hi   <span class="ot">&lt;-</span> <span class="fu">apply</span>(eta_draws, <span class="dv">2</span>, quantile, <span class="fl">0.975</span>)</span>
-<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">s1 =</span> grid_total<span class="sc">$</span>s1, <span class="at">s2 =</span> grid_total<span class="sc">$</span>s2,</span>
-<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>                 <span class="at">eta_true =</span> eta_true_grid, <span class="at">eta_mean =</span> eta_mean, <span class="at">eta_sd =</span> eta_sd,</span>
-<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>                 <span class="at">err      =</span> eta_mean <span class="sc">-</span> eta_true_grid,</span>
-<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>                 <span class="at">inside   =</span> eta_true_grid <span class="sc">&gt;=</span> eta_lo <span class="sc">&amp;</span> eta_true_grid <span class="sc">&lt;=</span> eta_hi,</span>
-<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>                 <span class="at">mu_true  =</span> <span class="fu">exp</span>(eta_true_grid), <span class="at">mu_mean =</span> <span class="fu">colMeans</span>(mu_draws))</span>
-<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">RMSE_eta        =</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>(df<span class="sc">$</span>err<span class="sc">^</span><span class="dv">2</span>)),</span>
-<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>           <span class="at">MAE_eta         =</span> <span class="fu">mean</span>(<span class="fu">abs</span>(df<span class="sc">$</span>err)),</span>
-<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a>           <span class="at">Correlation_eta =</span> <span class="fu">cor</span>(df<span class="sc">$</span>eta_true, df<span class="sc">$</span>eta_mean),</span>
-<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>           <span class="at">RMSE_mu         =</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>((df<span class="sc">$</span>mu_mean <span class="sc">-</span> df<span class="sc">$</span>mu_true)<span class="sc">^</span><span class="dv">2</span>)),</span>
-<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a>           <span class="at">Coverage95_eta  =</span> <span class="fu">mean</span>(df<span class="sc">$</span>inside))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>eta_draws <span class="ot">&lt;-</span> post<span class="sc">$</span>eta_grid          <span class="co"># draws x N_grid</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>mu_draws  <span class="ot">&lt;-</span> post<span class="sc">$</span>mu_grid</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>eta_mean <span class="ot">&lt;-</span> <span class="fu">colMeans</span>(eta_draws)</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>eta_sd   <span class="ot">&lt;-</span> <span class="fu">apply</span>(eta_draws, <span class="dv">2</span>, sd)</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>eta_lo   <span class="ot">&lt;-</span> <span class="fu">apply</span>(eta_draws, <span class="dv">2</span>, quantile, <span class="fl">0.025</span>)</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>eta_hi   <span class="ot">&lt;-</span> <span class="fu">apply</span>(eta_draws, <span class="dv">2</span>, quantile, <span class="fl">0.975</span>)</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">s1 =</span> grid_total<span class="sc">$</span>s1, <span class="at">s2 =</span> grid_total<span class="sc">$</span>s2,</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>                 <span class="at">eta_true =</span> eta_true_grid, <span class="at">eta_mean =</span> eta_mean, <span class="at">eta_sd =</span> eta_sd,</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>                 <span class="at">err      =</span> eta_mean <span class="sc">-</span> eta_true_grid,</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>                 <span class="at">inside   =</span> eta_true_grid <span class="sc">&gt;=</span> eta_lo <span class="sc">&amp;</span> eta_true_grid <span class="sc">&lt;=</span> eta_hi,</span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>                 <span class="at">mu_true  =</span> <span class="fu">exp</span>(eta_true_grid), <span class="at">mu_mean =</span> <span class="fu">colMeans</span>(mu_draws))</span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">RMSE_eta        =</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>(df<span class="sc">$</span>err<span class="sc">^</span><span class="dv">2</span>)),</span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>           <span class="at">MAE_eta         =</span> <span class="fu">mean</span>(<span class="fu">abs</span>(df<span class="sc">$</span>err)),</span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>           <span class="at">Correlation_eta =</span> <span class="fu">cor</span>(df<span class="sc">$</span>eta_true, df<span class="sc">$</span>eta_mean),</span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>           <span class="at">RMSE_mu         =</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>((df<span class="sc">$</span>mu_mean <span class="sc">-</span> df<span class="sc">$</span>mu_true)<span class="sc">^</span><span class="dv">2</span>)),</span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>           <span class="at">Coverage95_eta  =</span> <span class="fu">mean</span>(df<span class="sc">$</span>inside))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   RMSE_eta   MAE_eta Correlation_eta  RMSE_mu Coverage95_eta
 1 0.2665837 0.2079358        0.955426 1.626744      0.7977778</code></pre>
@@ -771,51 +762,51 @@ Energy:</code></pre>
 </section>
 <section id="maps" class="level2" data-number="5.2">
 <h2 data-number="5.2" class="anchored" data-anchor-id="maps"><span class="header-section-number">5.2</span> Maps</h2>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>lims       <span class="ot">&lt;-</span> <span class="fu">range</span>(<span class="fu">c</span>(df<span class="sc">$</span>eta_true, df<span class="sc">$</span>eta_mean))</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>fld_scale  <span class="ot">&lt;-</span> <span class="fu">scale_fill_viridis_c</span>(<span class="at">limits =</span> lims, <span class="at">option =</span> <span class="st">"D"</span>)</span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>base_theme <span class="ot">&lt;-</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>())</span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>obs_df     <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(sp_points, <span class="at">y =</span> y)</span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>p_true <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(s1, s2, <span class="at">fill =</span> eta_true)) <span class="sc">+</span></span>
-<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_raster</span>() <span class="sc">+</span> fld_scale <span class="sc">+</span> <span class="fu">coord_equal</span>() <span class="sc">+</span></span>
-<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> obs_df, <span class="fu">aes</span>(s1, s2, <span class="at">size =</span> y), <span class="at">inherit.aes =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>             <span class="at">shape =</span> <span class="dv">21</span>, <span class="at">fill =</span> <span class="st">"white"</span>, <span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
-<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"True log-intensity and counts"</span>, <span class="at">fill =</span> <span class="fu">expression</span>(eta), <span class="at">size =</span> <span class="st">"count"</span>) <span class="sc">+</span></span>
-<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>  base_theme</span>
-<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>p_est <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(s1, s2, <span class="at">fill =</span> eta_mean)) <span class="sc">+</span></span>
-<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_raster</span>() <span class="sc">+</span> fld_scale <span class="sc">+</span> <span class="fu">coord_equal</span>() <span class="sc">+</span></span>
-<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Posterior mean of the log-intensity"</span>, <span class="at">fill =</span> <span class="fu">expression</span>(eta)) <span class="sc">+</span> base_theme</span>
-<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a>p_err <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(s1, s2, <span class="at">fill =</span> err)) <span class="sc">+</span></span>
-<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_raster</span>() <span class="sc">+</span> <span class="fu">coord_equal</span>() <span class="sc">+</span></span>
-<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradient2</span>(<span class="at">low =</span> <span class="st">"blue"</span>, <span class="at">mid =</span> <span class="st">"white"</span>, <span class="at">high =</span> <span class="st">"red"</span>, <span class="at">midpoint =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
-<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Error (posterior mean - truth)"</span>, <span class="at">fill =</span> <span class="st">"err"</span>) <span class="sc">+</span> base_theme</span>
-<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a>p_sd <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(s1, s2, <span class="at">fill =</span> eta_sd)) <span class="sc">+</span></span>
-<span id="cb29-23"><a href="#cb29-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_raster</span>() <span class="sc">+</span> <span class="fu">coord_equal</span>() <span class="sc">+</span></span>
-<span id="cb29-24"><a href="#cb29-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(<span class="at">option =</span> <span class="st">"magma"</span>) <span class="sc">+</span></span>
-<span id="cb29-25"><a href="#cb29-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Posterior SD of the log-intensity"</span>, <span class="at">fill =</span> <span class="st">"sd"</span>) <span class="sc">+</span> base_theme</span>
-<span id="cb29-26"><a href="#cb29-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-27"><a href="#cb29-27" aria-hidden="true" tabindex="-1"></a>p_scatter <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(mu_true, mu_mean)) <span class="sc">+</span></span>
-<span id="cb29-28"><a href="#cb29-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.4</span>, <span class="at">size =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
-<span id="cb29-29"><a href="#cb29-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">slope =</span> <span class="dv">1</span>, <span class="at">intercept =</span> <span class="dv">0</span>, <span class="at">colour =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
-<span id="cb29-30"><a href="#cb29-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Expected count: truth vs estimate"</span>, <span class="at">x =</span> <span class="st">"True mean"</span>, <span class="at">y =</span> <span class="st">"Posterior mean"</span>) <span class="sc">+</span></span>
-<span id="cb29-31"><a href="#cb29-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
-<span id="cb29-32"><a href="#cb29-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-33"><a href="#cb29-33" aria-hidden="true" tabindex="-1"></a>p_cover <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(s1, s2, <span class="at">fill =</span> inside)) <span class="sc">+</span></span>
-<span id="cb29-34"><a href="#cb29-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_raster</span>() <span class="sc">+</span> <span class="fu">coord_equal</span>() <span class="sc">+</span></span>
-<span id="cb29-35"><a href="#cb29-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"TRUE"</span> <span class="ot">=</span> <span class="st">"grey85"</span>, <span class="st">"FALSE"</span> <span class="ot">=</span> <span class="st">"red"</span>),</span>
-<span id="cb29-36"><a href="#cb29-36" aria-hidden="true" tabindex="-1"></a>                    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"TRUE"</span> <span class="ot">=</span> <span class="st">"inside"</span>, <span class="st">"FALSE"</span> <span class="ot">=</span> <span class="st">"outside"</span>)) <span class="sc">+</span></span>
-<span id="cb29-37"><a href="#cb29-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">sprintf</span>(<span class="st">"95%% CI coverage (log-intensity): %.1f%%"</span>, <span class="dv">100</span> <span class="sc">*</span> <span class="fu">mean</span>(df<span class="sc">$</span>inside)),</span>
-<span id="cb29-38"><a href="#cb29-38" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">"truth"</span>) <span class="sc">+</span> base_theme</span>
-<span id="cb29-39"><a href="#cb29-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-40"><a href="#cb29-40" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(p_true, p_est, p_err, p_sd, p_scatter, p_cover, <span class="at">ncol =</span> <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>lims       <span class="ot">&lt;-</span> <span class="fu">range</span>(<span class="fu">c</span>(df<span class="sc">$</span>eta_true, df<span class="sc">$</span>eta_mean))</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>fld_scale  <span class="ot">&lt;-</span> <span class="fu">scale_fill_viridis_c</span>(<span class="at">limits =</span> lims, <span class="at">option =</span> <span class="st">"D"</span>)</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>base_theme <span class="ot">&lt;-</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>())</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>obs_df     <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(sp_points, <span class="at">y =</span> y)</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>p_true <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(s1, s2, <span class="at">fill =</span> eta_true)) <span class="sc">+</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_raster</span>() <span class="sc">+</span> fld_scale <span class="sc">+</span> <span class="fu">coord_equal</span>() <span class="sc">+</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> obs_df, <span class="fu">aes</span>(s1, s2, <span class="at">size =</span> y), <span class="at">inherit.aes =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>             <span class="at">shape =</span> <span class="dv">21</span>, <span class="at">fill =</span> <span class="st">"white"</span>, <span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"True log-intensity and counts"</span>, <span class="at">fill =</span> <span class="fu">expression</span>(eta), <span class="at">size =</span> <span class="st">"count"</span>) <span class="sc">+</span></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>  base_theme</span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>p_est <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(s1, s2, <span class="at">fill =</span> eta_mean)) <span class="sc">+</span></span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_raster</span>() <span class="sc">+</span> fld_scale <span class="sc">+</span> <span class="fu">coord_equal</span>() <span class="sc">+</span></span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Posterior mean of the log-intensity"</span>, <span class="at">fill =</span> <span class="fu">expression</span>(eta)) <span class="sc">+</span> base_theme</span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>p_err <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(s1, s2, <span class="at">fill =</span> err)) <span class="sc">+</span></span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_raster</span>() <span class="sc">+</span> <span class="fu">coord_equal</span>() <span class="sc">+</span></span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradient2</span>(<span class="at">low =</span> <span class="st">"blue"</span>, <span class="at">mid =</span> <span class="st">"white"</span>, <span class="at">high =</span> <span class="st">"red"</span>, <span class="at">midpoint =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Error (posterior mean - truth)"</span>, <span class="at">fill =</span> <span class="st">"err"</span>) <span class="sc">+</span> base_theme</span>
+<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a>p_sd <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(s1, s2, <span class="at">fill =</span> eta_sd)) <span class="sc">+</span></span>
+<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_raster</span>() <span class="sc">+</span> <span class="fu">coord_equal</span>() <span class="sc">+</span></span>
+<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(<span class="at">option =</span> <span class="st">"magma"</span>) <span class="sc">+</span></span>
+<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Posterior SD of the log-intensity"</span>, <span class="at">fill =</span> <span class="st">"sd"</span>) <span class="sc">+</span> base_theme</span>
+<span id="cb26-26"><a href="#cb26-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-27"><a href="#cb26-27" aria-hidden="true" tabindex="-1"></a>p_scatter <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(mu_true, mu_mean)) <span class="sc">+</span></span>
+<span id="cb26-28"><a href="#cb26-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.4</span>, <span class="at">size =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb26-29"><a href="#cb26-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">slope =</span> <span class="dv">1</span>, <span class="at">intercept =</span> <span class="dv">0</span>, <span class="at">colour =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb26-30"><a href="#cb26-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Expected count: truth vs estimate"</span>, <span class="at">x =</span> <span class="st">"True mean"</span>, <span class="at">y =</span> <span class="st">"Posterior mean"</span>) <span class="sc">+</span></span>
+<span id="cb26-31"><a href="#cb26-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb26-32"><a href="#cb26-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-33"><a href="#cb26-33" aria-hidden="true" tabindex="-1"></a>p_cover <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(s1, s2, <span class="at">fill =</span> inside)) <span class="sc">+</span></span>
+<span id="cb26-34"><a href="#cb26-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_raster</span>() <span class="sc">+</span> <span class="fu">coord_equal</span>() <span class="sc">+</span></span>
+<span id="cb26-35"><a href="#cb26-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"TRUE"</span> <span class="ot">=</span> <span class="st">"grey85"</span>, <span class="st">"FALSE"</span> <span class="ot">=</span> <span class="st">"red"</span>),</span>
+<span id="cb26-36"><a href="#cb26-36" aria-hidden="true" tabindex="-1"></a>                    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"TRUE"</span> <span class="ot">=</span> <span class="st">"inside"</span>, <span class="st">"FALSE"</span> <span class="ot">=</span> <span class="st">"outside"</span>)) <span class="sc">+</span></span>
+<span id="cb26-37"><a href="#cb26-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">sprintf</span>(<span class="st">"95%% CI coverage (log-intensity): %.1f%%"</span>, <span class="dv">100</span> <span class="sc">*</span> <span class="fu">mean</span>(df<span class="sc">$</span>inside)),</span>
+<span id="cb26-38"><a href="#cb26-38" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">"truth"</span>) <span class="sc">+</span> base_theme</span>
+<span id="cb26-39"><a href="#cb26-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-40"><a href="#cb26-40" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(p_true, p_est, p_err, p_sd, p_scatter, p_cover, <span class="at">ncol =</span> <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div>
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="regTPS_part2_files/figure-html/pois-maps-1.png" class="img-fluid figure-img" width="1056"></p>
+<p><img src="regTPS_part2_files/figure-html/pois-maps-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="1056"></p>
 </figure>
 </div>
 </div>
@@ -824,26 +815,26 @@ Energy:</code></pre>
 <section id="posterior-predictive-checks-for-counts" class="level2" data-number="5.3">
 <h2 data-number="5.3" class="anchored" data-anchor-id="posterior-predictive-checks-for-counts"><span class="header-section-number">5.3</span> Posterior predictive checks for counts</h2>
 <p>For counts, a density overlay is less informative than summary statistics that probe the Poisson assumption. We compare the observed value (red line) with its distribution over the replicated data sets <code>y_sim</code>. The proportion of zeros and the maximum count check the tails. The variance-to-mean ratio checks <strong>overdispersion</strong>, which this model cannot capture because it has no free dispersion parameter.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>y_sim <span class="ot">&lt;-</span> post<span class="sc">$</span>y_sim</span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>stat_fun <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="st">"Proportion of zeros"</span> <span class="ot">=</span> <span class="cf">function</span>(v) <span class="fu">mean</span>(v <span class="sc">==</span> <span class="dv">0</span>),</span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"Variance / mean"</span>     <span class="ot">=</span> <span class="cf">function</span>(v) <span class="fu">var</span>(v) <span class="sc">/</span> <span class="fu">mean</span>(v),</span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"Maximum count"</span>       <span class="ot">=</span> max)</span>
-<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>))</span>
-<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (nm <span class="cf">in</span> <span class="fu">names</span>(stat_fun)) {</span>
-<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>  f        <span class="ot">&lt;-</span> stat_fun[[nm]]</span>
-<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>  rep_stat <span class="ot">&lt;-</span> <span class="fu">apply</span>(y_sim, <span class="dv">1</span>, f)</span>
-<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hist</span>(rep_stat, <span class="at">main =</span> nm, <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">col =</span> <span class="st">"grey85"</span>, <span class="at">border =</span> <span class="st">"white"</span>)</span>
-<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>(<span class="at">v =</span> <span class="fu">f</span>(y), <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"red"</span>)</span>
-<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mtext</span>(<span class="fu">sprintf</span>(<span class="st">"P(T_rep &gt;= T_obs) = %.2f"</span>, <span class="fu">mean</span>(rep_stat <span class="sc">&gt;=</span> <span class="fu">f</span>(y))),</span>
-<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">side =</span> <span class="dv">3</span>, <span class="at">line =</span> <span class="sc">-</span><span class="fl">1.5</span>, <span class="at">cex =</span> <span class="fl">0.8</span>)</span>
-<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>y_sim <span class="ot">&lt;-</span> post<span class="sc">$</span>y_sim</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>stat_fun <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="st">"Proportion of zeros"</span> <span class="ot">=</span> <span class="cf">function</span>(v) <span class="fu">mean</span>(v <span class="sc">==</span> <span class="dv">0</span>),</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"Variance / mean"</span>     <span class="ot">=</span> <span class="cf">function</span>(v) <span class="fu">var</span>(v) <span class="sc">/</span> <span class="fu">mean</span>(v),</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"Maximum count"</span>       <span class="ot">=</span> max)</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>))</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (nm <span class="cf">in</span> <span class="fu">names</span>(stat_fun)) {</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>  f        <span class="ot">&lt;-</span> stat_fun[[nm]]</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>  rep_stat <span class="ot">&lt;-</span> <span class="fu">apply</span>(y_sim, <span class="dv">1</span>, f)</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hist</span>(rep_stat, <span class="at">main =</span> nm, <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">col =</span> <span class="st">"grey85"</span>, <span class="at">border =</span> <span class="st">"white"</span>)</span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>(<span class="at">v =</span> <span class="fu">f</span>(y), <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"red"</span>)</span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mtext</span>(<span class="fu">sprintf</span>(<span class="st">"P(T_rep &gt;= T_obs) = %.2f"</span>, <span class="fu">mean</span>(rep_stat <span class="sc">&gt;=</span> <span class="fu">f</span>(y))),</span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">side =</span> <span class="dv">3</span>, <span class="at">line =</span> <span class="sc">-</span><span class="fl">1.5</span>, <span class="at">cex =</span> <span class="fl">0.8</span>)</span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div>
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="regTPS_part2_files/figure-html/pois-ppc-1.png" class="img-fluid figure-img" width="960"></p>
+<p><img src="regTPS_part2_files/figure-html/pois-ppc-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -860,19 +851,19 @@ Energy:</code></pre>
 <h1 data-number="6"><span class="header-section-number">6</span> Predicting at new locations without refitting</h1>
 <p>The linear predictor is again linear in the posterior draws of <span class="math inline">\(\mathbf{z}\)</span>, <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta\)</span>, so new sites only need a covariate value and the stored basis. The covariate must be known at the new sites.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>new_pts <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">s1 =</span> <span class="fu">c</span>(<span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span>), <span class="at">s2 =</span> <span class="fu">c</span>(<span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span>))</span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>x_new   <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.5</span>, <span class="dv">0</span>, <span class="dv">1</span>)                      <span class="co"># covariate values at the new sites</span></span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>Phi_new <span class="ot">&lt;-</span> <span class="fu">PredictMat</span>(reg<span class="sc">$</span>sm, new_pts) <span class="sc">%*%</span> reg<span class="sc">$</span>evectors[, <span class="dv">1</span><span class="sc">:</span>reg<span class="sc">$</span>M_truncation]</span>
-<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>eta_new <span class="ot">&lt;-</span> <span class="fu">sweep</span>(post<span class="sc">$</span>z <span class="sc">%*%</span> <span class="fu">t</span>(Phi_new), <span class="dv">1</span>, post<span class="sc">$</span>beta0, <span class="st">"+"</span>) <span class="sc">+</span></span>
-<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>           <span class="fu">outer</span>(post<span class="sc">$</span>beta, x_new)            <span class="co"># draws x n_new</span></span>
-<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>mu_new  <span class="ot">&lt;-</span> <span class="fu">exp</span>(eta_new)</span>
-<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(new_pts, <span class="at">x =</span> x_new,</span>
-<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>           <span class="at">mean =</span> <span class="fu">colMeans</span>(mu_new),</span>
-<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>           <span class="at">lo   =</span> <span class="fu">apply</span>(mu_new, <span class="dv">2</span>, quantile, <span class="fl">0.025</span>),</span>
-<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>           <span class="at">hi   =</span> <span class="fu">apply</span>(mu_new, <span class="dv">2</span>, quantile, <span class="fl">0.975</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>new_pts <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">s1 =</span> <span class="fu">c</span>(<span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span>), <span class="at">s2 =</span> <span class="fu">c</span>(<span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span>))</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>x_new   <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.5</span>, <span class="dv">0</span>, <span class="dv">1</span>)                      <span class="co"># covariate values at the new sites</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>Phi_new <span class="ot">&lt;-</span> <span class="fu">PredictMat</span>(reg<span class="sc">$</span>sm, new_pts) <span class="sc">%*%</span> reg<span class="sc">$</span>evectors[, <span class="dv">1</span><span class="sc">:</span>reg<span class="sc">$</span>M_truncation]</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>eta_new <span class="ot">&lt;-</span> <span class="fu">sweep</span>(post<span class="sc">$</span>z <span class="sc">%*%</span> <span class="fu">t</span>(Phi_new), <span class="dv">1</span>, post<span class="sc">$</span>beta0, <span class="st">"+"</span>) <span class="sc">+</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>           <span class="fu">outer</span>(post<span class="sc">$</span>beta, x_new)            <span class="co"># draws x n_new</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>mu_new  <span class="ot">&lt;-</span> <span class="fu">exp</span>(eta_new)</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(new_pts, <span class="at">x =</span> x_new,</span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>           <span class="at">mean =</span> <span class="fu">colMeans</span>(mu_new),</span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>           <span class="at">lo   =</span> <span class="fu">apply</span>(mu_new, <span class="dv">2</span>, quantile, <span class="fl">0.025</span>),</span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>           <span class="at">hi   =</span> <span class="fu">apply</span>(mu_new, <span class="dv">2</span>, quantile, <span class="fl">0.975</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    s1   s2    x     mean       lo       hi
 1 0.25 0.25 -0.5 6.269502 4.936847 7.891006

@@ -375,7 +375,7 @@ window.Quarto = {
 <p>The first <span class="math inline">\(d_{\text{null}}\)</span> eigenvalues are numerically zero and their eigenvectors span the polynomial trends. The <span class="math inline">\(k\)</span>-th <strong>discrete eigenfunction</strong> is</p>
 <p><span class="math display">\[\hat\phi_k(\mathbf{s}) = \tilde{\boldsymbol\phi}(\mathbf{s})^\top \boldsymbol\psi_{S,k}.\]</span></p>
 <p>The eigenvalues <span class="math inline">\(v_k\)</span> of <span class="math inline">\(\mathbf{S}\)</span> approximate those of <span class="math inline">\(\Delta^2\)</span> on <span class="math inline">\(\mathcal{V}_K\)</span>, and the approximation improves as <span class="math inline">\(K\)</span> grows.</p>
-<p><strong>Standard versus generalized eigenproblem.</strong> A fully consistent Galerkin discretization solves the generalized problem <span class="math inline">\(\mathbf{S}\boldsymbol\psi = v\,\mathbf{M}\boldsymbol\psi\)</span> with the <span class="math inline">\(L^2\)</span> mass matrix <span class="math inline">\(M_{jk} = \int \tilde\phi_j\tilde\phi_k\, d\mathbf{s}\)</span>, which keeps the <span class="math inline">\(\hat\phi_k\)</span> orthonormal in <span class="math inline">\(L^2\)</span>. regTPS-KLE instead solves the <strong>standard</strong> problem <span class="math inline">\(\mathbf{S}\boldsymbol\psi = v\boldsymbol\psi\)</span>, as is common in TPS software. Modes are then ranked purely by bending energy, and <span class="math inline">\(\alpha\)</span> absorbs any constant scaling. This is a computational approximation (see Appendix A of the paper).</p>
+<p><strong>Standard versus generalized eigenproblem.</strong> A fully consistent Galerkin discretization solves the generalized problem <span class="math inline">\(\mathbf{S}\boldsymbol\psi = v\,\mathbf{M}\boldsymbol\psi\)</span> with the <span class="math inline">\(L^2\)</span> mass matrix <span class="math inline">\(M_{jk} = \int \tilde\phi_j\tilde\phi_k\, d\mathbf{s}\)</span>, which keeps the <span class="math inline">\(\hat\phi_k\)</span> orthonormal in <span class="math inline">\(L^2\)</span>. regTPS instead solves the <strong>standard</strong> problem <span class="math inline">\(\mathbf{S}\boldsymbol\psi = v\boldsymbol\psi\)</span>, as is common in TPS software. Modes are then ranked purely by bending energy, and <span class="math inline">\(\alpha\)</span> absorbs any constant scaling. This is a computational approximation (see Appendix A of the paper).</p>
 </section>
 </section>
 <section id="discrete-kle-with-adaptive-truncation" class="level2" data-number="2.5">
@@ -775,12 +775,12 @@ window.Quarto = {
 </section>
 <section id="build-the-regtps-basis" class="level2" data-number="5.2">
 <h2 data-number="5.2" class="anchored" data-anchor-id="build-the-regtps-basis"><span class="header-section-number">5.2</span> Build the regTPS basis</h2>
-<p>We use <span class="math inline">\(K_{\text{ini}} = 199\)</span> basis functions (one fewer than the number of observed sites, to avoid singularities) and keep 95% of the KLE variance.</p>
+<p>We use <span class="math inline">\(K = 199\)</span> basis functions (one fewer than the number of observed sites, to avoid singularities) and keep 95% of the KLE variance.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>K_ini <span class="ot">&lt;-</span> <span class="dv">199</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>K <span class="ot">&lt;-</span> <span class="dv">199</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>variance_threshold <span class="ot">&lt;-</span> <span class="fl">0.95</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>reg <span class="ot">&lt;-</span> <span class="fu">regTPS_s</span>(sp_points, grid_total, y_obs, <span class="at">k_basis =</span> K_ini,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>reg <span class="ot">&lt;-</span> <span class="fu">regTPS_s</span>(sp_points, grid_total, y_obs, <span class="at">k_basis =</span> K,</span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">variance_threshold =</span> variance_threshold, <span class="at">alpha_ref =</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Null space dim: 3 | basis: 199 | non-zero eig: 196 
@@ -1201,6 +1201,8 @@ Energy:</code></pre>
 </section>
 <section id="conclusions" class="level1" data-number="8">
 <h1 data-number="8"><span class="header-section-number">8</span> Conclusions</h1>
+<p>In this tutorial we explained the theory of the regTPS approach for Bayesian spatial modeling and showed how to implement it with Stan. The thin plate spline kernel is not a valid covariance function, and regTPS repairs this with the regularized operator <span class="math inline">\(L_\alpha = \mathbf{I} + \alpha\Delta^2\)</span> to approximate a GRF. In the simulated data with Gaussian error, we recovered the true field and checked the fit with MCMC diagnostics, posterior predictive checks and credible-interval coverage.</p>
+<p>The next tutorial will extend this framework to other likelihood functions and to models with additional covariates.</p>
 </section>
 <section id="references" class="level1" data-number="9">
 <h1 data-number="9"><span class="header-section-number">9</span> References</h1>
